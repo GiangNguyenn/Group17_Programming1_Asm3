@@ -1,7 +1,8 @@
+package Model;
 public class Customer {
     private String password;
-    public  String name;
-    public String phone;
+    private String name;
+    private String phone;
     private String username;
 
 
@@ -13,6 +14,10 @@ public class Customer {
     public boolean login(){
 
         return false;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 

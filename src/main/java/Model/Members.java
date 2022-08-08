@@ -1,7 +1,7 @@
-public class Cart {
+package Model;
+public class Members {
 
     public static void main(String[] args) {
 
     }
-
 }

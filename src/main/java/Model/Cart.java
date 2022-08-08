@@ -1,6 +1,8 @@
-public class Category {
+package Model;
+public class Cart {
 
     public static void main(String[] args) {
 
     }
+
 }
