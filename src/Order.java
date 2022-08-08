@@ -1,4 +1,3 @@
-package Tutorial.Project;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,9 +9,12 @@ public class Order {
     private LocalDateTime created_at;
     private String status;
 
-    public Order(String id, Member member) {
-        this.id = id;
-        this.member = member;
+    public Order(Cart cart) {
+        this.id = cart.getId();
+        this.member = cart.getMember();
+        this.products = cart.getProducts();
+        this.created_at = LocalDateTime.now();
+        this.status = "Proccessing";
     }
 
     public Order(String id, Member member, ArrayList<Product> products, LocalDateTime created_at, String status) {

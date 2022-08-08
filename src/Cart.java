@@ -1,5 +1,3 @@
-package Tutorial.Project;
-
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -17,8 +15,8 @@ public class Cart {
         return myDateObj.format(myFormatObj);
     }
 
-    public Cart(String id,Member member) {
-        this.id = id;
+    public Cart(Member member) {
+        this.id = idUnique();
         this.member = member;
         this.products =  new ArrayList<>();
     }
@@ -49,9 +47,10 @@ public class Cart {
     }
 
     public static void main(String[] args) {
+        //For testing purposes
         Member m1 = new Member();
         Product p1 = new Product();
-        Cart cart = new Cart("0001",m1);
+        Cart cart = new Cart(m1);
         cart.addProductIntoCart(p1);
         cart.addProductIntoCart(new Product());
         System.out.println(cart.toString());
