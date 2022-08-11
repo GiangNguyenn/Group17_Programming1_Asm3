@@ -13,6 +13,9 @@ public class MenuService {
         System.out.println("1. Login");
         System.out.println("2. Register");
         System.out.println("3. Exit");
+        if (!BaseHelper.isNullOrEmpty(Utils.current_user)) {
+            System.out.println("4. Logout");
+        }
         System.out.println("Your choice: ");
     }
 
@@ -23,7 +26,7 @@ public class MenuService {
         try {
             String choice = Utils.reader.readLine();
 
-            switch(choice) {
+            switch (choice) {
                 case "1":
                     userService.login();
                     break;
@@ -32,6 +35,9 @@ public class MenuService {
                     break;
                 case "3":
                     exit();
+                case "4":
+                    userService.logout();
+                    break;
                 default:
                     System.out.println("Invalid choice, please try again!");
             }

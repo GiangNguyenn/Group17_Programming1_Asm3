@@ -26,8 +26,8 @@ public class Member extends User {
     public Member() {
     }
 
-    public Member(String userName) {
-        super(userName);
+    public Member(String userName, String password) {
+        super(userName, password);
     }
 
 

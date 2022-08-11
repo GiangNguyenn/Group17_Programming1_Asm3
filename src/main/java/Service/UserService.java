@@ -37,23 +37,22 @@ public class UserService implements UserInterface {
 
         // TODO: declare new User
 
-        Member member = new Member(username);
-
+        Member member = new Member(username, password);
 
 //		After successful login, set the flag in Utils to re-use.
 
 //		ex:
-        if (!BaseHelper.isNullOrEmpty(member) && member.checkingUserLoginInfo(username, password)) {
-
+        if (!BaseHelper.isNullOrEmpty(member) && BaseHelper.checkingUserLoginInfo(username, password)) {
+            Member validated = null;
             for (Member validatedMember : lstMember) {
                 if (member.getUsername().equals(username)) {
-                    member = validatedMember;
+                    validated = validatedMember;
                 }
             }
 
             Utils.isLogin = true;
-            Utils.current_user = member;
-            System.out.println("Login success! " + member.toString());
+            Utils.current_user = validated;
+            System.out.println("Login success! " + validated.toString());
             System.out.println(Utils.current_user);
             return;
         }
@@ -79,13 +78,14 @@ public class UserService implements UserInterface {
             System.out.println("Enter your password: ");
             String password = scanner.nextLine();
 
-            if (BaseHelper.checkExistId(username)) {
+            if (BaseHelper.checkExistUsername(username)) {
                 System.out.println("This username has been used! Please register with another one.");
                 userExists = true;
             } else {
                 String id = BaseHelper.generateIdForUser();
                 lstMember.add(new Member(id, name, phoneNumber, username, password));
                 System.out.println(lstMember);
+                break;
             }
         }
         /*
@@ -93,14 +93,13 @@ public class UserService implements UserInterface {
          * creating new Member if this username is not exits
          * after that, switch to login page
          * */
-
-
     }
 
     @Override
     public void logout() {
         Utils.isLogin = false;
         Utils.current_user = null;
+        System.out.println("You have logged out!");
     }
 
     @Override
