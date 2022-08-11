@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import Model.User.Member;
+import Model.User.User;
 import common.BaseConstant;
 import common.BaseHelper;
 import common.Utils;
@@ -49,6 +50,7 @@ public class UserService implements UserInterface {
                     member = validatedMember;
                 }
             }
+
             Utils.isLogin = true;
             Utils.current_user = member;
             System.out.println("Login success! " + member.toString());
@@ -56,7 +58,7 @@ public class UserService implements UserInterface {
             return;
         }
 
-//		can be modified if you want.Ò
+//		can be modified if you want.
     }
 
     @Override

@@ -15,7 +15,6 @@ public abstract class User {
          * TODO checking infor of an Member.
          * return true if username and password are correct
          */
-
         boolean matchedUsername = lstMember.stream().map(User::getUsername).anyMatch(username::equals);
         boolean matchedPassword = lstMember.stream().map(User::getPassword).anyMatch(password::equals);
         return matchedUsername && matchedPassword;
