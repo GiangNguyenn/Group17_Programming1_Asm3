@@ -3,23 +3,31 @@ package Model.User;
 import common.BaseConstant;
 import common.BaseConstant.*;
 
-public class Member extends User{
+public class Member extends User {
 
     private String name;
     private String phoneNumber;
     private TypeMember typeMember;
     private Double totalSpending;
 
-    public Member(String id, String userName, String password, String name, String phoneNumber) {
+    public Member(String id, String name, String phoneNumber, String username, String password) {
         // TODO
-        super();
-
+        super(id, username, password);
+        this.name = name;
+        this.phoneNumber = phoneNumber;
     }
 
     public Member(String userName, String password, String name, String phoneNumber) {
         // TODO
         super();
 
+    }
+
+    public Member() {
+    }
+
+    public Member(String userName, String password) {
+        super(userName, password);
     }
 
 
@@ -32,5 +40,6 @@ public class Member extends User{
     public void showInfo() {
         this.toString();
     }
+
 
 }
