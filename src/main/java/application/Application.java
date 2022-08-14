@@ -14,5 +14,4 @@ public class Application {
         BaseHelper.printWelcomePage();
         menuService.mainMenu();
     }
-
 }

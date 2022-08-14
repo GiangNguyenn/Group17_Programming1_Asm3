@@ -66,7 +66,7 @@ public class BaseHelper {
 
     public static String generateIdForUser() {
         // TODO creating an id of Member, it must be not exist in lstMember
-        List<Integer> idArray = lstMember.stream().map(user -> Integer.valueOf(user.getId())).toList();
+        List<Integer> idArray = lstMember.stream().map(user -> Integer.valueOf(user.getId())).collect(Collectors.toList());
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }
