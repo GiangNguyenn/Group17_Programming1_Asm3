@@ -39,5 +39,4 @@ public abstract class User {
     public String getId() {
         return this.id;
     }
-
 }
