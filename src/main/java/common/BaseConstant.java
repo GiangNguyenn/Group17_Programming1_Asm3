@@ -14,4 +14,6 @@ public class BaseConstant {
 
     // Path
     public static final String USER_DATA_PATH = "src/main/resources/data/user.csv";
+    public static final String ORDER_DATA_PATH = "src/main/resources/data/order.csv";
+
 }
