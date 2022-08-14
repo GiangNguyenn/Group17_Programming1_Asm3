@@ -3,8 +3,8 @@ package common;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import Model.User.Member;
-import Model.User.User;
+import main.java.Model.User.Member;
+import main.java.Model.User.User;
 
 import static common.Utils.lstMember;
 import static java.lang.Integer.parseInt;
@@ -17,11 +17,11 @@ public class BaseHelper {
     }
 
     public static Boolean isLogin() {
-        return Utils.isLogin;
+        return common.Utils.isLogin;
     }
 
     public static User getCurrentUser() {
-        return Utils.current_user;
+        return common.Utils.current_user;
     }
 
     public static Member getMemberByUserName(String userName) {

@@ -1,4 +1,4 @@
-package Model.User;
+package main.java.Model.User;
 
 import common.BaseConstant;
 import common.BaseConstant.*;

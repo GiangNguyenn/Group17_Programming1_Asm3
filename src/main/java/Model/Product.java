@@ -1,4 +1,4 @@
-package order.management.system;
+package main.java.Model;
 
 /**
  * This class responsible for product information and manipulation

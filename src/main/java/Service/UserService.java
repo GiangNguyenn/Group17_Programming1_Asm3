@@ -1,4 +1,4 @@
-package Service;
+package main.java.Service;
 
 
 import java.io.BufferedReader;
@@ -7,8 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
-import Model.User.Member;
-import Model.User.User;
+import main.java.Model.User.Member;
+import main.java.Model.User.User;
 import common.BaseConstant;
 import common.BaseHelper;
 import common.Utils;

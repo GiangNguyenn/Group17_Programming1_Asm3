@@ -1,4 +1,4 @@
-package order.management.system;
+package main.java.Model;
 
 import java.util.ArrayList;
 import java.util.List;

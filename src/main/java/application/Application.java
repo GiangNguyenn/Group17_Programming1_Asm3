@@ -1,4 +1,4 @@
-package application;
+package main.java.application;
 
 import Service.MenuService;
 import Service.UserService;
