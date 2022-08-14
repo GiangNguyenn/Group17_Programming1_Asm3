@@ -1,5 +1,6 @@
 package Service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import common.BaseHelper;
@@ -13,9 +14,6 @@ public class MenuService {
         System.out.println("1. Login");
         System.out.println("2. Register");
         System.out.println("3. Exit");
-        if (!BaseHelper.isNullOrEmpty(Utils.current_user)) {
-            System.out.println("4. Logout");
-        }
         System.out.println("Your choice: ");
     }
 
@@ -35,9 +33,6 @@ public class MenuService {
                     break;
                 case "3":
                     exit();
-                case "4":
-                    userService.logout();
-                    break;
                 default:
                     System.out.println("Invalid choice, please try again!");
             }
@@ -51,9 +46,10 @@ public class MenuService {
 
     }
 
-    public void exit() {
+    public void exit() throws FileNotFoundException {
         UserService userService = new UserService();
         userService.writeData();
+        System.exit(-1);
     }
 
 }

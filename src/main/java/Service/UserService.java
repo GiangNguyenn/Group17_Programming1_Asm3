@@ -1,10 +1,7 @@
 package Service;
 
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 import Model.User.Member;
@@ -99,7 +96,6 @@ public class UserService implements UserInterface {
     public void logout() {
         Utils.isLogin = false;
         Utils.current_user = null;
-        System.out.println("You have logged out!");
     }
 
     @Override
@@ -125,8 +121,17 @@ public class UserService implements UserInterface {
     }
 
     @Override
-    public void writeData() {
-
+    public void writeData() throws FileNotFoundException {
+        File csvFile = new File(BaseConstant.USER_DATA_PATH);
+        PrintWriter out = new PrintWriter(csvFile);
+        if (BaseHelper.isNullOrEmpty(lstMember)) {
+            System.out.println("The List is empty or null");
+        } else {
+            for (Member member : lstMember) {
+                out.printf("%s,%s,%s,%s,%s\n", member.getId(), member.getUsername(), member.getPassword(), member.getName(), member.getPhoneNumber());
+            }
+        }
+        out.close();
     }
 
 }
