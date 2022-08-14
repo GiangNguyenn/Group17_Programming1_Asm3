@@ -1,4 +1,7 @@
-package main.java.Model.Shopping;
+package Model.Shopping;
+
+import Model.Products;
+import Model.User.Member;
 
 import java.time.*;
 import java.util.ArrayList;
@@ -119,17 +122,17 @@ public class Order {
      * @param user : What user object to display
      * @param orderDatabase : where data is taken from
      */
-    public static void displayOrdersOfCustomer(Member member, ArrayList<Order> orderDatabase){
-        ArrayList<Order> ordersOfCustomer =  findOrdersOfCustomer(member, );
-        if (ordersOfCustomer == null){
-            System.out.println("Orders not found!");
-            return;
-        }
-        for (Order order : ordersOfCustomer){
-            System.out.println(order.toString());
-            System.out.println(" ");
-        }
-    }
+//    public static void displayOrdersOfCustomer(Member member, ArrayList<Order> orderDatabase){
+//        ArrayList<Order> ordersOfCustomer =  findOrdersOfCustomer(member, );
+//        if (ordersOfCustomer == null){
+//            System.out.println("Orders not found!");
+//            return;
+//        }
+//        for (Order order : ordersOfCustomer){
+//            System.out.println(order.toString());
+//            System.out.println(" ");
+//        }
+//    }
     // Static version of toString
     public static void displayOrder(Order order){
         System.out.println(order.toString());

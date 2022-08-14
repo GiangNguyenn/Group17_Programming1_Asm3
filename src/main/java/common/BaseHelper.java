@@ -64,7 +64,7 @@ public class BaseHelper {
         return matchedUser.isPresent();
     }
 
-    public static String generateIdForUser() {
+    public static String generateUniqueId() {
         // TODO creating an id of Member, it must be not exist in lstMember
         List<Integer> idArray = lstMember.stream().map(user -> Integer.valueOf(user.getId())).toList();
         Integer maxId = Collections.max(idArray);

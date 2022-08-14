@@ -82,7 +82,7 @@ public class UserService implements UserInterface {
                 System.out.println("This username has been used! Please register with another one.");
                 userExists = true;
             } else {
-                String id = BaseHelper.generateIdForUser();
+                String id = BaseHelper.generateUniqueId();
                 lstMember.add(new Member(id, name, phoneNumber, username, password));
                 System.out.println(lstMember);
                 break;

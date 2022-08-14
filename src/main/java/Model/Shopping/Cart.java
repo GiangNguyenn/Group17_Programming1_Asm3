@@ -1,7 +1,12 @@
-package main.java.Model.Shopping;
+package Model.Shopping;
 
+import Model.Products;
+import Model.Shopping.Order;
+import Model.User.Member;
 
 import java.util.*;
+
+import static common.BaseHelper.generateUniqueId;
 
 
 public class Cart {
@@ -18,7 +23,9 @@ public class Cart {
     }
 
     // Getters
-    public String getId() { return id;}
+    public String getId() {
+        return id;
+    }
 
     public Member getMember() {
         return member;
@@ -35,40 +42,34 @@ public class Cart {
         // Adding a product to the array
         products.add(product);
     }
-    public void removeProductFromCart(Products targetProduct){
+
+    public void removeProductFromCart(Products targetProduct) {
         // Iterating through the list to find Product
-        for ( int i = this.getProducts().size() - 1; i >= 0; i--){
-            if (this.getProducts().get(i).equals(targetProduct)){
-               this.getProducts().remove(i);
+        for (int i = this.getProducts().size() - 1; i >= 0; i--) {
+            if (this.getProducts().get(i).equals(targetProduct)) {
+                this.getProducts().remove(i);
             }
         }
     }
-    /**
-     * This method purpose is for creating a unique ID each time it is called
-     * @return String id
-     */
-    public static String idUnique(){
-        ArrayList<Integer> userArray = Arrays.stream(userDatabase)
-                .map(user -> Integer.valueOf(member.getID())).toList();
-        Integer max = Collections.max(userArray);
-        return String.valueOf((max+1));
-    }
+
 
     // Program constructor
-    /** This constructor only get 1 parameter in order to create a Cart
+
+    /**
+     * This constructor only get 1 parameter in order to create a Cart
      * Other values are automatically created and are better being systematic
      * Since these values act as unique feature for each Cart/main.java.Model.Shopping.Order
+     *
      * @param member: What customer do this cart belongs?
      * @return Cart
      */
     public static Cart createCart(Member member) {
-        return new Cart(idUnique(),member,new ArrayList<Products>());
+        return new Cart(generateUniqueId(), member, new ArrayList<Products>());
     }
 
-    public static Order finishCart(Cart cart){          // Innit when done shopping
+    public static Order finishCart(Cart cart) {          // Innit when done shopping
         return Order.createOrder(cart);
     }
-
 
 
     // Display methods
