@@ -1,10 +1,12 @@
 package common;
 
+import Model.User.Member;
+import Model.User.User;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
-import main.java.Model.User.Member;
-import main.java.Model.User.User;
+
 
 import static common.Utils.lstMember;
 import static java.lang.Integer.parseInt;

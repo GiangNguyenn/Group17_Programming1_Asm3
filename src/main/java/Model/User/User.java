@@ -1,4 +1,4 @@
-package main.java.Model.User;
+package Model.User;
 
 import static common.Utils.lstMember;
 

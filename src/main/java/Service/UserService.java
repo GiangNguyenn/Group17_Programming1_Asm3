@@ -1,11 +1,11 @@
-package main.java.Service;
+package Service;
 
 
 import java.io.*;
 import java.util.Scanner;
 
-import main.java.Model.User.Member;
-import main.java.Model.User.User;
+
+import Model.User.Member;
 import common.BaseConstant;
 import common.BaseHelper;
 import common.Utils;
