@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import Model.Productions.Order;
+import Model.Productions.Product;
 import Model.User.Member;
 import Model.User.User;
 import common.BaseConstant.TypeMember;
@@ -32,6 +34,11 @@ public  class Utils {
     /* Adding user to lstMember after registering successfully */
     public static List<Member> lstMember = new ArrayList<Member>();
 
+    /* Adding products to lstMember after registering successfully */
+    public static List<Product> lstProduct = new ArrayList<Product>();
+
+    /* Adding products to lstMember after registering successfully */
+    public static List<Order> lstOrders = new ArrayList<Order>();
 
     // Some tools useful
     public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

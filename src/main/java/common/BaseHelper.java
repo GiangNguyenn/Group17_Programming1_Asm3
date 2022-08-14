@@ -1,13 +1,10 @@
 package common;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
 import Model.User.Member;
 import Model.User.User;
 
 import static common.Utils.lstMember;
-import static java.lang.Integer.parseInt;
 
 public class BaseHelper {
 
@@ -25,8 +22,8 @@ public class BaseHelper {
     }
 
     public static Member getMemberByUserName(String userName) {
-        // TODO get a member from lstMember with userName
-        return new Member(null, null, null, null, null);
+        Optional<Member> op = lstMember.stream().filter(user -> user.getPassword().equalsIgnoreCase(userName)).findFirst();
+        return op.isPresent()? op.get() : null;
     }
 
     @SuppressWarnings("rawtypes")
@@ -55,32 +52,28 @@ public class BaseHelper {
     }
 
     public static Boolean checkingUserLoginInfo(String username, String password) {
-        /*
-         * TODO checking infor of an Member.
-         * return true if username and password are correct
-         */
-        Optional<Member> matchedUser = lstMember.stream().filter(user -> Objects.equals(user.getPassword(), password) && Objects.equals(user.getUsername(), username)).findFirst();
-
-        return matchedUser.isPresent();
+        return lstMember.stream()
+                .filter(user -> Objects.equals(user.getPassword(), password)
+                        && Objects.equals(user.getUsername(), username))
+                .findFirst().isPresent();
     }
 
     public static String generateIdForUser() {
-        // TODO creating an id of Member, it must be not exist in lstMember
         List<Integer> idArray = lstMember.stream().map(user -> Integer.valueOf(user.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }
 
     public static boolean checkExistUsername(String username) {
-		/*
-		TODO check an id of Member
-		return true if exist it in lstMember
-		*/
         return lstMember.stream().map(User::getUsername).anyMatch(username::equals);
     }
 
     public static void clearConsole() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
+    }
+
+    public static String generateIdForProduction() {
+        return null;
     }
 }

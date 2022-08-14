@@ -26,22 +26,14 @@ public class UserService implements UserInterface {
             return;
         }
 
-        Scanner scanner = new Scanner(System.in);
-
-        // TODO: process get input to login
         System.out.println("Process login:");
         System.out.println("Username: ");
-        String username = scanner.nextLine();
+        String username = Utils.reader.readLine();
         System.out.println("Password: ");
-        String password = scanner.nextLine();
+        String password = Utils.reader.readLine();
 
-        // TODO: declare new User
+        Member member = BaseHelper.getMemberByUserName(username);
 
-        Member member = new Member(username, password);
-
-//		After successful login, set the flag in Utils to re-use.
-
-//		ex:
         if (!BaseHelper.isNullOrEmpty(member) && BaseHelper.checkingUserLoginInfo(username, password)) {
             Member validated = null;
             for (Member validatedMember : lstMember) {
@@ -57,7 +49,7 @@ public class UserService implements UserInterface {
             return;
         }
 
-//		can be modified if you want.
+        System.out.println("Login fail, please try again! ");
     }
 
     @Override
