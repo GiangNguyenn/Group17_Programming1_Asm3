@@ -9,6 +9,7 @@ import java.util.Random;
 
 import Model.Productions.Order;
 import Model.Productions.Product;
+import Model.User.Admin;
 import Model.User.Member;
 import Model.User.User;
 import common.BaseConstant.TypeMember;
@@ -30,6 +31,9 @@ public  class Utils {
             put(TypeMember.PLATINUM, (float) 0.85);
         }
     };
+
+    /* Adding user to lstMember after registering successfully */
+    public static List<Admin> lstAdmin = new ArrayList<Admin>();
 
     /* Adding user to lstMember after registering successfully */
     public static List<Member> lstMember = new ArrayList<Member>();
