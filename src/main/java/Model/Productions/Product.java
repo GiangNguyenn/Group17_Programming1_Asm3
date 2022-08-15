@@ -9,6 +9,17 @@ public class Product {
     String category;
     String supplier;
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id='" + id + '\'' +
+                ", productName='" + productName + '\'' +
+                ", price='" + price + '\'' +
+                ", category='" + category + '\'' +
+                ", supplier='" + supplier + '\'' +
+                '}';
+    }
+
     public Product(String id, String productName, String price, String category, String supplier) {
         this.id = id;
         this.productName = productName;

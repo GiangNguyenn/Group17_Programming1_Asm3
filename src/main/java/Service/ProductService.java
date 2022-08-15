@@ -8,12 +8,10 @@ import interfaces.ProductInterface;
 import java.io.*;
 import java.util.Scanner;
 
-
 import static common.BaseConstant.PRODUCT_DATA_PATH;
 import static common.Utils.*;
 
 public class ProductService implements ProductInterface {
-
     @Override
     public void loadData() {
         // TODO Auto-generated method stub
@@ -57,10 +55,35 @@ public class ProductService implements ProductInterface {
 
     @Override
     public void showAllProduct() {
-        // TODO Auto-generated method stub
-
+        for (Product product : lstProduct) {
+            System.out.println(product);
+        }
     }
-    public void showProductsByCategory() {
+
+    public static void showProductsByCategory() {
+        printListOfCategories();
+        List<Product> searchedProducts = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Input categories: ");
+        String categoryInput = scanner.nextLine();
+        for (Product product : lstProduct) {
+            if (Objects.equals(product.getCategory(), categoryInput)) {
+                searchedProducts.add(product);
+            }
+        }
+        if (!BaseHelper.isNullOrEmpty(searchedProducts)) {
+            for (Product product : searchedProducts) {
+                System.out.println(product);
+            }
+        }
+    }
+
+
+    public static void printListOfCategories() {
+        List<String> uniqueCategories = lstProduct.stream().map(Product::getCategory).distinct().toList();
+        for (int i = 0; i < uniqueCategories.size(); i++) {
+            System.out.println(i + " " + uniqueCategories.get(i));
+        }
     }
 
     public void viewOrderDetails() {
