@@ -1,7 +1,5 @@
 package Model.User;
 
-import static common.Utils.lstMember;
-
 public abstract class User {
     private String id;
     private String username;
@@ -14,7 +12,11 @@ public abstract class User {
         this.password = password;
     }
 
-    public User(String id, String userName, String password, Boolean isAdmin) {
+    public User(String id, String username, String password, Boolean isAdmin) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.isAdmin = isAdmin;
 
     }
 
@@ -39,4 +41,6 @@ public abstract class User {
     public String getId() {
         return this.id;
     }
+
+
 }

@@ -1,13 +1,13 @@
 package common;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
+import Model.User.Admin;
 import Model.User.Member;
 import Model.User.User;
 
+import static common.Utils.lstAdmin;
 import static common.Utils.lstMember;
-import static java.lang.Integer.parseInt;
 
 public class BaseHelper {
 
@@ -15,18 +15,21 @@ public class BaseHelper {
         // Todo prin welcome page in item C
         System.out.println("********* Here is welcome page *********");
     }
-
     public static Boolean isLogin() {
         return Utils.isLogin;
     }
-
     public static User getCurrentUser() {
         return Utils.current_user;
     }
 
     public static Member getMemberByUserName(String userName) {
-        // TODO get a member from lstMember with userName
-        return new Member(null, null, null, null, null);
+        Optional<Member> op = lstMember.stream().filter(user -> user.getUsername().equalsIgnoreCase(userName)).findFirst();
+        return op.isPresent() ? op.get() : null;
+    }
+
+    public static Admin getAdminByUserName(String userName) {
+        Optional<Admin> op = lstAdmin.stream().filter(admin -> admin.getUsername().equalsIgnoreCase(userName)).findFirst();
+        return op.isPresent() ? op.get() : null;
     }
 
     @SuppressWarnings("rawtypes")
@@ -34,7 +37,6 @@ public class BaseHelper {
         if (value == null) {
             return true;
         }
-
         if (value instanceof String) {
             return "".equals(value.toString().trim());
         } else if (value instanceof Collection) {
@@ -54,33 +56,34 @@ public class BaseHelper {
         }
     }
 
-    public static Boolean checkingUserLoginInfo(String username, String password) {
-        /*
-         * TODO checking infor of an Member.
-         * return true if username and password are correct
-         */
-        Optional<Member> matchedUser = lstMember.stream().filter(user -> Objects.equals(user.getPassword(), password) && Objects.equals(user.getUsername(), username)).findFirst();
+    public static Boolean checkingMemberLoginInfo(String username, String password) {
+        return lstMember.stream()
+                .anyMatch(user -> Objects.equals(user.getPassword(), password)
+                        && Objects.equals(user.getUsername(), username));
+    }
 
-        return matchedUser.isPresent();
+    public static Boolean checkingAdminLoginInfo(String username, String password) {
+        return lstAdmin.stream()
+                .anyMatch(admin -> Objects.equals(admin.getPassword(), password)
+                        && Objects.equals(admin.getUsername(), username));
     }
 
     public static String generateIdForUser() {
-        // TODO creating an id of Member, it must be not exist in lstMember
-        List<Integer> idArray = lstMember.stream().map(user -> Integer.valueOf(user.getId())).collect(Collectors.toList());
+        List<Integer> idArray = lstMember.stream().map(user -> Integer.valueOf(user.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }
 
     public static boolean checkExistUsername(String username) {
-		/*
-		TODO check an id of Member
-		return true if exist it in lstMember
-		*/
         return lstMember.stream().map(User::getUsername).anyMatch(username::equals);
     }
 
     public static void clearConsole() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
+    }
+
+    public static String generateIdForProduction() {
+        return null;
     }
 }

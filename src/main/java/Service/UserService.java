@@ -4,17 +4,21 @@ package Service;
 import java.io.*;
 import java.util.Scanner;
 
+import Model.User.Admin;
 import Model.User.Member;
-import Model.User.User;
 import common.BaseConstant;
 import common.BaseHelper;
 import common.Utils;
 import interfaces.UserInterface;
 
+import static common.Utils.lstAdmin;
 import static common.Utils.lstMember;
 
 public class UserService implements UserInterface {
 
+    /**
+     * @throws IOException
+     */
     @Override
     public void login() throws IOException {
 
@@ -23,45 +27,38 @@ public class UserService implements UserInterface {
             return;
         }
 
-        Scanner scanner = new Scanner(System.in);
-
-        // TODO: process get input to login
         System.out.println("Process login:");
         System.out.println("Username: ");
-        String username = scanner.nextLine();
+        String username = Utils.reader.readLine();
         System.out.println("Password: ");
-        String password = scanner.nextLine();
+        String password = Utils.reader.readLine();
 
-        // TODO: declare new User
+        Member member = BaseHelper.getMemberByUserName(username);
 
-        Member member = new Member(username, password);
+        Admin admin = BaseHelper.getAdminByUserName(username);
 
-//		After successful login, set the flag in Utils to re-use.
-
-//		ex:
-        if (!BaseHelper.isNullOrEmpty(member) && BaseHelper.checkingUserLoginInfo(username, password)) {
-            Member validated = null;
-            for (Member validatedMember : lstMember) {
-                if (member.getUsername().equals(username)) {
-                    validated = validatedMember;
-                }
-            }
-
+        if (!BaseHelper.isNullOrEmpty(member) && BaseHelper.checkingMemberLoginInfo(username, password)) {
             Utils.isLogin = true;
-            Utils.current_user = validated;
-            System.out.println("Login success! " + validated.toString());
+            Utils.current_user = member;
+            System.out.println("Login success! " + member);
             System.out.println(Utils.current_user);
             return;
         }
 
-//		can be modified if you want.
+        if (!BaseHelper.isNullOrEmpty(admin) && BaseHelper.checkingAdminLoginInfo(username, password)) {
+            Utils.isLogin = true;
+            Utils.isAdmin = true;
+            Utils.current_user = admin;
+            System.out.println(Utils.current_user);
+            return;
+        }
+
+        System.out.println("Login fail, please try again! ");
     }
 
     @Override
     public void register() throws IOException {
-
         // TODO: process get input to login
-
         Scanner scanner = new Scanner(System.in);
         boolean userExists = false;
 
@@ -86,7 +83,7 @@ public class UserService implements UserInterface {
             }
         }
         /*
-         * TODO: Checking exitÒs username
+         * TODO: Checking exits username
          * creating new Member if this username is not exits
          * after that, switch to login page
          * */
@@ -96,24 +93,30 @@ public class UserService implements UserInterface {
     public void logout() {
         Utils.isLogin = false;
         Utils.current_user = null;
+        System.out.println("You have logged out!");
     }
 
     @Override
     public void loadData() {
         try {
-            BufferedReader userData = new BufferedReader(new FileReader(BaseConstant.USER_DATA_PATH));
+            BufferedReader userData = Utils.fileReader(BaseConstant.USER_DATA_PATH);
             String dataRow;
 
             while ((dataRow = userData.readLine()) != null) {
                 String[] detailed = dataRow.split(",");
-                String id = detailed[0];
-                String name = detailed[1];
-                String phone = detailed[2];
-                String userName = detailed[3];
-                String password = detailed[4];
-
-                lstMember.add(new Member(id, name, phone, userName, password));
-                System.out.println(lstMember);
+                if (detailed.length == 5) {
+                    String id = detailed[0];
+                    String name = detailed[1];
+                    String phone = detailed[2];
+                    String userName = detailed[3];
+                    String password = detailed[4];
+                    lstMember.add(new Member(id, name, phone, userName, password));
+                } else {
+                    String adminId = detailed[0];
+                    String adminUsername = detailed[1];
+                    String adminPassword = detailed[2];
+                    lstAdmin.add(new Admin(adminId, adminUsername, adminPassword));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -122,13 +125,15 @@ public class UserService implements UserInterface {
 
     @Override
     public void writeData() throws FileNotFoundException {
-        File csvFile = new File(BaseConstant.USER_DATA_PATH);
-        PrintWriter out = new PrintWriter(csvFile);
-        if (BaseHelper.isNullOrEmpty(lstMember)) {
+        PrintWriter out = new PrintWriter(BaseConstant.USER_DATA_PATH);
+        if (BaseHelper.isNullOrEmpty(lstMember) || BaseHelper.isNullOrEmpty(lstAdmin)) {
             System.out.println("The List is empty or null");
         } else {
             for (Member member : lstMember) {
-                out.printf("%s,%s,%s,%s,%s\n", member.getId(), member.getUsername(), member.getPassword(), member.getName(), member.getPhoneNumber());
+                out.printf("%s,%s,%s,%s,%s\n", member.getId(), member.getName(), member.getPassword(), member.getUsername(), member.getPhoneNumber());
+            }
+            for (Admin admin : lstAdmin) {
+                out.printf("%s,%s,%s\n", admin.getId(), admin.getUsername(), admin.getPassword());
             }
         }
         out.close();
