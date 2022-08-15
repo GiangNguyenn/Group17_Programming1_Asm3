@@ -1,8 +1,7 @@
 package Service;
 
-import Model.Productions.Product;
+import Model.Productions.*;
 import Model.User.*;
-import Shopping.Order;
 import common.BaseConstant;
 import common.BaseHelper;
 import common.Utils;
@@ -80,12 +79,16 @@ public class OrderService implements OrderInterface {
     }
 
     public void showAllOrderOfCustomer(Member member){
-        for (Order order : Order.findOrdersOfCustomer((Model.User.Member) member, (ArrayList<Order>) lstOrder)){
+        ArrayList<Order> customerOrders = new ArrayList<>();
+        for (Order order : lstOrder){
+            if (order.getMember().equals(member)){
+                customerOrders.add(order);
+            }
+        }
+        for (Order order : customerOrders){
             System.out.println(order.toString());
         }
     }
-
-
 
     public static String convertToString(LocalDateTime date) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
@@ -111,5 +114,7 @@ public class OrderService implements OrderInterface {
         }
         return resultArray;
     }
+
+
 
 }

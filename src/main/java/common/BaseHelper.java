@@ -2,12 +2,12 @@ package common;
 
 import java.util.*;
 
+import Model.Productions.Product;
 import Model.User.Admin;
 import Model.User.Member;
 import Model.User.User;
 
-import static common.Utils.lstAdmin;
-import static common.Utils.lstMember;
+import static common.Utils.*;
 
 public class BaseHelper {
 
@@ -29,6 +29,11 @@ public class BaseHelper {
 
     public static Admin getAdminByUserName(String userName) {
         Optional<Admin> op = lstAdmin.stream().filter(admin -> admin.getUsername().equalsIgnoreCase(userName)).findFirst();
+        return op.isPresent() ? op.get() : null;
+    }
+
+    public static Product getProductByProductId(String id) {
+        Optional<Product> op = lstProduct.stream().filter(product -> product.getId().equalsIgnoreCase(id)).findFirst();
         return op.isPresent() ? op.get() : null;
     }
 
