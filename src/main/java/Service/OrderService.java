@@ -1,6 +1,7 @@
 package Service;
 
 import Model.Productions.Product;
+import Model.User.*;
 import Shopping.Order;
 import common.BaseConstant;
 import common.BaseHelper;
@@ -8,6 +9,7 @@ import common.Utils;
 import interfaces.OrderInterface;
 
 import java.io.*;
+import java.lang.reflect.Member;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ public class OrderService implements OrderInterface {
             String dataRow;
             while ((dataRow = orderData.readLine()) != null) {
                 String[] detailed = dataRow.split(",");
+
                 String idString = detailed[0];
                 String memberString = detailed[1];
                 String productsString = detailed[2];
@@ -51,7 +54,7 @@ public class OrderService implements OrderInterface {
 
     //TODO: Giang + Khang
     @Override
-    public void writeData() throws FileNotFoundException {
+    public void  writeData() throws FileNotFoundException {
         // TODO Auto-generated method stub
         PrintWriter out = new PrintWriter(BaseConstant.ORDER_DATA_PATH);
         if (!BaseHelper.isNullOrEmpty(lstOrder)){
@@ -67,27 +70,35 @@ public class OrderService implements OrderInterface {
         out.close();
     }
 
-
     //TODO: Giang + Khang
     @Override
     public void showAllOder() {
         // TODO Auto-generated method stub
-
-
-
+        for (Order order : lstOrder){
+            System.out.print(order.toString());
+        }
     }
+
+    public void showAllOrderOfCustomer(Member member){
+        for (Order order : Order.findOrdersOfCustomer((Model.User.Member) member, (ArrayList<Order>) lstOrder)){
+            System.out.println(order.toString());
+        }
+    }
+
+
+
     public static String convertToString(LocalDateTime date) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         return date.format(formatter);
     }
 
     public static String convertToString(List<Product> productList){
-        String resultString = new String("[");
+        String resString = new String("[");
         for (Product product : productList){
-            resultString = resultString+product.getId()+"and";
+            resString = resString+product.getId()+"and";
         }
-        resultString = resultString+"]";
-        return resultString;
+        resString = resString+"]";
+        return resString;
     }
 
     static ArrayList<Product> convertToProductList(String inputString){
@@ -100,5 +111,7 @@ public class OrderService implements OrderInterface {
         }
         return resultArray;
     }
+
+
 
 }

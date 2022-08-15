@@ -88,15 +88,7 @@ public class Order {
      * @param orderDatabase: Where the information of Orders are stored
      * @return resultArrayList
      */
-    public static ArrayList<Order> findOrdersOfCustomer (Member targetMember, Order[] orderDatabase){
-        ArrayList<Order> resultArrayList = new ArrayList<>();
-        for (Order order : orderDatabase){
-            if (order.getMember().equals(targetMember)){
-                resultArrayList.add(order);
-            }
-        }
-        return resultArrayList;
-    }
+
     public static ArrayList<Order> findOrdersOfCustomer (Member targetMember, ArrayList<Order> orderDatabase){
         ArrayList<Order> resultArrayList = new ArrayList<>();
         for (Order order : orderDatabase){
