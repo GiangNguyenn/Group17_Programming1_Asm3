@@ -1,6 +1,5 @@
 package Model.User;
 
-import common.BaseConstant;
 import common.BaseConstant.*;
 
 public class Member extends User {
@@ -11,7 +10,7 @@ public class Member extends User {
 
     private String name;
     private String phoneNumber;
-    private TypeMember typeMember;
+    private TypeMember memberType;
     private Double totalSpending;
 
     public Member(String id, String name, String phoneNumber, String username, String password) {
@@ -38,7 +37,7 @@ public class Member extends User {
     @Override
     public String toString() {
         return "Member [name=" + name + ", phoneNumber=" + phoneNumber + ", totalSpending=" + totalSpending
-                + ", typeMember=" + typeMember + "]";
+                + ", typeMember=" + memberType + "]";
     }
 
     public void showInfo() {
@@ -51,4 +50,11 @@ public class Member extends User {
     }
 
 
+    public Double getTotalSpending() {
+        return this.totalSpending;
+    }
+
+    public TypeMember getMemberType() {
+        return this.memberType;
+    }
 }

@@ -8,6 +8,6 @@ public class Admin extends User {
 
     @Override
     public String toString() {
-        return "Admin [id=" + this.getId() + ", username=" + this.getUsername() +"]";
+        return "Admin [id=" + this.getId() + ", username=" + this.getUsername() + "]";
     }
 }

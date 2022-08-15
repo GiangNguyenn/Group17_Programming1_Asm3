@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import Model.Productions.Order;
+import Model.User.Member;
 import common.BaseHelper;
 import common.Utils;
 
@@ -89,7 +90,7 @@ public class MenuService {
 //                    productService.viewOrderDetails();
                     break;
                 case "4":
-//                    orderService.();
+                    UserService.printUserProfile((Member) Utils.current_user);
                     break;
                 case "5":
                     userService.logout();
