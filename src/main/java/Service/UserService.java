@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 import Model.User.Admin;
 import Model.User.Member;
-import Model.User.User;
 import common.BaseConstant;
 import common.BaseHelper;
 import common.Utils;
