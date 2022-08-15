@@ -5,6 +5,10 @@ import common.BaseConstant.*;
 
 public class Member extends User {
 
+    public String getName() {
+        return name;
+    }
+
     private String name;
     private String phoneNumber;
     private TypeMember typeMember;
@@ -39,6 +43,11 @@ public class Member extends User {
 
     public void showInfo() {
         this.toString();
+    }
+
+
+    public Object getPhoneNumber() {
+        return this.phoneNumber;
     }
 
 
