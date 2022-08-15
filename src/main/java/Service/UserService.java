@@ -149,5 +149,4 @@ public class UserService implements UserInterface {
             System.out.println("Member Type: " + (currentUser.getMemberType() == null ? "NORMAL" : currentUser.getMemberType()));
         }
     }
-
 }

@@ -3,7 +3,6 @@ package Service;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import Model.Productions.Order;
 import Model.User.Member;
 import common.BaseHelper;
 import common.Utils;
@@ -11,7 +10,6 @@ import common.Utils;
 public class MenuService {
 
     public static void printMainMenu() {
-        // Todo: Print main menu
         System.out.println("Select function: ");
         System.out.println("1. Login");
         System.out.println("2. Register");
@@ -23,6 +21,9 @@ public class MenuService {
         System.out.println("Your choice: ");
     }
 
+    /**
+     * Print out the main menu with customer options
+     */
     public void mainMenu() {
         BaseHelper.clearConsole();
         UserService userService = new UserService();
@@ -34,21 +35,14 @@ public class MenuService {
             String choice = Utils.reader.readLine();
 
             switch (choice) {
-                case "1":
+                case "1" -> {
                     userService.login();
                     printMenuByUserRole();
-                    break;
-                case "2":
-                    userService.register();
-                    break;
-                case "3":
-                    productService.showAllProduct();
-                    break;
-                case "4":
-                    exit();
-                    break;
-                default:
-                    System.out.println("Invalid choice, please try again!");
+                }
+                case "2" -> userService.register();
+                case "3" -> productService.showAllProduct();
+                case "4" -> exit();
+                default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -81,10 +75,10 @@ public class MenuService {
 
             switch (choice) {
                 case "1":
-//                    productService.showAllProduct();
+                    productService.showAllProduct();
                     break;
                 case "2":
-//                    productService.showProductsByCategory();
+                    ProductService.showProductsByCategory();
                     break;
                 case "3":
 //                    productService.viewOrderDetails();
@@ -157,11 +151,11 @@ public class MenuService {
             adminMenu();
             return;
         }
-        if (Utils.isLogin && !Utils.isAdmin) {
+        if (Utils.isLogin) {
             memberMenu();
-            return;
         }
     }
+
 
     public void exit() throws FileNotFoundException {
         UserService userService = new UserService();
