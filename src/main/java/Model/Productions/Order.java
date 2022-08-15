@@ -1,23 +1,30 @@
 package Model.Productions;
 
+import Model.User.*;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
     private String id;
-    private String member_id;
-    private Double totalPrice;
-    private List<Item> lstItems;
+    private Member member;
+    private List<Product> products;
+    private LocalDateTime created_at;
     private Boolean isPaid;
+    private Double totalPrice;
 
 
-    public Order(String id, String memberId) {
+    public Order(String id, Member member, List<Product> products, LocalDateTime created_at, Boolean isPaid, Double totalPrice) {
         this.id = id;
-        this.member_id = memberId;
-        this.totalPrice = 0.0;
-        this.lstItems = new ArrayList<Item>();
-        isPaid = false;
+        this.member = member;
+        this.products = products;
+        this.created_at = created_at;
+        this.isPaid = isPaid;
+        this.totalPrice = totalPrice;
     }
+
+
 
     public String getId() {
         return id;
@@ -27,12 +34,28 @@ public class Order {
         this.id = id;
     }
 
-    public String getMemberId() {
-        return member_id;
+    public Member getMember() {
+        return member;
     }
 
-    public void setMemberId(String id) {
-        this.member_id = id;
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 
     public Double getTotalPrice() {
@@ -43,15 +66,41 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public List<Item> getLstItems() {
-        return lstItems;
+    public Boolean getPaid() {
+        return isPaid;
     }
 
-    public void setLstItems(List<Item> lstItems) {
-        this.lstItems = lstItems;
+    public void setPaid(Boolean paid) {
+        isPaid = paid;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id='" + id + '\'' +
+                ", member=" + member +
+                ", products=" + products +
+                ", created_at=" + created_at +
+                ", isPaid=" + isPaid +
+                ", totalPrice=" + totalPrice +
+                '}';
+    }
+
+
+    public String toStringCustom() {
+        return "Order{" +
+                "\nid='" + id + '\'' +
+                ", member=" + member +
+                ", \nproducts=" + products.toString() +
+                ", \ncreated_at=" + created_at +
+                ", totalPrice=" + totalPrice +
+                ", isPaid=" + isPaid +
+                '}';
+    }
+
 
     public void calculateTotalPrice() {
-        // TODO
-    }
+
+
+        }
 }

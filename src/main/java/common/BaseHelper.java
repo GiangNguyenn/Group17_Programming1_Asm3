@@ -2,10 +2,11 @@ package common;
 
 import java.util.*;
 
-import Model.Productions.Product;
+import Model.Productions.*;
 import Model.User.Admin;
 import Model.User.Member;
 import Model.User.User;
+import Service.OrderService;
 
 import static common.Utils.*;
 
@@ -22,18 +23,29 @@ public class BaseHelper {
         return Utils.current_user;
     }
 
+    //Customer
     public static Member getMemberByUserName(String userName) {
         Optional<Member> op = lstMember.stream().filter(user -> user.getUsername().equalsIgnoreCase(userName)).findFirst();
         return op.isPresent() ? op.get() : null;
     }
-
+    public static Member getMemberById(String id) {
+        Optional<Member> op = lstMember.stream().filter(user -> user.getId().equalsIgnoreCase(id)).findFirst();
+        return op.isPresent() ? op.get() : null;
+    }
     public static Admin getAdminByUserName(String userName) {
         Optional<Admin> op = lstAdmin.stream().filter(admin -> admin.getUsername().equalsIgnoreCase(userName)).findFirst();
         return op.isPresent() ? op.get() : null;
     }
 
+    //Product
     public static Product getProductByProductId(String id) {
         Optional<Product> op = lstProduct.stream().filter(product -> product.getId().equalsIgnoreCase(id)).findFirst();
+        return op.isPresent() ? op.get() : null;
+    }
+
+    //Order
+    public static Order getOrderByOrderId(String id) {
+        Optional<Order> op = lstOrder.stream().filter(order -> order.getId().equalsIgnoreCase(id)).findFirst();
         return op.isPresent() ? op.get() : null;
     }
 
