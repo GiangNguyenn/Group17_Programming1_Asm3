@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 import Model.User.Admin;
 import Model.User.Member;
-import Model.User.User;
 import common.BaseConstant;
 import common.BaseHelper;
 import common.Utils;
@@ -149,5 +148,4 @@ public class UserService implements UserInterface {
             System.out.println("Member Type: " + (currentUser.getMemberType() == null ? "NORMAL" : currentUser.getMemberType()));
         }
     }
-
 }
