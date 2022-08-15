@@ -17,6 +17,17 @@ public class Product {
         this.supplier = supplier;
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id='" + id + '\'' +
+                ", productName='" + productName + '\'' +
+                ", price='" + price + '\'' +
+                ", category='" + category + '\'' +
+                ", supplier='" + supplier + '\'' +
+                '}';
+    }
+
     public Product(String productName, String price, String category, String supplier) {
         this.id = BaseHelper.generateIdForProduction();
         this.productName = productName;
@@ -26,7 +37,7 @@ public class Product {
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(String id) {

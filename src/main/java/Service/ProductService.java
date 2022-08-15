@@ -1,30 +1,90 @@
 package Service;
 
+import Model.Productions.Product;
+import Model.User.User;
+import common.BaseConstant;
 import interfaces.ProductInterface;
+
+import java.io.*;
+import java.util.Scanner;
+
+
+import static common.BaseConstant.PRODUCT_DATA_PATH;
+import static common.Utils.*;
 
 public class ProductService implements ProductInterface {
 
-    //    TODO: Loan
     @Override
     public void loadData() {
-
+        // TODO Auto-generated method stub
+        try {
+            BufferedReader productData = new BufferedReader(new FileReader(BaseConstant.PRODUCT_DATA_PATH));
+            String record;
+            while ((record = productData.readLine()) != null){
+                String[] detailed = record.split(",");
+                String id = detailed[0];
+                String productName = detailed[1];
+                String price = detailed[2];
+                String category = detailed[3];
+                String supplier = detailed[4];
+                lstProduct.add(new Product(id, productName, price, category, supplier));
+            }
+            System.out.println(lstProduct);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
-    //    TODO: Loan
     @Override
-    public void writeData() {
-
+    public void writeData() throws FileNotFoundException {
+        // TODO Auto-generated method stub
+        File productionCsvFile = new File(PRODUCT_DATA_PATH);
+        File csvFile = new File(productionCsvFile.toURI());
+        PrintWriter out = new PrintWriter(csvFile);
+//        Product iphone = new Product("123", "iphone12", "122$", "phone", "samsung");
+//        lstProduct.add(iphone);
+        System.out.println(lstProduct);
+        boolean ans = lstProduct.isEmpty();
+        if (ans)
+            System.out.println("The List is empty");
+        else
+            for (Product product : lstProduct){
+                out.printf("%s,%s,%s,%s,%s\n", product.getId(), product.getProductName(), product.getPrice(), product.getCategory(), product.getSupplier());
+            }
+        out.close();
     }
 
-    // TODO: Loan
     @Override
     public void showAllProduct() {
+        // TODO Auto-generated method stub
 
     }
-
     public void showProductsByCategory() {
     }
 
     public void viewOrderDetails() {
+    }
+
+    public void addProduct(){
+
+    }
+    public void deleteProduct(){
+        try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Please input Product ID you want to delete:");
+            String userInput = scanner.nextLine();
+            BufferedReader productData = new BufferedReader(new FileReader(BaseConstant.PRODUCT_DATA_PATH));
+            System.out.println(lstProduct);
+            for (int i = 0; i < lstProduct.size(); i++) {
+                if(lstProduct.get(i).getId().equals(userInput)){
+                    lstProduct.remove(i);
+                }
+            }
+            writeData();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }
