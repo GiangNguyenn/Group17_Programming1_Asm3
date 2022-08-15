@@ -80,7 +80,13 @@ public class OrderService implements OrderInterface {
     }
 
     public void showAllOrderOfCustomer(Member member){
-        for (Order order : Order.findOrdersOfCustomer((Model.User.Member) member, (ArrayList<Order>) lstOrder)){
+        ArrayList<Order> customerOrders = new ArrayList<>();
+        for (Order order : lstOrder){
+            if (order.getMember().equals(member)){
+                customerOrders.add(order);
+            }
+        }
+        for (Order order : customerOrders){
             System.out.println(order.toString());
         }
     }

@@ -22,6 +22,7 @@ public class BaseHelper {
         return Utils.current_user;
     }
 
+
     public static Member getMemberByUserName(String userName) {
         Optional<Member> op = lstMember.stream().filter(user -> user.getUsername().equalsIgnoreCase(userName)).findFirst();
         return op.isPresent() ? op.get() : null;

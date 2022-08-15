@@ -27,7 +27,7 @@ public class Utils {
     public static HashMap<TypeMember, Float> promotionHash = new HashMap<TypeMember, Float>() {
         private static final long serialVersionUID = 1L;
         {
-            put(TypeMember.NOMAL, (float) 1.0);
+            put(TypeMember.NORMAL, (float) 1.0);
             put(TypeMember.SILVER, (float) 0.95);
             put(TypeMember.GOLD, (float) 0.9);
             put(TypeMember.PLATINUM, (float) 0.85);

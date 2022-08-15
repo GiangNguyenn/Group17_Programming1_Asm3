@@ -2,6 +2,8 @@ package Service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Member;
+
 
 import Shopping.Order;
 import common.BaseHelper;
@@ -89,7 +91,7 @@ public class MenuService {
 //                    productService.viewOrderDetails();
                     break;
                 case "4":
-/                   orderService.showAllOrderOfCustomer();
+                  orderService.showAllOrderOfCustomer((Member) Utils.current_user);
                     break;
                 case "5":
                     userService.logout();

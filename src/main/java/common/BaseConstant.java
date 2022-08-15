@@ -3,7 +3,7 @@ package common;
 public class BaseConstant {
     public static final String App_Name = "ASM3";
 
-    public static enum TypeMember {NOMAL, SILVER, GOLD, PLATINUM};
+    public static enum TypeMember {NORMAL, SILVER, GOLD, PLATINUM};
 
     public static final Double LITMIT_SILVER = 5000000.0;
 

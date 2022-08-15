@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import Model.User.Admin;
 import Model.User.Member;
+import Model.User.User;
 import common.BaseConstant;
 import common.BaseHelper;
 import common.Utils;
@@ -137,6 +138,16 @@ public class UserService implements UserInterface {
             }
         }
         out.close();
+    }
+
+    public static void printUserProfile(Member currentUser) {
+        if (Utils.isLogin) {
+            System.out.println("My profile");
+            System.out.println("Name: " + currentUser.getName());
+            System.out.println("Phone Number: " + currentUser.getPhoneNumber());
+            System.out.println("Total Spending: " + (currentUser.getTotalSpending() == null ? "0" : currentUser.getTotalSpending()));
+            System.out.println("Member Type: " + (currentUser.getMemberType() == null ? "NORMAL" : currentUser.getMemberType()));
+        }
     }
 
 }
