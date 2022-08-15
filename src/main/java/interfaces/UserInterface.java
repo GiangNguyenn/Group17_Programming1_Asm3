@@ -2,7 +2,7 @@ package interfaces;
 
 import java.io.IOException;
 
-public interface UserInterface extends mainInterface{
+public interface UserInterface extends mainInterface {
 
     public void login() throws IOException;
 
