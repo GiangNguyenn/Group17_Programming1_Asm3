@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import Model.Productions.Order;
 import Model.Productions.Product;
 import Model.User.Admin;
 import Model.User.Member;
 import Model.User.User;
+import Shopping.Order;
 import common.BaseConstant.TypeMember;
 
 public class Utils {
@@ -44,7 +44,7 @@ public class Utils {
     public static List<Product> lstProduct = new ArrayList<Product>();
 
     /* Adding products to lstMember after registering successfully */
-    public static List<Order> lstOrders = new ArrayList<Order>();
+    public static List<Order> lstOrder = new ArrayList<Order>();
 
     // Some tools useful
     public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

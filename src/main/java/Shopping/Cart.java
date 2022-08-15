@@ -1,4 +1,4 @@
-package main.java.Shopping;
+package Shopping;
 
 
 import main.java.Model.User.Order;

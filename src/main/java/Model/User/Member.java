@@ -35,6 +35,7 @@ public class Member extends User {
     }
 
 
+
     @Override
     public String toString() {
         return "Member [name=" + name + ", phoneNumber=" + phoneNumber + ", totalSpending=" + totalSpending

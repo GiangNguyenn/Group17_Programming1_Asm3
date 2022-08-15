@@ -1,18 +1,20 @@
-package main.java.Shopping;
+package Shopping;
 
-import main.java.*
+
+import Model.Productions.Product;
+import Model.User.*;
 import java.time.*;
 import java.util.ArrayList;
 
 public class Order {
     private final String id;
     private final Member member;
-    private final ArrayList<Products> products;
+    private final ArrayList<Product> products;
     private final LocalDateTime created_at;
     private String status;
 
     // Constructor
-    public Order(String id, Member member, ArrayList<Products> products, LocalDateTime created_at, String status) {
+    public Order(String id, Member member, ArrayList<Product> products, LocalDateTime created_at, String status) {
         this.id = id;
         this.member = member;
         this.products = products;
@@ -25,7 +27,7 @@ public class Order {
 
     public Member getMember() { return member; }
 
-    public ArrayList<Products> getProducts() { return products; }
+    public ArrayList<Product> getProducts() { return products; }
 
     public LocalDateTime getCreated_at() { return created_at; }
 
@@ -53,10 +55,10 @@ public class Order {
      * @param cart: This main.java.Shopping.Order is created when user are done shopping on that cart
      * @return main.java.Shopping.Order
      */
-    public static Order createOrder(Cart cart){
-        return new Order (cart.getId(), cart.getMember(), cart.getProducts(),
-                LocalDateTime.now(),"Processing");
-    }
+//    public static Order createOrder(Cart cart){
+//        return new Order (cart.getId(), cart.getMember(), cart.getProducts(),
+//                LocalDateTime.now(),"Processing");
+//    }
 
     // Finder Methods
     /** Finds a specific order using ID

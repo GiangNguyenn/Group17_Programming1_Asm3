@@ -2,12 +2,12 @@ package common;
 
 import java.util.*;
 
+import Model.Productions.Product;
 import Model.User.Admin;
 import Model.User.Member;
 import Model.User.User;
 
-import static common.Utils.lstAdmin;
-import static common.Utils.lstMember;
+import static common.Utils.*;
 
 public class BaseHelper {
 
@@ -29,6 +29,11 @@ public class BaseHelper {
 
     public static Admin getAdminByUserName(String userName) {
         Optional<Admin> op = lstAdmin.stream().filter(admin -> admin.getUsername().equalsIgnoreCase(userName)).findFirst();
+        return op.isPresent() ? op.get() : null;
+    }
+
+    public static Product getProductByProductId(String id) {
+        Optional<Product> op = lstProduct.stream().filter(admin -> admin.getId().equalsIgnoreCase(id)).findFirst();
         return op.isPresent() ? op.get() : null;
     }
 
@@ -70,6 +75,12 @@ public class BaseHelper {
 
     public static String generateIdForUser() {
         List<Integer> idArray = lstMember.stream().map(user -> Integer.valueOf(user.getId())).toList();
+        Integer maxId = Collections.max(idArray);
+        return String.valueOf(maxId + 1);
+    }
+
+    public static String generateIdForOrder() {
+        List<Integer> idArray = lstOrder.stream().map(order -> Integer.valueOf(order.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }
