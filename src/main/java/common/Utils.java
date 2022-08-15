@@ -1,6 +1,8 @@
 package common;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,10 +16,11 @@ import Model.User.Member;
 import Model.User.User;
 import common.BaseConstant.TypeMember;
 
-public  class Utils {
+public class Utils {
     //login infor
     public static Boolean isLogin = false;
     public static User current_user = null;
+    public static boolean isAdmin = false;
 
 
     // Data in use
@@ -47,7 +50,9 @@ public  class Utils {
     // Some tools useful
     public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
+    public static BufferedReader fileReader(String filePath) throws FileNotFoundException {
+        return new BufferedReader(new FileReader(filePath));
+    }
+
     public static Random rand = new Random();
-
-
 }

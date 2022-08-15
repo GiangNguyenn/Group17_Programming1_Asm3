@@ -1,9 +1,12 @@
 package common;
 
 import java.util.*;
+
+import Model.User.Admin;
 import Model.User.Member;
 import Model.User.User;
 
+import static common.Utils.lstAdmin;
 import static common.Utils.lstMember;
 
 public class BaseHelper {
@@ -22,8 +25,13 @@ public class BaseHelper {
     }
 
     public static Member getMemberByUserName(String userName) {
-        Optional<Member> op = lstMember.stream().filter(user -> user.getPassword().equalsIgnoreCase(userName)).findFirst();
-        return op.isPresent()? op.get() : null;
+        Optional<Member> op = lstMember.stream().filter(user -> user.getUsername().equalsIgnoreCase(userName)).findFirst();
+        return op.isPresent() ? op.get() : null;
+    }
+
+    public static Admin getAdminByUserName(String userName) {
+        Optional<Admin> op = lstAdmin.stream().filter(admin -> admin.getUsername().equalsIgnoreCase(userName)).findFirst();
+        return op.isPresent() ? op.get() : null;
     }
 
     @SuppressWarnings("rawtypes")
@@ -31,7 +39,6 @@ public class BaseHelper {
         if (value == null) {
             return true;
         }
-
         if (value instanceof String) {
             return "".equals(value.toString().trim());
         } else if (value instanceof Collection) {
@@ -51,11 +58,16 @@ public class BaseHelper {
         }
     }
 
-    public static Boolean checkingUserLoginInfo(String username, String password) {
+    public static Boolean checkingMemberLoginInfo(String username, String password) {
         return lstMember.stream()
-                .filter(user -> Objects.equals(user.getPassword(), password)
-                        && Objects.equals(user.getUsername(), username))
-                .findFirst().isPresent();
+                .anyMatch(user -> Objects.equals(user.getPassword(), password)
+                        && Objects.equals(user.getUsername(), username));
+    }
+
+    public static Boolean checkingAdminLoginInfo(String username, String password) {
+        return lstAdmin.stream()
+                .anyMatch(admin -> Objects.equals(admin.getPassword(), password)
+                        && Objects.equals(admin.getUsername(), username));
     }
 
     public static String generateIdForUser() {

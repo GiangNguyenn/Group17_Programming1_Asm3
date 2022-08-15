@@ -3,6 +3,7 @@ package application;
 import Service.MenuService;
 import Service.UserService;
 import common.BaseHelper;
+import common.Utils;
 
 public class Application {
 
@@ -11,6 +12,7 @@ public class Application {
         UserService userService = new UserService();
 
         userService.loadData();
+        System.out.println(Utils.lstMember);
         BaseHelper.printWelcomePage();
         menuService.mainMenu();
     }

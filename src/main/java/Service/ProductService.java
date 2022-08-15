@@ -4,22 +4,27 @@ import interfaces.ProductInterface;
 
 public class ProductService implements ProductInterface {
 
+    //    TODO: Loan
     @Override
     public void loadData() {
-        // TODO Auto-generated method stub
-        
+
     }
 
+    //    TODO: Loan
     @Override
     public void writeData() {
-        // TODO Auto-generated method stub
-        
+
     }
 
+    // TODO: Loan
     @Override
     public void showAllProduct() {
-        // TODO Auto-generated method stub
-        
+
     }
-    
+
+    public void showProductsByCategory() {
+    }
+
+    public void viewOrderDetails() {
+    }
 }
