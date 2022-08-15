@@ -6,7 +6,7 @@ import Model.Productions.*;
 import Model.User.Admin;
 import Model.User.Member;
 import Model.User.User;
-import Service.OrderService;
+
 
 import static common.Utils.*;
 
@@ -87,6 +87,12 @@ public class BaseHelper {
 
     public static String generateIdForUser() {
         List<Integer> idArray = lstMember.stream().map(user -> Integer.valueOf(user.getId())).toList();
+        Integer maxId = Collections.max(idArray);
+        return String.valueOf(maxId + 1);
+    }
+
+    public static String generateIdForOrder() {
+        List<Integer> idArray = lstProduct.stream().map(order -> Integer.valueOf(order.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }
