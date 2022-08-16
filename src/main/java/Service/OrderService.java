@@ -148,21 +148,23 @@ public class OrderService implements OrderInterface {
             System.out.println("Order's status: UNPAID. \n Do you want to change the status to PAID? (Y/N): ");
             String answer = Utils.reader.readLine();
             searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
-            System.out.println(searchedOrder);
+            System.out.println(searchedOrder.getPaid());
         } else if (!BaseHelper.isNullOrEmpty(searchedOrder) && searchedOrder.getPaid()) {
             System.out.println(searchedOrder);
             System.out.println("===================");
             System.out.println("Order's status: UNPAID. \n Do you want to change the status to PAID? (Y/N): ");
             String answer = Utils.reader.readLine();
             searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
-            System.out.println(searchedOrder);
+            System.out.println(searchedOrder.getPaid());
         }
     }
 
     private Boolean changeOrderStatus(String input, Boolean orderStatus) {
         if (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes")) {
+            System.out.println("Order status changed successfully!");
             return !orderStatus;
         } else if (input.equalsIgnoreCase("n") || input.equalsIgnoreCase("no")) {
+            System.out.println("Order status has not been changed!");
             return orderStatus;
         } else {
             System.out.println("Invalid input!");

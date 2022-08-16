@@ -6,8 +6,6 @@ import Service.ProductService;
 import Service.UserService;
 import common.BaseHelper;
 
-import static common.Utils.lstOrder;
-
 
 public class Application {
 
@@ -20,7 +18,6 @@ public class Application {
         userService.loadData();
         productService.loadData();
         orderService.loadData();
-        System.out.println(lstOrder);
         BaseHelper.printWelcomePage();
         menuService.mainMenu();
     }
