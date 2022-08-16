@@ -106,7 +106,6 @@ public class OrderService implements OrderInterface {
 
     @Override
     public void showAllOder() {
-        // TODO Auto-generated method stub
         for (Order order : lstOrder) {
             System.out.print(order.toString());
         }
@@ -138,6 +137,13 @@ public class OrderService implements OrderInterface {
     }
 
 
+    /**
+     * get user's order Id input to find the order object.
+     * then continue getting an input to see if user want to change the input
+     * call method changeOrderStatus using that input and order's status
+     *
+     * @throws IOException
+     */
     public void manageOrderStatus() throws IOException {
         System.out.println("Enter an Order ID: ");
         String orderId = Utils.reader.readLine();
@@ -145,20 +151,25 @@ public class OrderService implements OrderInterface {
         if (!BaseHelper.isNullOrEmpty(searchedOrder) && !searchedOrder.getPaid()) {
             System.out.println(searchedOrder);
             System.out.println("===================");
-            System.out.println("Order's status: UNPAID. \n Do you want to change the status to PAID? (Y/N): ");
+            System.out.println("Order's status: UNPAID.\n Do you want to change the status to PAID? (Y/N): ");
             String answer = Utils.reader.readLine();
             searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
             System.out.println(searchedOrder.getPaid());
         } else if (!BaseHelper.isNullOrEmpty(searchedOrder) && searchedOrder.getPaid()) {
             System.out.println(searchedOrder);
             System.out.println("===================");
-            System.out.println("Order's status: UNPAID. \n Do you want to change the status to PAID? (Y/N): ");
+            System.out.println("Order's status: PAID.\n Do you want to change the status to UNPAID? (Y/N): ");
             String answer = Utils.reader.readLine();
             searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
             System.out.println(searchedOrder.getPaid());
         }
     }
 
+    /**
+     * @param input
+     * @param orderStatus
+     * @return true if user's input is y or yes, and vice versa with n or no
+     */
     private Boolean changeOrderStatus(String input, Boolean orderStatus) {
         if (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes")) {
             System.out.println("Order status changed successfully!");
