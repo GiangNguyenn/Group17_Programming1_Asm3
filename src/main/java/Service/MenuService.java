@@ -109,6 +109,7 @@ public class MenuService {
         System.out.println("2. Update a product's price");
         System.out.println("3. View all orders of a Customer ID");
         System.out.println("4. Manage order status");
+        System.out.println("5. Delete a product");
         System.out.println("Your choice: ");
     }
 
@@ -133,7 +134,7 @@ public class MenuService {
                 case "4":
                     break;
                 case "5":
-                    return;
+                    productService.deleteProduct();
                 default:
                     System.out.println("Invalid choice, please try again!");
             }

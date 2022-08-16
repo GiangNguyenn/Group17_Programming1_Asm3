@@ -2,6 +2,7 @@ package application;
 
 import Service.MenuService;
 import Service.OrderService;
+import Service.ProductService;
 import Service.UserService;
 import common.BaseHelper;
 
@@ -12,9 +13,11 @@ public class Application {
         MenuService menuService = new MenuService();
         UserService userService = new UserService();
         OrderService orderService = new OrderService();
+        ProductService productService = new ProductService();
 
-        orderService.loadData();
         userService.loadData();
+        productService.loadData();
+        orderService.loadData();
         BaseHelper.printWelcomePage();
         menuService.mainMenu();
     }
