@@ -1,6 +1,6 @@
 package Model.Productions;
 
-import Model.User.*;
+import Model.User.Member;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +22,6 @@ public class Order {
         this.isPaid = isPaid;
         this.totalPrice = totalPrice;
     }
-
 
 
     public String getId() {
@@ -85,7 +84,6 @@ public class Order {
                 '}';
     }
 
-
     public String toStringCustom() {
         return "Order{" +
                 "\nid='" + id + '\'' +
@@ -101,5 +99,5 @@ public class Order {
     public void calculateTotalPrice() {
 
 
-        }
+    }
 }

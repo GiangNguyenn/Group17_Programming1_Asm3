@@ -1,22 +1,31 @@
 package Service;
 
-import Model.Productions.*;
+import Model.Productions.Order;
+import Model.Productions.Product;
 import Model.User.Member;
-import common.*;
+import common.BaseConstant;
+import common.BaseHelper;
+import common.Utils;
 import interfaces.OrderInterface;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import static common.Utils.lstOrder;
 
 public class OrderService implements OrderInterface {
 
-    // Menus
+    /**
+     * Take user input as orderID to get specific order
+     */
     public void viewOrderByIdMenu() throws IOException {
-        loadData();
         System.out.print("Please enter the ID of the order: ");
         String targetOrderId = Utils.reader.readLine();
         Order order = BaseHelper.getOrderByOrderId(targetOrderId);
@@ -28,9 +37,12 @@ public class OrderService implements OrderInterface {
         }
     }
 
+    /**
+     * Take user input as customer ID to get associated Orders
+     *
+     * @throws IOException
+     */
     public void viewOrderByCustomerId() throws IOException {
-        loadData();
-
         System.out.print("Please enter the ID of the customer:");
         String customerID = Utils.reader.readLine();
         Member targetCustomer = BaseHelper.getMemberById(customerID);       //Finds customer
@@ -40,24 +52,21 @@ public class OrderService implements OrderInterface {
         }
 
         ArrayList<Order> ordersOfCustomer = new ArrayList<>();
-        for (Order order: lstOrder){
-            if (Objects.equals(order.getMember(),targetCustomer)){          // Returns Empty List if no customer is found
+        for (Order order : lstOrder) {
+            if (Objects.equals(order.getMember(), targetCustomer)) {          // Returns Empty List if no customer is found
                 ordersOfCustomer.add(order);
             }
         }
 
-        for (Order order:ordersOfCustomer){
-
+        for (Order order : ordersOfCustomer) {
             System.out.println(order.toString());
         }
 
     }
 
 
-    //TODO: Giang + Khang
     @Override
     public void loadData() {
-        // TODO Auto-genethod stub
         //REQUIRES PRODUCT, MEMBER OBJECT LIST TO LOAD FIRST
         //IN ORDER TO USE THE GET***BY*** FUNCTIONS
         try {
@@ -78,7 +87,7 @@ public class OrderService implements OrderInterface {
                         idString,
                         (Model.User.Member) BaseHelper.getMemberById(memberString),
                         convertToProductList(productsString),
-                        LocalDateTime.parse(dateString,DateTimeFormatter.ISO_DATE_TIME),
+                        LocalDateTime.parse(dateString, DateTimeFormatter.ISO_DATE_TIME),
                         convertToBoolean(statusString),
                         Double.valueOf(statusString)
                 ));
@@ -90,42 +99,39 @@ public class OrderService implements OrderInterface {
     }
 
 
-    //TODO: Giang + Khang
     @Override
-    public void  writeData() throws FileNotFoundException {
-        // TODO Auto-generated method stub
+    public void writeData() throws FileNotFoundException {
         PrintWriter out = new PrintWriter(BaseConstant.ORDER_DATA_PATH);
-        if (!BaseHelper.isNullOrEmpty(lstOrder)){
-            for (Order order : lstOrder){
+        if (!BaseHelper.isNullOrEmpty(lstOrder)) {
+            for (Order order : lstOrder) {
                 out.printf("%s,%s,%s,%s,%s,%s\n",
                         order.getId(),
-                        String.valueOf(order.getMember().getId()),            //Stores username for customer
+                        order.getMember().getId(),            //Stores username for customer
                         convertToString(order.getProducts()),       //Stores ID for product
                         convertToString(order.getCreated_at()),     //String of ISO dateformat
                         convertToString(order.getPaid()),
-                        String.valueOf(order.getTotalPrice()));
+                        order.getTotalPrice());
             }
         }
         out.close();
     }
 
-    //TODO: Giang + Khang
     @Override
     public void showAllOder() {
         // TODO Auto-generated method stub
-        for (Order order : lstOrder){
+        for (Order order : lstOrder) {
             System.out.print(order.toString());
         }
     }
 
-    public void findAllOrderOfCustomer(Member member){
+    public void findAllOrderOfCustomer(Member member) {
         ArrayList<Order> customerOrders = new ArrayList<>();
-        for (Order order : lstOrder){
-            if (order.getMember().equals(member)){
+        for (Order order : lstOrder) {
+            if (order.getMember().equals(member)) {
                 customerOrders.add(order);
             }
         }
-        for (Order order : customerOrders){
+        for (Order order : customerOrders) {
             System.out.println(order.toString());
         }
     }
@@ -136,16 +142,16 @@ public class OrderService implements OrderInterface {
         return date.format(formatter);
     }
 
-    public static String convertToString(List<Product> productList){
-        String resString = "";
-        for (Product product : productList){
-            resString = resString+product.getId()+"and";
+    public static String convertToString(List<Product> productList) {
+        StringBuilder resString = new StringBuilder();
+        for (Product product : productList) {
+            resString.append(product.getId()).append("and");
         }
-        return resString;
+        return resString.toString();
     }
 
-    public static String convertToString(Boolean blean){
-        if (blean){
+    public static String convertToString(Boolean blean) {
+        if (blean) {
             return "1";
         } else {
             return "0";
@@ -153,19 +159,18 @@ public class OrderService implements OrderInterface {
     }
 
     //String to other datatype
-    static ArrayList<Product> convertToProductList(String inputString){
+    static ArrayList<Product> convertToProductList(String inputString) {
         ArrayList<Product> resultArray = new ArrayList<>();
         String[] productStringList = inputString.split("and");
-        for (String productIdString : productStringList){
+        for (String productIdString : productStringList) {
             resultArray.add(BaseHelper.getProductByProductId(productIdString));
         }
         return resultArray;
     }
 
-    static boolean convertToBoolean(String string){
+    static boolean convertToBoolean(String string) {
         return Objects.equals(string, "1");
     }
-
 
 
 }
