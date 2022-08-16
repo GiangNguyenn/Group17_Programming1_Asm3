@@ -1,15 +1,18 @@
 package Service;
 
 import Model.Productions.Product;
-import Model.User.User;
 import common.BaseConstant;
+import common.BaseHelper;
 import interfaces.ProductInterface;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 import static common.BaseConstant.PRODUCT_DATA_PATH;
-import static common.Utils.*;
+import static common.Utils.lstProduct;
 
 public class ProductService implements ProductInterface {
     @Override
@@ -18,7 +21,7 @@ public class ProductService implements ProductInterface {
         try {
             BufferedReader productData = new BufferedReader(new FileReader(BaseConstant.PRODUCT_DATA_PATH));
             String record;
-            while ((record = productData.readLine()) != null){
+            while ((record = productData.readLine()) != null) {
                 String[] detailed = record.split(",");
                 String id = detailed[0];
                 String productName = detailed[1];
@@ -28,8 +31,7 @@ public class ProductService implements ProductInterface {
                 lstProduct.add(new Product(id, productName, price, category, supplier));
             }
             System.out.println(lstProduct);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -47,7 +49,7 @@ public class ProductService implements ProductInterface {
         if (ans)
             System.out.println("The List is empty");
         else
-            for (Product product : lstProduct){
+            for (Product product : lstProduct) {
                 out.printf("%s,%s,%s,%s,%s\n", product.getId(), product.getProductName(), product.getPrice(), product.getCategory(), product.getSupplier());
             }
         out.close();
@@ -89,10 +91,11 @@ public class ProductService implements ProductInterface {
     public void viewOrderDetails() {
     }
 
-    public void addProduct(){
+    public void addProduct() {
 
     }
-    public void deleteProduct(){
+
+    public void deleteProduct() {
         try {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Please input Product ID you want to delete:");
@@ -100,13 +103,12 @@ public class ProductService implements ProductInterface {
             BufferedReader productData = new BufferedReader(new FileReader(BaseConstant.PRODUCT_DATA_PATH));
             System.out.println(lstProduct);
             for (int i = 0; i < lstProduct.size(); i++) {
-                if(lstProduct.get(i).getId().equals(userInput)){
+                if (lstProduct.get(i).getId().equals(userInput)) {
                     lstProduct.remove(i);
                 }
             }
             writeData();
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
