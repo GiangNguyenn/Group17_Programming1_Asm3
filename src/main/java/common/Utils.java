@@ -40,7 +40,7 @@ public class Utils {
     /* Adding user to lstMember after registering successfully */
     public static List<Member> lstMember = new ArrayList<Member>();
 
-    /* Adding products to lstMember after registering successfully */
+    /* Adding products to lstProduct */
     public static List<Product> lstProduct = new ArrayList<Product>();
 
     /* Adding products to lstMember after registering successfully */

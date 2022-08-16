@@ -130,7 +130,7 @@ public class UserService implements UserInterface {
             System.out.println("The List is empty or null");
         } else {
             for (Member member : lstMember) {
-                out.printf("%s,%s,%s,%s,%s\n", member.getId(), member.getName(), member.getPassword(), member.getUsername(), member.getPhoneNumber());
+                out.printf("%s,%s,%s,%s,%s\n", member.getId(), member.getName(), member.getPhoneNumber(), member.getUsername(), member.getPassword());
             }
             for (Admin admin : lstAdmin) {
                 out.printf("%s,%s,%s\n", admin.getId(), admin.getUsername(), admin.getPassword());
