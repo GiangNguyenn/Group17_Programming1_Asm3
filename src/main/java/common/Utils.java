@@ -44,7 +44,7 @@ public class Utils {
     public static List<Product> lstProduct = new ArrayList<Product>();
 
     /* Adding products to lstMember after registering successfully */
-    public static List<Order> lstOrders = new ArrayList<Order>();
+    public static List<Order> lstOrder = new ArrayList<Order>();
 
     // Some tools useful
     public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

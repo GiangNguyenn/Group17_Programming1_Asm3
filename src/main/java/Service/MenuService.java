@@ -1,11 +1,11 @@
 package Service;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import Model.User.Member;
 import common.BaseHelper;
 import common.Utils;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class MenuService {
 
@@ -58,8 +58,9 @@ public class MenuService {
         System.out.println("Select function: ");
         System.out.println("1. View all products");
         System.out.println("2. Browse products by categories");
-        System.out.println("3. View order by OrderID");
+        System.out.println("3. View order by OrderID");   //done
         System.out.println("4. View my profile");
+        System.out.println("5. Log out");
         System.out.println("Your choice: ");
     }
 
@@ -81,7 +82,7 @@ public class MenuService {
                     ProductService.showProductsByCategory();
                     break;
                 case "3":
-//                    productService.viewOrderDetails();
+                    orderService.viewOrderByIdMenu();
                     break;
                 case "4":
                     UserService.printUserProfile((Member) Utils.current_user);
@@ -128,6 +129,7 @@ public class MenuService {
                 case "2":
                     break;
                 case "3":
+                    orderService.viewOrderByCustomerId();
                     break;
                 case "4":
                     break;
