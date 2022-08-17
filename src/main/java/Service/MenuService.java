@@ -132,6 +132,7 @@ public class MenuService {
                     orderService.viewOrderByCustomerId();
                     break;
                 case "4":
+                    orderService.manageOrderStatus();
                     break;
                 case "5":
                     productService.deleteProduct();
@@ -162,7 +163,10 @@ public class MenuService {
 
     public void exit() throws FileNotFoundException {
         UserService userService = new UserService();
+        OrderService orderService = new OrderService();
+
         userService.writeData();
+        orderService.writeData();
         System.exit(-1);
     }
 
