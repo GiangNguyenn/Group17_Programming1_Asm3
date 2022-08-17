@@ -25,7 +25,7 @@ public class ProductService implements ProductInterface {
                 String[] detailed = record.split(",");
                 String id = detailed[0];
                 String productName = detailed[1];
-                String price = detailed[2];
+                Double price = Double.parseDouble(detailed[2]);
                 String category = detailed[3];
                 String supplier = detailed[4];
                 lstProduct.add(new Product(id, productName, price, category, supplier));
@@ -61,7 +61,7 @@ public class ProductService implements ProductInterface {
         }
     }
 
-    public static void showProductsByCategory() {
+    public void showProductsByCategory() {
         printListOfCategories();
         List<Product> searchedProducts = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
@@ -99,7 +99,6 @@ public class ProductService implements ProductInterface {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Please input Product ID you want to delete:");
             String userInput = scanner.nextLine();
-            BufferedReader productData = new BufferedReader(new FileReader(BaseConstant.PRODUCT_DATA_PATH));
             for (int i = 0; i < lstProduct.size(); i++) {
                 if (lstProduct.get(i).getId().equals(userInput)) {
                     lstProduct.remove(i);

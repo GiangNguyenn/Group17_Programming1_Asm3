@@ -94,10 +94,4 @@ public class Order {
                 ", isPaid=" + isPaid +
                 '}';
     }
-
-
-    public void calculateTotalPrice() {
-
-
-    }
 }
