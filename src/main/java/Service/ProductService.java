@@ -30,7 +30,6 @@ public class ProductService implements ProductInterface {
                 String supplier = detailed[4];
                 lstProduct.add(new Product(id, productName, price, category, supplier));
             }
-            System.out.println(lstProduct);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -122,7 +121,6 @@ public class ProductService implements ProductInterface {
             System.out.println("Please input Product ID you want to delete:");
             String userInput = scanner.nextLine();
             BufferedReader productData = new BufferedReader(new FileReader(BaseConstant.PRODUCT_DATA_PATH));
-            System.out.println(lstProduct);
             for (int i = 0; i < lstProduct.size(); i++) {
                 if (lstProduct.get(i).getId().equals(userInput)) {
                     lstProduct.remove(i);

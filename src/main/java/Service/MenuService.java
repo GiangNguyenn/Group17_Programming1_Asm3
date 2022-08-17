@@ -133,6 +133,9 @@ public class MenuService {
                     break;
                 case "exit":
                     exit();
+                case "4":
+                    orderService.manageOrderStatus();
+                    break;
                 case "5":
                     productService.deleteProduct();
                 default:
@@ -167,6 +170,9 @@ public class MenuService {
         userService.writeData();
         productService.writeData();
 
+        OrderService orderService = new OrderService();
+
+        orderService.writeData();
         System.exit(-1);
     }
 

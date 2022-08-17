@@ -1,15 +1,18 @@
 package Service;
 
 
-import java.io.*;
-import java.util.Scanner;
-
 import Model.User.Admin;
 import Model.User.Member;
 import common.BaseConstant;
 import common.BaseHelper;
 import common.Utils;
 import interfaces.UserInterface;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 import static common.Utils.lstAdmin;
 import static common.Utils.lstMember;
@@ -41,7 +44,6 @@ public class UserService implements UserInterface {
             Utils.isLogin = true;
             Utils.current_user = member;
             System.out.println("Login success! " + member);
-            System.out.println(Utils.current_user);
             return;
         }
 

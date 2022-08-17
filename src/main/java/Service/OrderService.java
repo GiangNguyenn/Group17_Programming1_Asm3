@@ -39,8 +39,6 @@ public class OrderService implements OrderInterface {
 
     /**
      * Take user input as customer ID to get associated Orders
-     *
-     * @throws IOException
      */
     public void viewOrderByCustomerId() throws IOException {
         System.out.print("Please enter the ID of the customer:");
@@ -64,11 +62,12 @@ public class OrderService implements OrderInterface {
 
     }
 
-
+    /**
+     * REQUIRES PRODUCT, MEMBER OBJECT LIST TO LOAD FIRST
+     * IN ORDER TO USE THE GET***BY*** FUNCTIONS
+     */
     @Override
     public void loadData() {
-        //REQUIRES PRODUCT, MEMBER OBJECT LIST TO LOAD FIRST
-        //IN ORDER TO USE THE GET***BY*** FUNCTIONS
         try {
             BufferedReader orderData = Utils.fileReader(BaseConstant.ORDER_DATA_PATH);
             String dataRow;
@@ -80,17 +79,9 @@ public class OrderService implements OrderInterface {
                 String memberString = detailed[1];
                 String productsString = detailed[2];
                 String dateString = detailed[3];
-                String statusString = detailed[4];
+                Boolean statusString = Boolean.valueOf(detailed[4]);
                 String priceString = detailed[5];
-
-                lstOrder.add(new Order(
-                        idString,
-                        (Model.User.Member) BaseHelper.getMemberById(memberString),
-                        convertToProductList(productsString),
-                        LocalDateTime.parse(dateString, DateTimeFormatter.ISO_DATE_TIME),
-                        convertToBoolean(statusString),
-                        Double.valueOf(statusString)
-                ));
+                lstOrder.add(new Order(idString, BaseHelper.getMemberById(memberString), convertToProductList(productsString), LocalDateTime.parse(dateString, DateTimeFormatter.ISO_DATE_TIME), statusString, Double.valueOf(priceString)));
             }
             orderData.close();
         } catch (IOException e) {
@@ -104,13 +95,10 @@ public class OrderService implements OrderInterface {
         PrintWriter out = new PrintWriter(BaseConstant.ORDER_DATA_PATH);
         if (!BaseHelper.isNullOrEmpty(lstOrder)) {
             for (Order order : lstOrder) {
-                out.printf("%s,%s,%s,%s,%s,%s\n",
-                        order.getId(),
-                        order.getMember().getId(),            //Stores username for customer
+                out.printf("%s,%s,%s,%s,%s,%s\n", order.getId(), order.getMember().getId(),            //Stores username for customer
                         convertToString(order.getProducts()),       //Stores ID for product
                         convertToString(order.getCreated_at()),     //String of ISO dateformat
-                        convertToString(order.getPaid()),
-                        order.getTotalPrice());
+                        order.getPaid(), order.getTotalPrice());
             }
         }
         out.close();
@@ -118,21 +106,8 @@ public class OrderService implements OrderInterface {
 
     @Override
     public void showAllOder() {
-        // TODO Auto-generated method stub
         for (Order order : lstOrder) {
             System.out.print(order.toString());
-        }
-    }
-
-    public void findAllOrderOfCustomer(Member member) {
-        ArrayList<Order> customerOrders = new ArrayList<>();
-        for (Order order : lstOrder) {
-            if (order.getMember().equals(member)) {
-                customerOrders.add(order);
-            }
-        }
-        for (Order order : customerOrders) {
-            System.out.println(order.toString());
         }
     }
 
@@ -150,13 +125,6 @@ public class OrderService implements OrderInterface {
         return resString.toString();
     }
 
-    public static String convertToString(Boolean blean) {
-        if (blean) {
-            return "1";
-        } else {
-            return "0";
-        }
-    }
 
     //String to other datatype
     static ArrayList<Product> convertToProductList(String inputString) {
@@ -168,9 +136,50 @@ public class OrderService implements OrderInterface {
         return resultArray;
     }
 
-    static boolean convertToBoolean(String string) {
-        return Objects.equals(string, "1");
+
+    /**
+     * get user's order Id input to find the order object.
+     * then continue getting an input to see if user want to change the input
+     * call method changeOrderStatus using that input and order's status
+     *
+     * @throws IOException
+     */
+    public void manageOrderStatus() throws IOException {
+        System.out.println("Enter an Order ID: ");
+        String orderId = Utils.reader.readLine();
+        Order searchedOrder = BaseHelper.getOrderByOrderId(orderId);
+        if (!BaseHelper.isNullOrEmpty(searchedOrder) && !searchedOrder.getPaid()) {
+            System.out.println(searchedOrder);
+            System.out.println("===================");
+            System.out.println("Order's status: UNPAID.\n Do you want to change the status to PAID? (Y/N): ");
+            String answer = Utils.reader.readLine();
+            searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
+            System.out.println(searchedOrder.getPaid());
+        } else if (!BaseHelper.isNullOrEmpty(searchedOrder) && searchedOrder.getPaid()) {
+            System.out.println(searchedOrder);
+            System.out.println("===================");
+            System.out.println("Order's status: PAID.\n Do you want to change the status to UNPAID? (Y/N): ");
+            String answer = Utils.reader.readLine();
+            searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
+            System.out.println(searchedOrder.getPaid());
+        }
     }
 
-
+    /**
+     * @param input
+     * @param orderStatus
+     * @return true if user's input is y or yes, and vice versa with n or no
+     */
+    private Boolean changeOrderStatus(String input, Boolean orderStatus) {
+        if (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes")) {
+            System.out.println("Order status changed successfully!");
+            return !orderStatus;
+        } else if (input.equalsIgnoreCase("n") || input.equalsIgnoreCase("no")) {
+            System.out.println("Order status has not been changed!");
+            return orderStatus;
+        } else {
+            System.out.println("Invalid input!");
+            return orderStatus;
+        }
+    }
 }
