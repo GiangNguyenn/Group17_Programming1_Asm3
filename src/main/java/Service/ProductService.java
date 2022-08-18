@@ -103,12 +103,14 @@ public class ProductService implements ProductInterface {
             System.out.println("Enter supplier: ");
             String supplier = scanner.nextLine();
 
+            Double priceDouble = Double.parseDouble(price);
+
             if (BaseHelper.checkExistProduct(productName, supplier)) {
-                System.out.println(productName + " of supplier " + supplier + " has been added! Please add another product");
+                System.out.println(productName + " of supplier " + supplier + " has already been added! Please add another product");
                 productExists = true;
             } else {
                 String id = BaseHelper.generateIdForProduct();
-                lstProduct.add(new Product(id, productName, price, category, supplier));
+                lstProduct.add(new Product(id, productName, Double.parseDouble(price), category, supplier));
                 System.out.println(lstProduct);
                 break;
             }

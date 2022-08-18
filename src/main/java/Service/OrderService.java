@@ -192,19 +192,26 @@ public class OrderService implements OrderInterface {
             System.out.println(Utils.cart);
         } else {
             System.out.println("Product Id not found! Please try again!");
-            addProductToCart();
+//            addProductToCart();
+            // Deleting this because the user will be stuck in the loop if they don't know the ID
+
         }
     }
 
     public Double calculateTotalPrice() {
-        return Utils.cart.stream().mapToDouble(Product::getPrice).sum();
+        return Utils.cart.stream().mapToDouble(Product::getPrice).sum()
+                *((Member) Utils.current_user).discountAmount();
     }
 
     public void placeOrder() throws IOException {
         LocalDateTime now = LocalDateTime.now();
 
         if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
-            Order newOrder = new Order(BaseHelper.generateIdForOrder(), (Member) Utils.current_user, Utils.cart, now, false, calculateTotalPrice());
+            Order newOrder = new Order(BaseHelper.generateIdForOrder(),
+                    (Member) Utils.current_user,
+                    Utils.cart, now,
+                    false,
+                    calculateTotalPrice());
             lstOrder.add(newOrder);
             System.out.println("Order placed successfully!");
             System.out.println(newOrder);

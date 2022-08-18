@@ -57,4 +57,21 @@ public class Member extends User {
     public TypeMember getMemberType() {
         return this.memberType;
     }
+
+    public double discountAmount(){
+        switch (this.getMemberType()){
+            case SILVER -> {
+                return 0.95;
+            }
+            case GOLD -> {
+                return 0.90;
+            }
+            case PLATINUM -> {
+                return 0.85;
+            }
+            default -> {
+                return 1.0;
+            }
+        }
+    }
 }
