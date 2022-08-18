@@ -45,12 +45,10 @@ public class ProductService implements ProductInterface {
 //        lstProduct.add(iphone);
         System.out.println(lstProduct);
         boolean ans = lstProduct.isEmpty();
-        if (ans)
-            System.out.println("The List is empty");
-        else
-            for (Product product : lstProduct) {
-                out.printf("%s,%s,%s,%s,%s\n", product.getId(), product.getProductName(), product.getPrice(), product.getCategory(), product.getSupplier());
-            }
+        if (ans) System.out.println("The List is empty");
+        else for (Product product : lstProduct) {
+            out.printf("%s,%s,%s,%s,%s\n", product.getId(), product.getProductName(), product.getPrice(), product.getCategory(), product.getSupplier());
+        }
         out.close();
     }
 
@@ -90,8 +88,31 @@ public class ProductService implements ProductInterface {
     public void viewOrderDetails() {
     }
 
-    public void addProduct() {
+    @Override
+    public void addProduct() throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        boolean productExists = false;
 
+        while (!productExists) {
+            System.out.println("Enter product name: ");
+            String productName = scanner.nextLine();
+            System.out.println("Enter price: ");
+            String price = scanner.nextLine();
+            System.out.println("Enter category: ");
+            String category = scanner.nextLine();
+            System.out.println("Enter supplier: ");
+            String supplier = scanner.nextLine();
+
+            if (BaseHelper.checkExistProduct(productName, supplier)) {
+                System.out.println(productName + " of supplier " + supplier + " has been added! Please add another product");
+                productExists = true;
+            } else {
+                String id = BaseHelper.generateIdForProduct();
+                lstProduct.add(new Product(id, productName, price, category, supplier));
+                System.out.println(lstProduct);
+                break;
+            }
+        }
     }
 
     public void deleteProduct() {

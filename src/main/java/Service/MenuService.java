@@ -144,12 +144,14 @@ public class MenuService {
 
             switch (choice) {
                 case "1":
-                    break;
+                    productService.addProduct();
                 case "2":
                     break;
                 case "3":
                     orderService.viewOrderByCustomerId();
                     break;
+                case "exit":
+                    exit();
                 case "4":
                     orderService.manageOrderStatus();
                     break;
@@ -182,9 +184,13 @@ public class MenuService {
 
     public void exit() throws FileNotFoundException {
         UserService userService = new UserService();
-        OrderService orderService = new OrderService();
+        ProductService productService = new ProductService();
 
         userService.writeData();
+        productService.writeData();
+
+        OrderService orderService = new OrderService();
+
         orderService.writeData();
         System.exit(-1);
     }

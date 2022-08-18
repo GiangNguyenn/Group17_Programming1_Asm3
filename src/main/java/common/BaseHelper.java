@@ -94,6 +94,12 @@ public class BaseHelper {
         return String.valueOf(maxId + 1);
     }
 
+    public static String generateIdForProduct() {
+        List<Integer> idArray = lstProduct.stream().map(product -> Integer.valueOf(product.getId())).toList();
+        Integer maxId = Collections.max(idArray);
+        return String.valueOf(maxId + 1);
+    }
+
     public static String generateIdForOrder() {
         List<Integer> idArray = lstProduct.stream().map(order -> Integer.valueOf(order.getId())).toList();
         Integer maxId = Collections.max(idArray);
@@ -102,6 +108,14 @@ public class BaseHelper {
 
     public static boolean checkExistUsername(String username) {
         return lstMember.stream().map(User::getUsername).anyMatch(username::equals);
+    }
+
+    public static boolean checkExistProduct(String productName, String supplier) {
+        if (lstProduct.stream().map(Product::getProductName).anyMatch(productName::equals)) {
+            return lstProduct.stream().map(Product::getSupplier).anyMatch(supplier::equals);
+        } else {
+            return false;
+        }
     }
 
     public static void clearConsole() {
