@@ -6,15 +6,37 @@ import common.BaseHelper;
 import interfaces.ProductInterface;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 import static common.BaseConstant.PRODUCT_DATA_PATH;
 import static common.Utils.lstProduct;
 
 public class ProductService implements ProductInterface {
+    public static void showProductsByCategory() {
+        printListOfCategories();
+        List<Product> searchedProducts = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Input categories: ");
+        String categoryInput = scanner.nextLine();
+        for (Product product : lstProduct) {
+            if (Objects.equals(product.getCategory(), categoryInput)) {
+                searchedProducts.add(product);
+            }
+        }
+        if (!BaseHelper.isNullOrEmpty(searchedProducts)) {
+            for (Product product : searchedProducts) {
+                System.out.println(product);
+            }
+        }
+    }
+
+    public static void printListOfCategories() {
+        List<String> uniqueCategories = lstProduct.stream().map(Product::getCategory).distinct().toList();
+        for (int i = 0; i < uniqueCategories.size(); i++) {
+            System.out.println(i + " " + uniqueCategories.get(i));
+        }
+    }
+
     @Override
     public void loadData() {
         // TODO Auto-generated method stub
@@ -55,35 +77,16 @@ public class ProductService implements ProductInterface {
 
     @Override
     public void showAllProduct() {
+        System.out.println("---------------------------------------------------------------------------------------------");
+        System.out.printf("%30s %25s %15s %15s", "PRODUCT NAME", "CATEGORY", "SUPPLIER", "PRICE");
+        System.out.println();
+        System.out.println("---------------------------------------------------------------------------------------------");
+        
         for (Product product : lstProduct) {
-            System.out.println(product);
+            System.out.format("%30s %25s %15s %15s", product.getProductName(), product.getCategory(), product.getSupplier(), product.getPrice());
+            System.out.println();
         }
-    }
-
-    public static void showProductsByCategory() {
-        printListOfCategories();
-        List<Product> searchedProducts = new ArrayList<>();
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Input categories: ");
-        String categoryInput = scanner.nextLine();
-        for (Product product : lstProduct) {
-            if (Objects.equals(product.getCategory(), categoryInput)) {
-                searchedProducts.add(product);
-            }
-        }
-        if (!BaseHelper.isNullOrEmpty(searchedProducts)) {
-            for (Product product : searchedProducts) {
-                System.out.println(product);
-            }
-        }
-    }
-
-
-    public static void printListOfCategories() {
-        List<String> uniqueCategories = lstProduct.stream().map(Product::getCategory).distinct().toList();
-        for (int i = 0; i < uniqueCategories.size(); i++) {
-            System.out.println(i + " " + uniqueCategories.get(i));
-        }
+        System.out.println("---------------------------------------------------------------------------------------------");
     }
 
     public void viewOrderDetails() {
