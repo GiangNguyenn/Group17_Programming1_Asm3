@@ -26,14 +26,23 @@ public class OrderService implements OrderInterface {
      * Take user input as orderID to get specific order
      */
     public void viewOrderByIdMenu() throws IOException {
-        System.out.print("Please enter the ID of the order: ");
+        ArrayList<Order> ordersOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
+        for (Order order : lstOrder) {
+            if (Objects.equals(order.getMember(), Utils.current_user)) {
+                ordersOfCustomer.add(order);
+            }
+        }
+        int indexOfOrder = 1;
+        for (Order order : ordersOfCustomer) {                          //Print out the belonging orders and the indexes of it
+            System.out.println(order.toString());
+        }
+        System.out.print("Please enter the ID of the order: ");        //Find order by index within the list (Much more simple for user)
         String targetOrderId = Utils.reader.readLine();
         Order order = BaseHelper.getOrderByOrderId(targetOrderId);
         if (order != null) {
             System.out.println(order.toStringCustom());
         } else {
             System.out.println("Order ID not found!");
-
         }
     }
 
