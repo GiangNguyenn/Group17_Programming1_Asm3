@@ -1,19 +1,18 @@
 package common;
 
-import java.util.*;
-
-import Model.Productions.*;
+import Model.Productions.Order;
+import Model.Productions.Product;
 import Model.User.Admin;
 import Model.User.Member;
 import Model.User.User;
 
+import java.util.*;
 
 import static common.Utils.*;
 
 public class BaseHelper {
 
     public static void printWelcomePage() {
-        // Todo prin welcome page in item C
         System.out.println("********* Here is welcome page *********");
     }
 

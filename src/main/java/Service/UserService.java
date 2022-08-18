@@ -141,7 +141,7 @@ public class UserService implements UserInterface {
         out.close();
     }
 
-    public static void printUserProfile(Member currentUser) {
+    public void printUserProfile(Member currentUser) {
         if (Utils.isLogin) {
             System.out.println("My profile");
             System.out.println("Name: " + currentUser.getName());
