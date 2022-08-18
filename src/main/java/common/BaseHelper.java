@@ -1,24 +1,25 @@
 package common;
 
-import java.util.*;
-
-import Model.Productions.*;
+import Model.Productions.Order;
+import Model.Productions.Product;
 import Model.User.Admin;
 import Model.User.Member;
 import Model.User.User;
 
+import java.util.*;
 
 import static common.Utils.*;
 
 public class BaseHelper {
 
     public static void printWelcomePage() {
-        // Todo prin welcome page in item C
         System.out.println("********* Here is welcome page *********");
     }
+
     public static Boolean isLogin() {
         return Utils.isLogin;
     }
+
     public static User getCurrentUser() {
         return Utils.current_user;
     }
@@ -28,10 +29,12 @@ public class BaseHelper {
         Optional<Member> op = lstMember.stream().filter(user -> user.getUsername().equalsIgnoreCase(userName)).findFirst();
         return op.isPresent() ? op.get() : null;
     }
+
     public static Member getMemberById(String id) {
         Optional<Member> op = lstMember.stream().filter(user -> user.getId().equalsIgnoreCase(id)).findFirst();
         return op.isPresent() ? op.get() : null;
     }
+
     public static Admin getAdminByUserName(String userName) {
         Optional<Admin> op = lstAdmin.stream().filter(admin -> admin.getUsername().equalsIgnoreCase(userName)).findFirst();
         return op.isPresent() ? op.get() : null;

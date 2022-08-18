@@ -43,7 +43,7 @@ public class OrderService implements OrderInterface {
     public void viewOrderByCustomerId() throws IOException {
         System.out.print("Please enter the ID of the customer:");
         String customerID = Utils.reader.readLine();
-        Member targetCustomer = BaseHelper.getMemberById(customerID);       //Finds customer
+        Member targetCustomer = BaseHelper.getMemberById(customerID);//Finds customer
 
         if (targetCustomer == null) {
             System.out.println("Customer not found!");
@@ -89,7 +89,6 @@ public class OrderService implements OrderInterface {
         }
     }
 
-
     @Override
     public void writeData() throws FileNotFoundException {
         PrintWriter out = new PrintWriter(BaseConstant.ORDER_DATA_PATH);
@@ -125,7 +124,6 @@ public class OrderService implements OrderInterface {
         return resString.toString();
     }
 
-
     //String to other datatype
     static ArrayList<Product> convertToProductList(String inputString) {
         ArrayList<Product> resultArray = new ArrayList<>();
@@ -154,14 +152,14 @@ public class OrderService implements OrderInterface {
             System.out.println("Order's status: UNPAID.\n Do you want to change the status to PAID? (Y/N): ");
             String answer = Utils.reader.readLine();
             searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
-            System.out.println(searchedOrder.getPaid());
+            System.out.println("Order status: Paid");
         } else if (!BaseHelper.isNullOrEmpty(searchedOrder) && searchedOrder.getPaid()) {
             System.out.println(searchedOrder);
             System.out.println("===================");
             System.out.println("Order's status: PAID.\n Do you want to change the status to UNPAID? (Y/N): ");
             String answer = Utils.reader.readLine();
             searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
-            System.out.println(searchedOrder.getPaid());
+            System.out.println("Order status: Unpaid");
         }
     }
 
@@ -180,6 +178,42 @@ public class OrderService implements OrderInterface {
         } else {
             System.out.println("Invalid input!");
             return orderStatus;
+        }
+    }
+
+    public void addProductToCart() throws IOException {
+        System.out.println("Please input the product Id you want to add to cart: ");
+        String productId = Utils.reader.readLine();
+
+        Product product = BaseHelper.getProductByProductId(productId);
+        if (!BaseHelper.isNullOrEmpty(product)) {
+            Utils.cart.add(product);
+            System.out.println("Product " + product.getProductName() + " added to cart!");
+            System.out.println(Utils.cart);
+        } else {
+            System.out.println("Product Id not found! Please try again!");
+            addProductToCart();
+        }
+    }
+
+    public Double calculateTotalPrice() {
+        return Utils.cart.stream().mapToDouble(Product::getPrice).sum();
+    }
+
+    public void placeOrder() throws IOException {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
+            Order newOrder = new Order(BaseHelper.generateIdForOrder(), (Member) Utils.current_user, Utils.cart, now, false, calculateTotalPrice());
+            lstOrder.add(newOrder);
+            System.out.println("Order placed successfully!");
+            System.out.println(newOrder);
+            Utils.cart.clear();
+        } else {
+            System.out.println("Your shopping cart is empty!");
+            ProductService productService = new ProductService();
+            productService.showAllProduct();
+            addProductToCart();
         }
     }
 }

@@ -1,4 +1,4 @@
-package application;
+package main;
 
 import Service.MenuService;
 import Service.OrderService;
@@ -7,7 +7,7 @@ import Service.UserService;
 import common.BaseHelper;
 
 
-public class Application {
+public class Main {
 
     public static void main(String[] args) {
         MenuService menuService = new MenuService();
