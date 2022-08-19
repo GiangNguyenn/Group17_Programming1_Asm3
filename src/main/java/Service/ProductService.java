@@ -97,7 +97,7 @@ public class ProductService implements ProductInterface {
             System.out.println("Enter product name: ");
             String productName = scanner.nextLine();
             System.out.println("Enter price: ");
-            Double price = scanner.nextDouble();
+            String price = scanner.nextLine();
             System.out.println("Enter category: ");
             String category = scanner.nextLine();
             System.out.println("Enter supplier: ");
@@ -108,7 +108,7 @@ public class ProductService implements ProductInterface {
                 productExists = true;
             } else {
                 String id = BaseHelper.generateIdForProduct();
-                lstProduct.add(new Product(id, productName, price, category, supplier));
+                lstProduct.add(new Product(id, productName, Double.parseDouble(price), category, supplier));
                 System.out.println(lstProduct);
                 break;
             }
