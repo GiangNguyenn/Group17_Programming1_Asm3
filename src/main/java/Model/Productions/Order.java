@@ -1,6 +1,8 @@
 package Model.Productions;
 
 import Model.User.Member;
+import common.BaseHelper;
+import common.Utils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,16 +10,16 @@ import java.util.List;
 public class Order {
     private String id;
     private String memberID;
-    private List<Product> products;
+    private List<String> productsID;
     private LocalDateTime created_at;
     private Boolean isPaid;
     private Double totalPrice;
 
 
-    public Order(String id, String memberID, List<Product> products, LocalDateTime created_at, Boolean isPaid, Double totalPrice) {
+    public Order(String id, String memberID, List<String> productsID, LocalDateTime created_at, Boolean isPaid, Double totalPrice) {
         this.id = id;
         this.memberID = memberID;
-        this.products = products;
+        this.productsID = productsID;
         this.created_at = created_at;
         this.isPaid = isPaid;
         this.totalPrice = totalPrice;
@@ -39,12 +41,12 @@ public class Order {
         this.memberID = memberID;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<String> getProductsID() {
+        return productsID;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setProductsID(List<String> productsID) {
+        this.productsID = productsID;
     }
 
     public LocalDateTime getCreated_at() {
@@ -76,7 +78,7 @@ public class Order {
         return "Order{" +
                 "id='" + id + '\'' +
                 ", member=" + memberID +
-                ", products=" + products +
+                ", products=" + productsID +
                 ", created_at=" + created_at +
                 ", isPaid=" + isPaid +
                 ", totalPrice=" + totalPrice +
@@ -87,10 +89,13 @@ public class Order {
         return "Order{" +
                 "\nid='" + id + '\'' +
                 ", member=" + memberID +
-                ", \nproducts=" + products.toString() +
+                ", \nproducts=" + productsID +
                 ", \ncreated_at=" + created_at +
                 ", totalPrice=" + totalPrice +
                 ", isPaid=" + isPaid +
                 '}';
     }
 }
+
+
+

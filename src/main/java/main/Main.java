@@ -15,8 +15,8 @@ public class Main {
         OrderService orderService = new OrderService();
         ProductService productService = new ProductService();
 
-        productService.loadData();
         userService.loadData();
+        productService.loadData();
         orderService.loadData();
 
 

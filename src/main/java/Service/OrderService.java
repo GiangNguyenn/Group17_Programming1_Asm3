@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -74,7 +75,7 @@ public class OrderService implements OrderInterface {
     }
 
     /**
-     * ONLY NEED PRODUCTION TO BE LOADED
+     * ORDER LOAD FIRST TO CALCULATE USER TOTAL SPENDING
      */
     @Override
     public void loadData() {
@@ -91,7 +92,7 @@ public class OrderService implements OrderInterface {
                 String dateString = detailed[3];
                 Boolean statusString = Boolean.valueOf(detailed[4]);
                 String priceString = detailed[5];
-                lstOrder.add(new Order(idString, memberString, convertToProductList(productsString), LocalDateTime.parse(dateString, DateTimeFormatter.ISO_DATE_TIME), statusString, Double.valueOf(priceString)));
+                lstOrder.add(new Order(idString, memberString, convertToProductIdList(productsString), LocalDateTime.parse(dateString, DateTimeFormatter.ISO_DATE_TIME), statusString, Double.valueOf(priceString)));
             }
             orderData.close();
         } catch (IOException e) {
@@ -106,9 +107,9 @@ public class OrderService implements OrderInterface {
         if (!BaseHelper.isNullOrEmpty(lstOrder)) {
             for (Order order : lstOrder) {
                 System.out.println(order.getId());                      //Debugging
-                System.out.println(order.getProducts().toString());     //Debugging
-                out.write(order.getMemberID()+","+            //Stores username for customer
-                        convertToString(order.getProducts())+","+        //Stores ID for product
+                System.out.println(order.getProductsID().toString());     //Debugging
+                out.write(order.getId()+","+order.getMemberID()+","+            //Stores userID for customer
+                        convertToString(order.getProductsID())+","+        //Stores ID for product
                         convertToString(order.getCreated_at())+","+     //String of ISO dateformat
                         order.getPaid()+","+ order.getTotalPrice()+"\n");
             }
@@ -129,23 +130,20 @@ public class OrderService implements OrderInterface {
         return date.format(formatter);
     }
 
-    public static String convertToString(List<Product> productList) {
+    public static String convertToString(List<String> productIDList) {
         StringBuilder resString = new StringBuilder();
-        for (Product product : productList) {
-            resString.append(product.getId()).append("and");
+        for (String product : productIDList) {
+            resString.append(product).append("and");
         }
-        resString = new StringBuilder(resString.substring(1, resString.length()-3));
+        resString = new StringBuilder(resString.substring(0, resString.length()-3));        //Deleting the last "and"
         return resString.toString();
     }
 
     //String to other datatype
-    static ArrayList<Product> convertToProductList(String inputString) {
-        ArrayList<Product> resultArray = new ArrayList<>();
-        String[] productStringList = inputString.split("and");
-        for (String productIdString : productStringList) {
-            resultArray.add(BaseHelper.getProductByProductId(productIdString));
-        }
-        return resultArray;
+    static ArrayList<String> convertToProductIdList(String inputString) {
+        String[] array = inputString.split("and");
+        List<String> resultArray = new ArrayList<String>(Arrays.asList(array));
+        return (ArrayList<String>) resultArray;
     }
 
 
@@ -201,7 +199,7 @@ public class OrderService implements OrderInterface {
 
         Product product = BaseHelper.getProductByProductId(productId);
         if (!BaseHelper.isNullOrEmpty(product)) {
-            Utils.cart.add(product);
+            Utils.cart.add(productId);
             System.out.println("Product " + product.getProductName() + " added to cart!");
             System.out.println(Utils.cart);
         } else {
@@ -213,9 +211,15 @@ public class OrderService implements OrderInterface {
     }
 
     public Double calculateTotalPrice() {
-        return Utils.cart.stream().mapToDouble(Product::getPrice).sum()
+        List<Product> productObjectList = new ArrayList<>();
+        for (String ProductId : Utils.cart){
+            Product productObject = BaseHelper.getProductByProductId(ProductId);
+            productObjectList.add(productObject);
+        }
+        return productObjectList.stream().mapToDouble(Product::getPrice).sum()
                 *((Member) Utils.current_user).discountAmount();
     }
+
 
     public void placeOrder() throws IOException {
         LocalDateTime now = LocalDateTime.now();
@@ -223,10 +227,10 @@ public class OrderService implements OrderInterface {
         if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
             Order newOrder = new Order(BaseHelper.generateIdForOrder(),
                     Utils.current_user.getId(),
-                    Utils.cart,
-                    now,
-                    false,
-                    calculateTotalPrice());
+                    new ArrayList<String>(Utils.cart),      //Mat em 1 buoi sang
+                    now,                                    //When clearing Utils.cart, the products in this order are deleted too
+                    false,                                  //Have to make separate object by copying the origin Utils.cart
+                    this.calculateTotalPrice());
             lstOrder.add(newOrder);
             System.out.println("Order placed successfully!");
             System.out.println(newOrder);
