@@ -5,6 +5,7 @@ import common.BaseHelper;
 import common.Utils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
@@ -86,12 +87,20 @@ public class Order {
     }
 
     public String toStringCustom() {
-        return "Order{" +
-                "\nid='" + id + '\'' +
-                ", member=" + memberID +
-                ", \nproducts=" + productsID +
-                ", \ncreated_at=" + created_at +
-                ", totalPrice=" + totalPrice +
+        StringBuilder productInfo = new StringBuilder();
+        List<Product> productObjectsOfCustomer = new ArrayList<>();
+        for (String productID : productsID){
+            Product productObject = BaseHelper.getProductByProductId(productID);
+            assert productObject != null;
+            productInfo.append("\n").append(productObject.toString());
+        }
+
+        return "\nOrder{" +
+                "id='" + id + '\'' +
+                ", member=" + BaseHelper.getMemberById(memberID).getName() +
+                ", \nproducts=" + productInfo +
+                " \ncreated_at=" + created_at +
+                ", \ntotalPrice=" + totalPrice +
                 ", isPaid=" + isPaid +
                 '}';
     }

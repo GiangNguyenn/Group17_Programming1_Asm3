@@ -39,14 +39,19 @@ public class OrderService implements OrderInterface {
             System.out.println(indexOfOrder + ". " + order.toString());
             indexOfOrder += 1;
         }
-        System.out.print("Please enter the ID of the order: ");
-        String targetOrderId = Utils.reader.readLine();
-        Order order = BaseHelper.getOrderByOrderId(targetOrderId,ordersOfCustomer);
-        if (order != null) {
-            System.out.println(order.toStringCustom());
-        } else {
-            System.out.println("Order ID not found!");
+        System.out.print("Please enter the index of the order: ");
+        String targetOrderIndex = Utils.reader.readLine().trim();
+        if (!targetOrderIndex.matches("[0-9]+")){
+            System.out.println("Input Invalid!");
+            viewCustomerOrder();
         }
+        if (Integer.parseInt(targetOrderIndex) > ordersOfCustomer.size()){
+            System.out.println("\nOrder not found");
+            System.out.println("Please enter again");
+            viewCustomerOrder();
+        }
+        Order order = ordersOfCustomer.get(Integer.parseInt(targetOrderIndex)-1);
+        System.out.println(order.toStringCustom());
     }
 
     /**
@@ -69,9 +74,8 @@ public class OrderService implements OrderInterface {
             }
         }
         for (Order order : ordersOfCustomer) {
-            System.out.println(order.toString());
+            System.out.println(order.toStringCustom());
         }
-
     }
 
     /**
@@ -103,11 +107,8 @@ public class OrderService implements OrderInterface {
     @Override
     public void writeData() throws FileNotFoundException {
         PrintWriter out = new PrintWriter(BaseConstant.ORDER_DATA_PATH);
-        System.out.println(lstOrder.toString());        //Debugging
         if (!BaseHelper.isNullOrEmpty(lstOrder)) {
             for (Order order : lstOrder) {
-                System.out.println(order.getId());                      //Debugging
-                System.out.println(order.getProductsID().toString());     //Debugging
                 out.write(order.getId()+","+order.getMemberID()+","+            //Stores userID for customer
                         convertToString(order.getProductsID())+","+        //Stores ID for product
                         convertToString(order.getCreated_at())+","+     //String of ISO dateformat
