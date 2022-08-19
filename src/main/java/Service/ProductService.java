@@ -3,16 +3,20 @@ package Service;
 import Model.Productions.Product;
 import common.BaseConstant;
 import common.BaseHelper;
+import common.Utils;
 import interfaces.ProductInterface;
 
 import java.io.*;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import static common.BaseConstant.PRODUCT_DATA_PATH;
 import static common.Utils.lstProduct;
+import static common.Utils.reader;
 
 public class ProductService implements ProductInterface {
     @Override
@@ -88,6 +92,49 @@ public class ProductService implements ProductInterface {
     public void viewOrderDetails() {
     }
 
+    public void manageProductPrice() throws IOException {
+        System.out.println("========================================================");
+        System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
+        System.out.println("");
+        System.out.println("========================================================");
+
+        for (Product product : lstProduct){
+            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ", "   " + product.getPrice() + "$");
+            System.out.println("");
+            System.out.println("========================================================");
+        }
+        System.out.println("Enter the id of the product you want to change the price of: ");
+        Pattern p = Pattern.compile("^[0-9]+$");
+        while (true){
+            String productId = Utils.reader.readLine();
+            Product searchProduct = BaseHelper.getProductByProductId(productId);
+            if(p.matcher(productId).find()){
+                changeProductPrice(productId);
+                break;
+            }else {
+            System.out.println("The id you entered is not correct! Please re-enter: ");
+            }
+        }
+        writeData();
+    }
+    public Double changeProductPrice(String input) throws IOException {
+        String productId = input;
+        Product searchProduct = BaseHelper.getProductByProductId(productId);
+        System.out.println("The current Price of the product is: " + searchProduct.getPrice());
+        System.out.println("============================");
+        System.out.println("Enter your desire product's price: ");
+        Pattern p = Pattern.compile("^[0-9]+$");
+        while (true){
+            Double newPrice = Double.valueOf(Utils.reader.readLine());
+            if(p.matcher(productId).find()){
+                searchProduct.setPrice(newPrice);
+                System.out.println("The new Product details are: " + searchProduct.getPrice());
+                return searchProduct.setPrice(newPrice);
+            }else {
+                System.out.println("The entered the amount in a wrong format! Please re-enter: ");
+            }
+        }
+    }
     @Override
     public void addProduct() throws IOException {
         Scanner scanner = new Scanner(System.in);
