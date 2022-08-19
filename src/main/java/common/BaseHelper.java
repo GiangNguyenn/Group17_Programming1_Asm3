@@ -52,6 +52,11 @@ public class BaseHelper {
         return op.isPresent() ? op.get() : null;
     }
 
+    public static Order getOrderByOrderId(String id, List<Order> orderList) {
+        Optional<Order> op = orderList.stream().filter(order -> order.getId().equalsIgnoreCase(id)).findFirst();
+        return op.isPresent() ? op.get() : null;
+    }
+
     @SuppressWarnings("rawtypes")
     public static boolean isNullOrEmpty(Object value) {
         if (value == null) {
@@ -101,7 +106,7 @@ public class BaseHelper {
     }
 
     public static String generateIdForOrder() {
-        List<Integer> idArray = lstProduct.stream().map(order -> Integer.valueOf(order.getId())).toList();
+        List<Integer> idArray = lstOrder.stream().map(order -> Integer.valueOf(order.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }

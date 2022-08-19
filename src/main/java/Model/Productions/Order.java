@@ -7,22 +7,21 @@ import java.util.List;
 
 public class Order {
     private String id;
-    private Member member;
+    private String memberID;
     private List<Product> products;
     private LocalDateTime created_at;
     private Boolean isPaid;
     private Double totalPrice;
 
 
-    public Order(String id, Member member, List<Product> products, LocalDateTime created_at, Boolean isPaid, Double totalPrice) {
+    public Order(String id, String memberID, List<Product> products, LocalDateTime created_at, Boolean isPaid, Double totalPrice) {
         this.id = id;
-        this.member = member;
+        this.memberID = memberID;
         this.products = products;
         this.created_at = created_at;
         this.isPaid = isPaid;
         this.totalPrice = totalPrice;
     }
-
 
     public String getId() {
         return id;
@@ -32,12 +31,12 @@ public class Order {
         this.id = id;
     }
 
-    public Member getMember() {
-        return member;
+    public String getMemberID() {
+        return memberID;
     }
 
-    public void setMember(Member member) {
-        this.member = member;
+    public void setMemberID(String memberID) {
+        this.memberID = memberID;
     }
 
     public List<Product> getProducts() {
@@ -76,7 +75,7 @@ public class Order {
     public String toString() {
         return "Order{" +
                 "id='" + id + '\'' +
-                ", member=" + member +
+                ", member=" + memberID +
                 ", products=" + products +
                 ", created_at=" + created_at +
                 ", isPaid=" + isPaid +
@@ -87,7 +86,7 @@ public class Order {
     public String toStringCustom() {
         return "Order{" +
                 "\nid='" + id + '\'' +
-                ", member=" + member +
+                ", member=" + memberID +
                 ", \nproducts=" + products.toString() +
                 ", \ncreated_at=" + created_at +
                 ", totalPrice=" + totalPrice +

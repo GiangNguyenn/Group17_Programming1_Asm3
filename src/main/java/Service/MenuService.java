@@ -76,7 +76,7 @@ public class MenuService {
                     placeOrderMenu();
                 }
                 case "2" -> productService.showProductsByCategory();
-                case "3" -> orderService.viewOrderByIdMenu();
+                case "3" -> orderService.viewCustomerOrder();
                 case "4" -> userService.printUserProfile((Member) Utils.current_user);
                 case "5" -> {
                     userService.logout();

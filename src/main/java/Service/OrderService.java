@@ -25,20 +25,22 @@ public class OrderService implements OrderInterface {
     /**
      * Take user input as orderID to get specific order
      */
-    public void viewOrderByIdMenu() throws IOException {
+
+    public void viewCustomerOrder() throws IOException {
         ArrayList<Order> ordersOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
         for (Order order : lstOrder) {
-            if (Objects.equals(order.getMember(), Utils.current_user)) {
+            if (Objects.equals(order.getMemberID(), Utils.current_user.getId())) {
                 ordersOfCustomer.add(order);
             }
         }
         int indexOfOrder = 1;
         for (Order order : ordersOfCustomer) {                          //Print out the belonging orders and the indexes of it
-            System.out.println(order.toString());
+            System.out.println(indexOfOrder + ". " + order.toString());
+            indexOfOrder += 1;
         }
-        System.out.print("Please enter the ID of the order: ");        //Find order by index within the list (Much more simple for user)
+        System.out.print("Please enter the ID of the order: ");
         String targetOrderId = Utils.reader.readLine();
-        Order order = BaseHelper.getOrderByOrderId(targetOrderId);
+        Order order = BaseHelper.getOrderByOrderId(targetOrderId,ordersOfCustomer);
         if (order != null) {
             System.out.println(order.toStringCustom());
         } else {
@@ -52,19 +54,19 @@ public class OrderService implements OrderInterface {
     public void viewOrderByCustomerId() throws IOException {
         System.out.print("Please enter the ID of the customer:");
         String customerID = Utils.reader.readLine();
-        Member targetCustomer = BaseHelper.getMemberById(customerID);//Finds customer
+        Member targetCustomer = BaseHelper.getMemberById(customerID);       //Finds customer
 
         if (targetCustomer == null) {
             System.out.println("Customer not found!");
+            viewOrderByCustomerId();
         }
 
         ArrayList<Order> ordersOfCustomer = new ArrayList<>();
         for (Order order : lstOrder) {
-            if (Objects.equals(order.getMember(), targetCustomer)) {          // Returns Empty List if no customer is found
+            if (Objects.equals(order.getMemberID(), targetCustomer.getId())) {          // Returns Empty List if no customer is found
                 ordersOfCustomer.add(order);
             }
         }
-
         for (Order order : ordersOfCustomer) {
             System.out.println(order.toString());
         }
@@ -72,8 +74,7 @@ public class OrderService implements OrderInterface {
     }
 
     /**
-     * REQUIRES PRODUCT, MEMBER OBJECT LIST TO LOAD FIRST
-     * IN ORDER TO USE THE GET***BY*** FUNCTIONS
+     * ONLY NEED PRODUCTION TO BE LOADED
      */
     @Override
     public void loadData() {
@@ -90,7 +91,7 @@ public class OrderService implements OrderInterface {
                 String dateString = detailed[3];
                 Boolean statusString = Boolean.valueOf(detailed[4]);
                 String priceString = detailed[5];
-                lstOrder.add(new Order(idString, BaseHelper.getMemberById(memberString), convertToProductList(productsString), LocalDateTime.parse(dateString, DateTimeFormatter.ISO_DATE_TIME), statusString, Double.valueOf(priceString)));
+                lstOrder.add(new Order(idString, memberString, convertToProductList(productsString), LocalDateTime.parse(dateString, DateTimeFormatter.ISO_DATE_TIME), statusString, Double.valueOf(priceString)));
             }
             orderData.close();
         } catch (IOException e) {
@@ -101,12 +102,15 @@ public class OrderService implements OrderInterface {
     @Override
     public void writeData() throws FileNotFoundException {
         PrintWriter out = new PrintWriter(BaseConstant.ORDER_DATA_PATH);
+        System.out.println(lstOrder.toString());        //Debugging
         if (!BaseHelper.isNullOrEmpty(lstOrder)) {
             for (Order order : lstOrder) {
-                out.printf("%s,%s,%s,%s,%s,%s\n", order.getId(), order.getMember().getId(),            //Stores username for customer
-                        convertToString(order.getProducts()),       //Stores ID for product
-                        convertToString(order.getCreated_at()),     //String of ISO dateformat
-                        order.getPaid(), order.getTotalPrice());
+                System.out.println(order.getId());                      //Debugging
+                System.out.println(order.getProducts().toString());     //Debugging
+                out.write(order.getMemberID()+","+            //Stores username for customer
+                        convertToString(order.getProducts())+","+        //Stores ID for product
+                        convertToString(order.getCreated_at())+","+     //String of ISO dateformat
+                        order.getPaid()+","+ order.getTotalPrice()+"\n");
             }
         }
         out.close();
@@ -130,6 +134,7 @@ public class OrderService implements OrderInterface {
         for (Product product : productList) {
             resString.append(product.getId()).append("and");
         }
+        resString = new StringBuilder(resString.substring(1, resString.length()-3));
         return resString.toString();
     }
 
@@ -217,8 +222,9 @@ public class OrderService implements OrderInterface {
 
         if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
             Order newOrder = new Order(BaseHelper.generateIdForOrder(),
-                    (Member) Utils.current_user,
-                    Utils.cart, now,
+                    Utils.current_user.getId(),
+                    Utils.cart,
+                    now,
                     false,
                     calculateTotalPrice());
             lstOrder.add(newOrder);

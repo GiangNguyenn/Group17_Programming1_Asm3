@@ -15,9 +15,12 @@ public class Main {
         OrderService orderService = new OrderService();
         ProductService productService = new ProductService();
 
-        userService.loadData();
         productService.loadData();
+        userService.loadData();
         orderService.loadData();
+
+
+
         BaseHelper.printWelcomePage();
         menuService.mainMenu();
     }
