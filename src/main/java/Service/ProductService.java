@@ -97,7 +97,7 @@ public class ProductService implements ProductInterface {
             System.out.println("Enter product name: ");
             String productName = scanner.nextLine();
             System.out.println("Enter price: ");
-            String price = scanner.nextLine();
+            Double price = scanner.nextDouble();
             System.out.println("Enter category: ");
             String category = scanner.nextLine();
             System.out.println("Enter supplier: ");
