@@ -37,13 +37,14 @@ public class OrderService implements OrderInterface {
      * Take user input as orderID to get specific order
      */
     public void viewCustomerOrder() throws IOException {
+        int indexOfOrder = 1;
         ArrayList<Order> ordersOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
         for (Order order : lstOrder) {
             if (Objects.equals(order.getMemberID(), Utils.current_user.getId())) {
                 ordersOfCustomer.add(order);
             }
         }
-        int indexOfOrder = 1;
+
         for (Order order : ordersOfCustomer) {                          //Print out the belonging orders and the indexes of it
             System.out.println(indexOfOrder + ". " + order.toString());
             indexOfOrder += 1;

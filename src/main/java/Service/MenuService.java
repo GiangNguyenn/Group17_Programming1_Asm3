@@ -53,7 +53,7 @@ public class MenuService {
         System.out.println("4. Show all order");
         System.out.println("5. add order");
         System.out.println("6. add production");
-        System.out.println("Your choice: ");
+        System.out.print("Your choice: ");
     }
 
     /**
@@ -98,7 +98,7 @@ public class MenuService {
         System.out.println("3. View your orders");   //done
         System.out.println("4. View my profile");
         System.out.println("5. Log out");
-        System.out.println("Your choice: ");
+        System.out.print("Your choice: ");
     }
 
     private void memberMenu() {
@@ -135,7 +135,8 @@ public class MenuService {
         System.out.println("Select action: ");
         System.out.println("1. Add product to cart");
         System.out.println("2. Checkout");
-        System.out.println("Your choice:");
+        System.out.println("3. Exit");
+        System.out.print("Your choice: ");
 
     }
 
@@ -150,6 +151,7 @@ public class MenuService {
                     orderService.placeOrder();
                     return;
                 }
+                case "3" -> memberMenu();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -170,7 +172,7 @@ public class MenuService {
         System.out.println("3. View all orders of a Customer ID");
         System.out.println("4. Manage order status");
         System.out.println("5. Delete a product");
-        System.out.println("Your choice: ");
+        System.out.print("Your choice: ");
     }
 
     private void adminMenu() {
