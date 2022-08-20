@@ -6,7 +6,9 @@ import Model.User.Admin;
 import Model.User.Member;
 import Model.User.User;
 
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static common.Utils.*;
 
@@ -52,11 +54,6 @@ public class BaseHelper {
         return op.isPresent() ? op.get() : null;
     }
 
-    public static Order getOrderByOrderId(String id, List<Order> orderList) {
-        Optional<Order> op = orderList.stream().filter(order -> order.getId().equalsIgnoreCase(id)).findFirst();
-        return op.isPresent() ? op.get() : null;
-    }
-
     @SuppressWarnings("rawtypes")
     public static boolean isNullOrEmpty(Object value) {
         if (value == null) {
@@ -93,6 +90,22 @@ public class BaseHelper {
                         && Objects.equals(admin.getUsername(), username));
     }
 
+    @SuppressWarnings("rawtypes")
+    public static String generateUniqueId(Class objClass) {
+
+        if (Member.class.equals(objClass) || Admin.class.equals(objClass) || User.class.equals(objClass)) {
+            return generateIdForUser();
+        } else if (Product.class.equals(objClass)) {
+            return generateIdForProduct();
+        } else if (Order.class.equals(objClass)) {
+            return generateIdForOrder();
+        } else {
+            System.out.println("Could not generate id for object " + objClass.getName());
+        }
+        return "";
+    }
+
+
     public static String generateIdForUser() {
         List<Integer> idArray = lstMember.stream().map(user -> Integer.valueOf(user.getId())).toList();
         Integer maxId = Collections.max(idArray);
@@ -106,10 +119,11 @@ public class BaseHelper {
     }
 
     public static String generateIdForOrder() {
-        List<Integer> idArray = lstOrder.stream().map(order -> Integer.valueOf(order.getId())).toList();
+        List<Integer> idArray = lstProduct.stream().map(order -> Integer.valueOf(order.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }
+
 
     public static boolean checkExistUsername(String username) {
         return lstMember.stream().map(User::getUsername).anyMatch(username::equals);
@@ -128,7 +142,134 @@ public class BaseHelper {
         System.out.flush();
     }
 
-    public static String generateIdForProduction() {
-        return null;
+    public static void loadData() {
+        Utils.userService.loadData();
+        Utils.productService.loadData();
+        Utils.orderService.loadData();
     }
+
+    @SuppressWarnings("rawtypes")
+    public static void simpleTable(List<Object> objects, Class objClass) {
+
+        Field[] fields = objClass.getDeclaredFields();
+
+        int columnSize = fields.length;
+        int rowSize = objects.size() + 1;
+
+        /*
+         * leftJustifiedRows - If true, it will add "-" as a flag to format string to
+         * make it left justified. Otherwise right justified.
+         */
+        boolean leftJustifiedRows = true;
+
+        /*
+         * Maximum allowed width. Line will be wrapped beyond this width.
+         */
+        int maxWidth = 30;
+
+        /*
+         * Table to print in console in 2-dimensional array. Each sub-array is a row.
+         */
+        String[][] table = new String[][]{{"id", "First Name", "Last Name", "Age", "Profile"},
+                {"1", "John", "Johnson", "45", "My name is John Johnson. My id is 1. My age is 45."},
+                {"2", "Tom", "", "35", "My name is Tom. My id is 2. My age is 35."},
+                {"3", "Rose", "Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson", "22",
+                        "My name is Rose Johnson. My id is 3. My age is 22."},
+                {"4", "Jimmy", "Kimmel", "", "My name is Jimmy Kimmel. My id is 4. My age is not specified. "
+                        + "I am the host of the late night show. I am not fan of Matt Damon. "}};
+
+        String[][] tables = new String[rowSize][columnSize];
+        int index = 0;
+        for (Field field : fields) {
+            table[0][index] = field.getName();
+            index++;
+        }
+
+        /*
+         * Create new table array with wrapped rows
+         */
+        List<String[]> tableList = new ArrayList<>(Arrays.asList(table));
+        List<String[]> finalTableList = new ArrayList<>();
+        for (String[] row : tableList) {
+            // If any cell data is more than max width, then it will need extra row.
+            boolean needExtraRow = false;
+            // Count of extra split row.
+            int splitRow = 0;
+            do {
+                needExtraRow = false;
+                String[] newRow = new String[row.length];
+                for (int i = 0; i < row.length; i++) {
+                    // If data is less than max width, use that as it is.
+                    if (row[i].length() < maxWidth) {
+                        newRow[i] = splitRow == 0 ? row[i] : "";
+                    } else if ((row[i].length() > (splitRow * maxWidth))) {
+                        // If data is more than max width, then crop data at maxwidth.
+                        // Remaining cropped data will be part of next row.
+                        int end = Math.min(row[i].length(), ((splitRow * maxWidth) + maxWidth));
+                        newRow[i] = row[i].substring((splitRow * maxWidth), end);
+                        needExtraRow = true;
+                    } else {
+                        newRow[i] = "";
+                    }
+                }
+                finalTableList.add(newRow);
+                if (needExtraRow) {
+                    splitRow++;
+                }
+            } while (needExtraRow);
+        }
+        String[][] finalTable = new String[finalTableList.size()][finalTableList.get(0).length];
+        for (int i = 0; i < finalTable.length; i++) {
+            finalTable[i] = finalTableList.get(i);
+        }
+
+        /*
+         * Calculate appropriate Length of each column by looking at width of data in
+         * each column.
+         *
+         * Map columnLengths is <column_number, column_length>
+         */
+        Map<Integer, Integer> columnLengths = new HashMap<>();
+        Arrays.stream(finalTable).forEach(a -> Stream.iterate(0, (i -> i < a.length), (i -> ++i)).forEach(i -> {
+            columnLengths.putIfAbsent(i, 0);
+            if (columnLengths.get(i) < a[i].length()) {
+                columnLengths.put(i, a[i].length());
+            }
+        }));
+        System.out.println("columnLengths = " + columnLengths);
+
+        /*
+         * Prepare format String
+         */
+        final StringBuilder formatString = new StringBuilder("");
+        String flag = leftJustifiedRows ? "-" : "";
+        columnLengths.entrySet().stream().forEach(e -> formatString.append("| %" + flag + e.getValue() + "s "));
+        formatString.append("|\n");
+        System.out.println("formatString = " + formatString.toString());
+
+        /*
+         * Prepare line for top, bottom & below header row.
+         */
+        String line = columnLengths.entrySet().stream().reduce("", (ln, b) -> {
+            String templn = "+-";
+            templn = templn + Stream.iterate(0, (i -> i < b.getValue()), (i -> ++i)).reduce("", (ln1, b1) -> ln1 + "-",
+                    (a1, b1) -> a1 + b1);
+            templn = templn + "-";
+            return ln + templn;
+        }, (a, b) -> a + b);
+        line = line + "+\n";
+        System.out.println("Line = " + line);
+
+        /*
+         * Print table
+         */
+        System.out.print(line);
+        Arrays.stream(finalTable).limit(1).forEach(a -> System.out.printf(formatString.toString(), a));
+        System.out.print(line);
+
+        Stream.iterate(1, (i -> i < finalTable.length), (i -> ++i))
+                .forEach(a -> System.out.printf(formatString.toString(), finalTable[a]));
+        System.out.print(line);
+    }
+
 }
