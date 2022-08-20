@@ -7,11 +7,9 @@ import common.Utils;
 import interfaces.ProductInterface;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static common.BaseConstant.PRODUCT_DATA_PATH;
 import static common.Utils.lstProduct;
@@ -128,6 +126,59 @@ public class ProductService implements ProductInterface {
             } else {
                 System.out.println("The your input must be larger than 1000(VND) and in the correct format! Please re-enter: ");
             }
+        }
+    }
+
+    public void sortProductByPrice(){
+        System.out.println("========================================================");
+        System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
+        System.out.println("");
+        System.out.println("========================================================");
+
+        for (Product product : lstProduct) {
+            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ", "   " + product.getPrice() + "$");
+            System.out.println("");
+            System.out.println("========================================================");
+        }
+        System.out.println("1. Sort product from low to high");
+        System.out.println("2. Sort product from high to low");
+        try {
+            String choice = Utils.reader.readLine();
+            switch (choice) {
+                case "1" -> ascendProductByPrice();
+                case "2" -> descendProductByPrice();
+                default -> System.out.println("Invalid choice, please try again!");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void ascendProductByPrice(){
+        List<Product> ascendProductList = lstProduct.stream().sorted(Comparator.comparing(Product::getPrice)).collect(Collectors.toList());
+        System.out.println("========================================================");
+        System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
+        System.out.println("");
+        System.out.println("========================================================");
+
+        for (Product product : ascendProductList) {
+            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ", "   " + product.getPrice() + "$");
+            System.out.println("");
+            System.out.println("========================================================");
+        }
+    }
+    public void descendProductByPrice(){
+        List<Product> descendProductList = lstProduct.stream().sorted(Comparator.comparing(Product::getPrice).reversed()).collect(Collectors.toList());
+
+        System.out.println("========================================================");
+        System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
+        System.out.println("");
+        System.out.println("========================================================");
+
+        for (Product product : descendProductList) {
+            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ", "   " + product.getPrice() + "$");
+            System.out.println("");
+            System.out.println("========================================================");
         }
     }
 

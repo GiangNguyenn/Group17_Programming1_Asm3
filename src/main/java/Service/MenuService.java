@@ -39,7 +39,8 @@ public class MenuService {
                 }
                 case "2" -> userService.register();
                 case "3" -> productService.showAllProduct();
-                case "4" -> exit();
+                case "4" -> productService.sortProductByPrice();
+                case "5" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -55,17 +56,16 @@ public class MenuService {
         // Todo: Print main menu
         System.out.println("Select function: ");
         System.out.println("1. View all products");
-        System.out.println("2. Browse products by categories");
-        System.out.println("3. View order by OrderID");   //done
-        System.out.println("4. View my profile");
-        System.out.println("5. Log out");
+        System.out.println("2. Sort products");
+        System.out.println("3. Browse products by categories");
+        System.out.println("4. View order by OrderID");   //done
+        System.out.println("5. View my profile");
+        System.out.println("6. Log out");
         System.out.println("Your choice: ");
     }
 
     public void memberMenu() {
         BaseHelper.clearConsole();
-
-
         printMemberMenu();
         try {
             String choice = Utils.reader.readLine();
@@ -75,10 +75,11 @@ public class MenuService {
                     productService.showAllProduct();
                     placeOrderMenu();
                 }
-                case "2" -> productService.showProductsByCategory();
-                case "3" -> orderService.viewOrderByIdMenu();
-                case "4" -> userService.printUserProfile((Member) Utils.current_user);
-                case "5" -> {
+                case "2" -> productService.sortProductByPrice();
+                case "3" -> productService.showProductsByCategory();
+                case "4" -> orderService.viewOrderByIdMenu();
+                case "5" -> userService.printUserProfile((Member) Utils.current_user);
+                case "6" -> {
                     userService.logout();
                     return;
                 }
