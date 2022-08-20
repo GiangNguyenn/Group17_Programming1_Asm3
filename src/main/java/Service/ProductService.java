@@ -3,6 +3,7 @@ package Service;
 import Model.Productions.Product;
 import common.BaseConstant;
 import common.BaseHelper;
+import common.Utils;
 import interfaces.ProductInterface;
 
 import java.io.*;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import static common.BaseConstant.PRODUCT_DATA_PATH;
 import static common.Utils.lstProduct;
@@ -41,9 +43,6 @@ public class ProductService implements ProductInterface {
         File productionCsvFile = new File(PRODUCT_DATA_PATH);
         File csvFile = new File(productionCsvFile.toURI());
         PrintWriter out = new PrintWriter(csvFile);
-//        Product iphone = new Product("123", "iphone12", "122$", "phone", "samsung");
-//        lstProduct.add(iphone);
-        System.out.println(lstProduct);
         boolean ans = lstProduct.isEmpty();
         if (ans) System.out.println("The List is empty");
         else for (Product product : lstProduct) {
@@ -87,6 +86,51 @@ public class ProductService implements ProductInterface {
 
     public void viewOrderDetails() {
     }
+
+    public void manageProductPrice() throws IOException {
+        System.out.println("========================================================");
+        System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
+        System.out.println("");
+        System.out.println("========================================================");
+
+        for (Product product : lstProduct) {
+            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ", "   " + product.getPrice() + "$");
+            System.out.println("");
+            System.out.println("========================================================");
+        }
+        System.out.println("Enter the id of the product you want to change the price of: ");
+
+        while (true) {
+            String productId = Utils.reader.readLine();
+            Product searchProduct = BaseHelper.getProductByProductId(productId);
+            if (!BaseHelper.isNullOrEmpty(searchProduct)) {
+                changeProductPrice(searchProduct);
+                break;
+            } else {
+                System.out.println("The id you entered is not correct! Please re-enter: ");
+            }
+        }
+        writeData();
+    }
+
+    public void changeProductPrice(Product searchedProduct) throws IOException {
+        System.out.println("The current Price of the product is: " + searchedProduct.getPrice());
+        System.out.println("============================");
+        System.out.println("Enter your desire product's price: ");
+        Pattern p = Pattern.compile("^[1-9][0-9]{3,}$");
+        boolean notMatchedRegex = true;
+        while (notMatchedRegex) {
+            String newPrice = String.valueOf(Utils.reader.readLine());
+            if (p.matcher(newPrice).find()) {
+                searchedProduct.setPrice(Double.parseDouble(newPrice));
+                System.out.println("The new Product price is: " + searchedProduct.getPrice() + " VND");
+                notMatchedRegex = false;
+            } else {
+                System.out.println("The your input must be larger than 1000(VND) and in the correct format! Please re-enter: ");
+            }
+        }
+    }
+
 
     @Override
     public void addProduct() throws IOException {
