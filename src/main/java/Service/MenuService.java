@@ -56,7 +56,7 @@ public class MenuService {
         System.out.println("Select function: ");
         System.out.println("1. View all products");
         System.out.println("2. Browse products by categories");
-        System.out.println("3. View order by OrderID");   //done
+        System.out.println("3. View your orders");   //done
         System.out.println("4. View my profile");
         System.out.println("5. Log out");
         System.out.println("Your choice: ");
@@ -76,7 +76,7 @@ public class MenuService {
                     placeOrderMenu();
                 }
                 case "2" -> productService.showProductsByCategory();
-                case "3" -> orderService.viewOrderByIdMenu();
+                case "3" -> orderService.viewCustomerOrder();
                 case "4" -> userService.printUserProfile((Member) Utils.current_user);
                 case "5" -> {
                     userService.logout();
@@ -97,6 +97,7 @@ public class MenuService {
         System.out.println("Select action: ");
         System.out.println("1. Add product to cart");
         System.out.println("2. Checkout");
+        System.out.println("3. Go back");
     }
 
     public void placeOrderMenu() {
@@ -110,6 +111,9 @@ public class MenuService {
                 case "1" -> orderService.addProductToCart();
                 case "2" -> {
                     orderService.placeOrder();
+                    return;
+                }
+                case "3" -> {
                     return;
                 }
                 default -> System.out.println("Invalid choice, please try again!");

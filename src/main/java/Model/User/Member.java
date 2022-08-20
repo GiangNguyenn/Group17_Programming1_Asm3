@@ -1,6 +1,16 @@
 package Model.User;
 
+import Model.Productions.Order;
+import Service.OrderService;
+import common.BaseConstant;
 import common.BaseConstant.*;
+import common.BaseHelper;
+import common.Utils;
+
+import java.util.ArrayList;
+import java.util.Objects;
+
+import static common.Utils.lstOrder;
 
 public class Member extends User {
 
@@ -18,6 +28,8 @@ public class Member extends User {
         super(id, username, password);
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.totalSpending = totalSpending();
+        this.memberType = memberType();
     }
 
     public Member(String userName, String password, String name, String phoneNumber) {
@@ -56,5 +68,49 @@ public class Member extends User {
 
     public TypeMember getMemberType() {
         return this.memberType;
+    }
+
+    double totalSpending(){
+        ArrayList<Double> totalSpendingOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
+        double resultDouble = 0;
+        for (Order order : lstOrder) {
+            if (order.getMemberID().equalsIgnoreCase(Utils.current_user.getId())) {
+                totalSpendingOfCustomer.add(order.getTotalPrice());
+            }
+        }
+        for (int i = 0; i < totalSpendingOfCustomer.size(); i++){
+            resultDouble += totalSpendingOfCustomer.get(0);
+        }
+        return resultDouble;
+    }
+    
+    TypeMember memberType(){        //5 10 25
+        if (totalSpending > 25000000){
+            return TypeMember.PLATINUM;
+        } else if (totalSpending > 10000000) {
+            return TypeMember.GOLD;
+        } else if (totalSpending > 5000000) {
+            return TypeMember.SILVER;
+        } else {
+            return TypeMember.NORMAL;
+        }
+
+    }
+
+    public double discountAmount(){
+        switch (this.getMemberType()){
+            case SILVER -> {
+                return 0.95;
+            }
+            case GOLD -> {
+                return 0.90;
+            }
+            case PLATINUM -> {
+                return 0.85;
+            }
+            default -> {
+                return 1.0;
+            }
+        }
     }
 }
