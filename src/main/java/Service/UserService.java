@@ -53,6 +53,7 @@ public class UserService implements UserInterface {
         if (!BaseHelper.isNullOrEmpty(member) && BaseHelper.checkingMemberLoginInfo(username, password)) {
             Utils.isLogin = true;
             Utils.current_user = member;
+            member.updateMemberInfo();
             System.out.println("Login success! " + member);
             return;
         }

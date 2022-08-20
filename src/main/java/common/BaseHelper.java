@@ -119,7 +119,7 @@ public class BaseHelper {
     }
 
     public static String generateIdForOrder() {
-        List<Integer> idArray = lstProduct.stream().map(order -> Integer.valueOf(order.getId())).toList();
+        List<Integer> idArray = lstOrder.stream().map(order -> Integer.valueOf(order.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }

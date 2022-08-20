@@ -12,12 +12,12 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static common.Utils.lstOrder;
 
@@ -33,60 +33,6 @@ public class OrderService implements OrderInterface {
         return INSTANT;
     }
 
-    /**
-     * Take user input as orderID to get specific order
-     */
-    public void viewCustomerOrder() throws IOException {
-        int indexOfOrder = 1;
-        ArrayList<Order> ordersOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
-        for (Order order : lstOrder) {
-            if (Objects.equals(order.getMemberID(), Utils.current_user.getId())) {
-                ordersOfCustomer.add(order);
-            }
-        }
-
-        for (Order order : ordersOfCustomer) {                          //Print out the belonging orders and the indexes of it
-            System.out.println(indexOfOrder + ". " + order.toString());
-            indexOfOrder += 1;
-        }
-        System.out.print("Please enter the index of the order: ");
-        String targetOrderIndex = Utils.reader.readLine().trim();
-        if (!targetOrderIndex.matches("[0-9]+")) {
-            System.out.println("Input Invalid!");
-            viewCustomerOrder();
-        }
-        if (Integer.parseInt(targetOrderIndex) > ordersOfCustomer.size()) {
-            System.out.println("\nOrder not found");
-            System.out.println("Please enter again");
-            viewCustomerOrder();
-        }
-        Order order = ordersOfCustomer.get(Integer.parseInt(targetOrderIndex) - 1);
-        System.out.println(order.toStringCustom());
-    }
-
-    /**
-     * Take user input as customer ID to get associated Orders
-     */
-    public void viewOrderByCustomerId() throws IOException {
-        System.out.print("Please enter the ID of the customer:");
-        String customerID = Utils.reader.readLine();
-        Member targetCustomer = BaseHelper.getMemberById(customerID);       //Finds customer
-
-        if (targetCustomer == null) {
-            System.out.println("Customer not found!");
-            viewOrderByCustomerId();
-        }
-
-        ArrayList<Order> ordersOfCustomer = new ArrayList<>();
-        for (Order order : lstOrder) {
-            if (Objects.equals(order.getMemberID(), targetCustomer.getId())) {          // Returns Empty List if no customer is found
-                ordersOfCustomer.add(order);
-            }
-        }
-        for (Order order : ordersOfCustomer) {
-            System.out.println(order.toStringCustom());
-        }
-    }
 
     /**
      * ORDER LOAD FIRST TO CALCULATE USER TOTAL SPENDING
@@ -158,11 +104,66 @@ public class OrderService implements OrderInterface {
     //String to other datatype
     private static ArrayList<String> convertToProductIdList(String inputString) {
         String[] array = inputString.split("and");
-        List<String> resultArray = new ArrayList<String>(Arrays.asList(array));
+        List<String> resultArray = new ArrayList<>(Arrays.asList(array));
         return (ArrayList<String>) resultArray;
     }
 
+    //Menus
 
+    /**
+     * Take user input as orderID to get specific order
+     */
+    public void viewCustomerOrder() throws IOException {
+        int indexOfOrder = 1;
+        ArrayList<Order> ordersOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
+        for (Order order : lstOrder) {
+            if (Objects.equals(order.getMemberID(), Utils.current_user.getId())) {
+                ordersOfCustomer.add(order);
+            }
+        }
+
+        for (Order order : ordersOfCustomer) {                          //Print out the belonging orders and the indexes of it
+            System.out.println(indexOfOrder + ". " + order.toString());
+            indexOfOrder += 1;
+        }
+        System.out.print("Please enter the index of the order: ");
+        String targetOrderIndex = Utils.reader.readLine().trim();
+        if (!targetOrderIndex.matches("[0-9]+")) {
+            System.out.println("Input Invalid!");
+            viewCustomerOrder();
+        }
+        if (Integer.parseInt(targetOrderIndex) > ordersOfCustomer.size()) {
+            System.out.println("\nOrder not found");
+            System.out.println("Please enter again");
+            viewCustomerOrder();
+        }
+        Order order = ordersOfCustomer.get(Integer.parseInt(targetOrderIndex) - 1);
+        System.out.println(order.toStringCustom());
+    }
+
+    /**
+     * Take user input as customer ID to get associated Orders
+     */
+    public void viewOrderByCustomerId() throws IOException {
+        System.out.print("Please enter the ID of the customer:");
+        String customerID = Utils.reader.readLine();
+        Member targetCustomer = BaseHelper.getMemberById(customerID);       //Finds customer
+
+        if (targetCustomer == null) {
+            System.out.println("Customer not found!");
+            viewOrderByCustomerId();
+        }
+
+        ArrayList<Order> ordersOfCustomer = new ArrayList<>();
+        for (Order order : lstOrder) {
+            if (Objects.equals(order.getMemberID(), targetCustomer.getId())) {          // Returns Empty List if no customer is found
+                ordersOfCustomer.add(order);
+            }
+        }
+        for (Order order : ordersOfCustomer) {
+            System.out.println(order.toStringCustom());
+        }
+    }
     /**
      * get user's order Id input to find the order object.
      * then continue getting an input to see if user want to change the input
@@ -170,6 +171,7 @@ public class OrderService implements OrderInterface {
      *
      * @throws IOException
      */
+
     public void manageOrderStatus() throws IOException {
         System.out.println("Enter an Order ID: ");
         String orderId = Utils.reader.readLine();
@@ -209,8 +211,9 @@ public class OrderService implements OrderInterface {
         }
     }
 
+    // Using product ID to add to Cart
     public void addProductToCart() throws IOException {
-        System.out.println("Please input the product Id you want to add to cart: ");
+        System.out.print("Please input the product Id you want to add to cart: ");
         String productId = Utils.reader.readLine();
 
         Product product = BaseHelper.getProductByProductId(productId);
@@ -226,18 +229,19 @@ public class OrderService implements OrderInterface {
     }
 
     private void printCart() {
-        for (String productId : Utils.cart) {
-            if (Utils.cart.size() > 0) {
-                System.out.println("Shopping cart: ");
-                System.out.println("-----------------------------------------");
+        if (Utils.cart.size() > 0) {
+            System.out.println("");
+            System.out.println("Shopping cart: ");                          // The first and second line only print once
+            System.out.println("-----------------------------------------");
+            for (String productId : Utils.cart) {
                 System.out.println(BaseHelper.getProductByProductId(productId).getProductName());
-                System.out.println("-----------------------------------------");
-            } else {
+                }
+            System.out.println("-----------------------------------------");
+        } else {
                 System.out.println("Empty cart!");
             }
         }
 
-    }
 
     private Double calculateTotalPrice() {
         List<Product> productObjectList = new ArrayList<>();
@@ -251,7 +255,6 @@ public class OrderService implements OrderInterface {
 
     public void placeOrder() throws IOException {
         LocalDateTime now = LocalDateTime.now();
-
         if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
             Order newOrder = new Order(BaseHelper.generateIdForOrder(), Utils.current_user.getId(), new ArrayList<String>(Utils.cart),      //Mat em 1 buoi sang
                     now,                                    //When clearing Utils.cart, the products in this order are deleted too
@@ -267,5 +270,11 @@ public class OrderService implements OrderInterface {
             productService.showAllProduct();
             addProductToCart();
         }
+    }
+
+    public void revenueInOneDay(){
+        LocalDate targetDate = LocalDate.now();
+        double totalSpendingToday = lstOrder.stream().filter(order -> order.getCreated_at().toLocalDate().equals(targetDate)).mapToDouble(Order::getTotalPrice).sum();
+        System.out.println("Revenue made in "+targetDate+" : "+totalSpendingToday);
     }
 }

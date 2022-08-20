@@ -8,9 +8,9 @@ import common.BaseHelper;
 import common.Utils;
 
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.stream.Stream;
 
-import static common.Utils.lstOrder;
+import static common.Utils.*;
 
 public class Member extends User {
 
@@ -28,8 +28,6 @@ public class Member extends User {
         super(id, username, password);
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.totalSpending = totalSpending();
-        this.memberType = memberType();
     }
 
     public Member(String userName, String password, String name, String phoneNumber) {
@@ -66,25 +64,25 @@ public class Member extends User {
         return this.totalSpending;
     }
 
+    public void setTotalSpending(Double totalSpending) {
+        this.totalSpending = totalSpending;
+    }
+
     public TypeMember getMemberType() {
         return this.memberType;
     }
 
-    double totalSpending(){
+    public void setMemberType(TypeMember memberType) {
+        this.memberType = memberType;
+    }
+
+    double calculateTotalSpending(){
         ArrayList<Double> totalSpendingOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
-        double resultDouble = 0;
-        for (Order order : lstOrder) {
-            if (order.getMemberID().equalsIgnoreCase(Utils.current_user.getId())) {
-                totalSpendingOfCustomer.add(order.getTotalPrice());
-            }
-        }
-        for (int i = 0; i < totalSpendingOfCustomer.size(); i++){
-            resultDouble += totalSpendingOfCustomer.get(0);
-        }
-        return resultDouble;
+        Double totalSpending = lstOrder.stream().filter(order -> order.getMemberID().equalsIgnoreCase(Utils.current_user.getId())).mapToDouble(Order::getTotalPrice).sum();
+        return totalSpending;
     }
     
-    TypeMember memberType(){        //5 10 25
+    TypeMember processMemberType(){        //5 10 25
         if (totalSpending > 25000000){
             return TypeMember.PLATINUM;
         } else if (totalSpending > 10000000) {
@@ -95,6 +93,11 @@ public class Member extends User {
             return TypeMember.NORMAL;
         }
 
+    }
+
+    public void updateMemberInfo(){
+        this.setTotalSpending(this.calculateTotalSpending());
+        this.setMemberType(this.processMemberType());
     }
 
     public double discountAmount(){

@@ -78,6 +78,8 @@ public class MenuService {
                     productService.showAllProduct();
                     break;
                 }
+                case "exit"->                   // For write date
+                    exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
 
@@ -95,7 +97,7 @@ public class MenuService {
         System.out.println("Select function: ");
         System.out.println("1. View all products");
         System.out.println("2. Browse products by categories");
-        System.out.println("3. View your orders");   //done
+        System.out.println("3. View your orders");
         System.out.println("4. View my profile");
         System.out.println("5. Log out");
         System.out.print("Your choice: ");
@@ -151,7 +153,13 @@ public class MenuService {
                     orderService.placeOrder();
                     return;
                 }
-                case "3" -> memberMenu();
+                case "3" -> {
+                    Utils.cart.clear();
+                    System.out.println("");         //Add line between
+                    memberMenu();
+                    return;
+                }
+
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -172,6 +180,7 @@ public class MenuService {
         System.out.println("3. View all orders of a Customer ID");
         System.out.println("4. Manage order status");
         System.out.println("5. Delete a product");
+        System.out.println("6. View revenue");
         System.out.print("Your choice: ");
     }
 
@@ -190,14 +199,17 @@ public class MenuService {
                 case "3":
                     orderService.viewOrderByCustomerId();
                     break;
-                case "exit":
-                    exit();
                 case "4":
                     orderService.manageOrderStatus();
                     break;
                 case "5":
                     productService.deleteProduct();
                     break;
+                case "6":
+                    orderService.revenueInOneDay();
+                    break;
+                case "exit":
+                    exit();
                 default:
                     System.out.println("Invalid choice, please try again!");
             }
