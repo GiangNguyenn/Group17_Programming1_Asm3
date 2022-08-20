@@ -3,6 +3,7 @@ package Service;
 import Model.Productions.Product;
 import common.BaseConstant;
 import common.BaseHelper;
+import common.Utils;
 import interfaces.ProductInterface;
 
 import java.io.*;
@@ -15,19 +16,36 @@ import static common.BaseConstant.PRODUCT_DATA_PATH;
 import static common.Utils.lstProduct;
 
 public class ProductService implements ProductInterface {
+
+    private static ProductService INSTANT;
+
+    public static void start() {
+        INSTANT = new ProductService();
+    }
+
+    public static ProductService getInstant() {
+        return INSTANT;
+    }
+
     @Override
     public void loadData() {
         // TODO Auto-generated method stub
         try {
             BufferedReader productData = new BufferedReader(new FileReader(BaseConstant.PRODUCT_DATA_PATH));
             String record;
+            String[] detailed;
+            String id;
+            String productName;
+            double price;
+            String category;
+            String supplier;
             while ((record = productData.readLine()) != null) {
-                String[] detailed = record.split(",");
-                String id = detailed[0];
-                String productName = detailed[1];
-                Double price = Double.parseDouble(detailed[2]);
-                String category = detailed[3];
-                String supplier = detailed[4];
+                detailed = record.split(",");
+                id = detailed[0];
+                productName = detailed[1];
+                price = Double.parseDouble(detailed[2]);
+                category = detailed[3];
+                supplier = detailed[4];
                 lstProduct.add(new Product(id, productName, price, category, supplier));
             }
         } catch (IOException e) {
@@ -41,13 +59,13 @@ public class ProductService implements ProductInterface {
         File productionCsvFile = new File(PRODUCT_DATA_PATH);
         File csvFile = new File(productionCsvFile.toURI());
         PrintWriter out = new PrintWriter(csvFile);
-//        Product iphone = new Product("123", "iphone12", "122$", "phone", "samsung");
-//        lstProduct.add(iphone);
-        System.out.println(lstProduct);
         boolean ans = lstProduct.isEmpty();
-        if (ans) System.out.println("The List is empty");
-        else for (Product product : lstProduct) {
-            out.printf("%s,%s,%s,%s,%s\n", product.getId(), product.getProductName(), product.getPrice(), product.getCategory(), product.getSupplier());
+        if (ans) {
+            System.out.println("The List is empty");
+        } else {
+            for (Product product : lstProduct) {
+                out.printf("%s,%s,%s,%s,%s\n", product.getId(), product.getProductName(), product.getPrice(), product.getCategory(), product.getSupplier());
+            }
         }
         out.close();
     }
@@ -78,7 +96,7 @@ public class ProductService implements ProductInterface {
     }
 
 
-    public static void printListOfCategories() {
+    private static void printListOfCategories() {
         List<String> uniqueCategories = lstProduct.stream().map(Product::getCategory).distinct().toList();
         for (int i = 0; i < uniqueCategories.size(); i++) {
             System.out.println(i + " " + uniqueCategories.get(i));
@@ -90,20 +108,19 @@ public class ProductService implements ProductInterface {
 
     @Override
     public void addProduct() throws IOException {
-        Scanner scanner = new Scanner(System.in);
         boolean productExists = false;
+
+        BufferedReader reader = Utils.reader;
 
         while (!productExists) {
             System.out.println("Enter product name: ");
-            String productName = scanner.nextLine();
+            String productName = reader.readLine();
             System.out.println("Enter price: ");
-            String price = scanner.nextLine();
+            String price = reader.readLine();
             System.out.println("Enter category: ");
-            String category = scanner.nextLine();
+            String category = reader.readLine();
             System.out.println("Enter supplier: ");
-            String supplier = scanner.nextLine();
-
-            Double priceDouble = Double.parseDouble(price);
+            String supplier = reader.readLine();
 
             if (BaseHelper.checkExistProduct(productName, supplier)) {
                 System.out.println(productName + " of supplier " + supplier + " has already been added! Please add another product");
