@@ -59,7 +59,7 @@ public class MenuService {
         System.out.println("Select function: ");
         System.out.println("1. View all products");
         System.out.println("2. Browse products by categories");
-        System.out.println("3. View your orders");   //done
+        System.out.println("3. View order by OrderID"); // done
         System.out.println("4. View my profile");
         System.out.println("5. Log out");
         System.out.println("Your choice: ");
@@ -77,7 +77,7 @@ public class MenuService {
                     placeOrderMenu();
                 }
                 case "2" -> productService.showProductsByCategory();
-                case "3" -> orderService.viewCustomerOrder();
+                case "3" -> orderService.viewOrderByIdMenu();
                 case "4" -> userService.printUserProfile((Member) Utils.current_user);
                 case "5" -> {
                     userService.logout();
@@ -98,7 +98,6 @@ public class MenuService {
         System.out.println("Select action: ");
         System.out.println("1. Add product to cart");
         System.out.println("2. Checkout");
-        System.out.println("3. Go back");
     }
 
     public void placeOrderMenu() {
@@ -114,9 +113,6 @@ public class MenuService {
                     orderService.placeOrder();
                     return;
                 }
-                case "3" -> {
-                    return;
-                }
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -127,24 +123,27 @@ public class MenuService {
         }
     }
 
-    public void printSortProductByPrice(){
+    public void printSortProductByPrice() {
         System.out.println("Select action: ");
         System.out.println("1. Sort product from low to high");
         System.out.println("2. Sort product from high to low");
     }
-    public void productTable(){
+
+    public void productTable() {
         System.out.println("========================================================");
         System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
         System.out.println("");
         System.out.println("========================================================");
 
         for (Product product : lstProduct) {
-            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ", "   " + product.getPrice() + "$");
+            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ",
+                    "   " + product.getPrice() + "$");
             System.out.println("");
             System.out.println("========================================================");
         }
     }
-    public void sortProductByPriceMenu(){
+
+    public void sortProductByPriceMenu() {
         BaseHelper.clearConsole();
         productTable();
         printSortProductByPrice();
@@ -157,7 +156,7 @@ public class MenuService {
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
-//            sortProductByPriceMenu();
+            // sortProductByPriceMenu();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -209,7 +208,6 @@ public class MenuService {
         }
     }
 
-
     public void printMenuByUserRole() {
         BaseHelper.clearConsole();
         if (Utils.isLogin && Utils.isAdmin) {
@@ -220,7 +218,6 @@ public class MenuService {
             memberMenu();
         }
     }
-
 
     public void exit() throws FileNotFoundException {
         UserService userService = new UserService();
