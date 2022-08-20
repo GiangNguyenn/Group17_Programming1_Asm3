@@ -82,7 +82,9 @@ public class ProductService implements ProductInterface {
         }
     }
 
+    // TODO
     public void viewOrderDetails() {
+
     }
 
     public void manageProductPrice() throws IOException {
@@ -129,32 +131,7 @@ public class ProductService implements ProductInterface {
         }
     }
 
-    public void sortProductByPrice(){
-        System.out.println("========================================================");
-        System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
-        System.out.println("");
-        System.out.println("========================================================");
-
-        for (Product product : lstProduct) {
-            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ", "   " + product.getPrice() + "$");
-            System.out.println("");
-            System.out.println("========================================================");
-        }
-        System.out.println("1. Sort product from low to high");
-        System.out.println("2. Sort product from high to low");
-        try {
-            String choice = Utils.reader.readLine();
-            switch (choice) {
-                case "1" -> ascendProductByPrice();
-                case "2" -> descendProductByPrice();
-                default -> System.out.println("Invalid choice, please try again!");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void ascendProductByPrice(){
+    public void ascendProductByPrice(){
         List<Product> ascendProductList = lstProduct.stream().sorted(Comparator.comparing(Product::getPrice)).collect(Collectors.toList());
         System.out.println("========================================================");
         System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
@@ -167,7 +144,7 @@ public class ProductService implements ProductInterface {
             System.out.println("========================================================");
         }
     }
-    private void descendProductByPrice(){
+    public void descendProductByPrice(){
         List<Product> descendProductList = lstProduct.stream().sorted(Comparator.comparing(Product::getPrice).reversed()).collect(Collectors.toList());
 
         System.out.println("========================================================");

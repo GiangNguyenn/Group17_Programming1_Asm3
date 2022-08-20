@@ -1,11 +1,14 @@
 package Service;
 
+import Model.Productions.Product;
 import Model.User.Member;
 import common.BaseHelper;
 import common.Utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import static common.Utils.lstProduct;
 
 public class MenuService {
     UserService userService = new UserService();
@@ -39,8 +42,7 @@ public class MenuService {
                 }
                 case "2" -> userService.register();
                 case "3" -> productService.showAllProduct();
-                case "4" -> productService.sortProductByPrice();
-                case "5" -> exit();
+                case "4" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -56,11 +58,10 @@ public class MenuService {
         // Todo: Print main menu
         System.out.println("Select function: ");
         System.out.println("1. View all products");
-        System.out.println("2. Sort products");
-        System.out.println("3. Browse products by categories");
-        System.out.println("4. View order by OrderID");   //done
-        System.out.println("5. View my profile");
-        System.out.println("6. Log out");
+        System.out.println("2. Browse products by categories");
+        System.out.println("3. View order by OrderID");   //done
+        System.out.println("4. View my profile");
+        System.out.println("5. Log out");
         System.out.println("Your choice: ");
     }
 
@@ -75,11 +76,10 @@ public class MenuService {
                     productService.showAllProduct();
                     placeOrderMenu();
                 }
-                case "2" -> productService.sortProductByPrice();
-                case "3" -> productService.showProductsByCategory();
-                case "4" -> orderService.viewOrderByIdMenu();
-                case "5" -> userService.printUserProfile((Member) Utils.current_user);
-                case "6" -> {
+                case "2" -> productService.showProductsByCategory();
+                case "3" -> orderService.viewOrderByIdMenu();
+                case "4" -> userService.printUserProfile((Member) Utils.current_user);
+                case "5" -> {
                     userService.logout();
                     return;
                 }
@@ -121,10 +121,43 @@ public class MenuService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
+    public void printSortProductByPrice(){
+        System.out.println("Select action: ");
+        System.out.println("1. Sort product from low to high");
+        System.out.println("2. Sort product from high to low");
+    }
+    public void productTable(){
+        System.out.println("========================================================");
+        System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
+        System.out.println("");
+        System.out.println("========================================================");
+
+        for (Product product : lstProduct) {
+            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ", "   " + product.getPrice() + "$");
+            System.out.println("");
+            System.out.println("========================================================");
+        }
+    }
+    public void sortProductByPriceMenu(){
+        BaseHelper.clearConsole();
+        productTable();
+        printSortProductByPrice();
+        try {
+            String choice = Utils.reader.readLine();
+            switch (choice) {
+                case "1" -> productService.ascendProductByPrice();
+                case "2" -> productService.descendProductByPrice();
+                default -> System.out.println("Invalid choice, please try again!");
+            }
+            System.out.println("press enter to continue...");
+            Utils.reader.read();
+//            sortProductByPriceMenu();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void printAdminMenu() {
         System.out.println("Select function: ");
