@@ -111,7 +111,7 @@ public class ProductService implements ProductInterface {
         writeData();
     }
 
-    public void changeProductPrice(Product searchedProduct) throws IOException {
+    private void changeProductPrice(Product searchedProduct) throws IOException {
         System.out.println("The current Price of the product is: " + searchedProduct.getPrice());
         System.out.println("============================");
         System.out.println("Enter your desire product's price: ");
@@ -154,7 +154,7 @@ public class ProductService implements ProductInterface {
         }
     }
 
-    public void ascendProductByPrice(){
+    private void ascendProductByPrice(){
         List<Product> ascendProductList = lstProduct.stream().sorted(Comparator.comparing(Product::getPrice)).collect(Collectors.toList());
         System.out.println("========================================================");
         System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
@@ -167,7 +167,7 @@ public class ProductService implements ProductInterface {
             System.out.println("========================================================");
         }
     }
-    public void descendProductByPrice(){
+    private void descendProductByPrice(){
         List<Product> descendProductList = lstProduct.stream().sorted(Comparator.comparing(Product::getPrice).reversed()).collect(Collectors.toList());
 
         System.out.println("========================================================");
