@@ -98,6 +98,7 @@ public class MenuService {
         System.out.println("Select action: ");
         System.out.println("1. Add product to cart");
         System.out.println("2. Checkout");
+        System.out.println("3. Go back");
     }
 
     public void placeOrderMenu() {
@@ -111,6 +112,9 @@ public class MenuService {
                 case "1" -> orderService.addProductToCart();
                 case "2" -> {
                     orderService.placeOrder();
+                    return;
+                }
+                case "3" -> {
                     return;
                 }
                 default -> System.out.println("Invalid choice, please try again!");

@@ -47,7 +47,7 @@ public class Utils {
     /* Adding products to lstMember after registering successfully */
     public static List<Order> lstOrder = new ArrayList<>();
 
-    public static List<Product> cart = new ArrayList<>();
+    public static List<String> cart = new ArrayList<>();    //String stands for ProductId string type
 
     // Some tools useful
     public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
