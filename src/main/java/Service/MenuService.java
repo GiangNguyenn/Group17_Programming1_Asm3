@@ -150,6 +150,7 @@ public class MenuService {
                 case "1":
                     productService.addProduct();
                 case "2":
+                    productService.manageProductPrice();
                     break;
                 case "3":
                     orderService.viewOrderByCustomerId();
@@ -161,6 +162,7 @@ public class MenuService {
                     break;
                 case "5":
                     productService.deleteProduct();
+                    break;
                 default:
                     System.out.println("Invalid choice, please try again!");
             }
