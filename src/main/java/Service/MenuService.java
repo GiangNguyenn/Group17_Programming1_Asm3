@@ -15,7 +15,40 @@ public class MenuService {
     ProductService productService = new ProductService();
     OrderService orderService = new OrderService();
 
-    public static void printMainMenu() {
+    private static MenuService INSTANT;
+
+    public static void start() {
+        INSTANT = new MenuService();
+    }
+
+    public static MenuService getInstant() {
+        return INSTANT;
+    }
+
+    private static void printUtilMenu() {
+        System.out.println("B. Go Back");
+        System.out.println("E. Exit");
+    }
+
+    public void utilMenu(String choice) {
+        try {
+            switch (choice) {
+                case "B" -> {
+                    System.out.println("going ");
+                    return;
+                }
+                case "E" -> exit();
+                default -> {
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static void printMainMenu() {
         System.out.println("Select function: ");
         System.out.println("1. Login");
         System.out.println("2. Register");
@@ -34,17 +67,23 @@ public class MenuService {
         printMainMenu();
         try {
             String choice = Utils.reader.readLine();
-
             switch (choice) {
                 case "1" -> {
                     userService.login();
                     printMenuByUserRole();
+                    break;
                 }
-                case "2" -> userService.register();
-                case "3" -> productService.showAllProduct();
-                case "4" -> exit();
+                case "2" -> {
+                    userService.register();
+                    break;
+                }
+                case "3" -> {
+                    productService.showAllProduct();
+                    break;
+                }
                 default -> System.out.println("Invalid choice, please try again!");
             }
+
             System.out.println("press enter to continue...");
             Utils.reader.read();
             mainMenu();
@@ -54,7 +93,7 @@ public class MenuService {
         }
     }
 
-    public static void printMemberMenu() {
+    private static void printMemberMenu() {
         // Todo: Print main menu
         System.out.println("Select function: ");
         System.out.println("1. View all products");
@@ -65,12 +104,12 @@ public class MenuService {
         System.out.println("Your choice: ");
     }
 
-    public void memberMenu() {
+    private void memberMenu() {
         BaseHelper.clearConsole();
         printMemberMenu();
+
         try {
             String choice = Utils.reader.readLine();
-
             switch (choice) {
                 case "1" -> {
                     productService.showAllProduct();
@@ -98,15 +137,14 @@ public class MenuService {
         System.out.println("Select action: ");
         System.out.println("1. Add product to cart");
         System.out.println("2. Checkout");
+        System.out.println("Your choice:");
     }
 
-    public void placeOrderMenu() {
+    private void placeOrderMenu() {
         BaseHelper.clearConsole();
-
         printPlaceOrderMenu();
         try {
             String choice = Utils.reader.readLine();
-
             switch (choice) {
                 case "1" -> orderService.addProductToCart();
                 case "2" -> {
@@ -172,13 +210,12 @@ public class MenuService {
         System.out.println("Your choice: ");
     }
 
-    public void adminMenu() {
+    private void adminMenu() {
         BaseHelper.clearConsole();
 
         printAdminMenu();
         try {
             String choice = Utils.reader.readLine();
-
             switch (choice) {
                 case "1":
                     productService.addProduct();
@@ -216,18 +253,18 @@ public class MenuService {
         }
         if (Utils.isLogin) {
             memberMenu();
+            return;
         }
     }
 
-    public void exit() throws FileNotFoundException {
+
+    private static void exit() throws FileNotFoundException {
         UserService userService = new UserService();
         ProductService productService = new ProductService();
+        OrderService orderService = new OrderService();
 
         userService.writeData();
         productService.writeData();
-
-        OrderService orderService = new OrderService();
-
         orderService.writeData();
         System.exit(-1);
     }

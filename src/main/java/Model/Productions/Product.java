@@ -30,7 +30,7 @@ public class Product {
 
 
     public Product(String productName, Double price, String category, String supplier) {
-        this.id = BaseHelper.generateIdForProduction();
+        this.id = BaseHelper.generateIdForProduct();
         this.productName = productName;
         this.price = price;
         this.category = category;
