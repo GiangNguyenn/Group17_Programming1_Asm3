@@ -18,6 +18,9 @@ public class Main {
         userService.loadData();
         productService.loadData();
         orderService.loadData();
+
+
+
         BaseHelper.printWelcomePage();
         menuService.mainMenu();
     }
