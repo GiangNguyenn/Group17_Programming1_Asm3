@@ -148,7 +148,7 @@ public class OrderService implements OrderInterface {
     private static String convertToString(List<String> productIDList) {
         StringBuilder resString = new StringBuilder();
         for (String product : productIDList) {
-            resString.append(product).append("ante");
+            resString.append(product).append("and");
         }
         resString = new StringBuilder(resString.substring(0, resString.length() - 3));        //Deleting the last "and"
         return resString.toString();
