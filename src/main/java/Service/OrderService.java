@@ -106,7 +106,7 @@ public class OrderService implements OrderInterface {
     //String to other datatype
     private static ArrayList<String> convertToProductIdList(String inputString) {
         String[] array = inputString.split("and");
-        List<String> resultArray = new ArrayList<>(Arrays.asList(array));
+        List<String> resultArray = new ArrayList<String>(Arrays.asList(array));
         return (ArrayList<String>) resultArray;
     }
 
@@ -178,6 +178,9 @@ public class OrderService implements OrderInterface {
     public void manageOrderStatus() throws IOException {
         System.out.println("Enter an Order ID: ");
         String orderId = Utils.reader.readLine();
+        if (orderId.equalsIgnoreCase("B")) {
+            return;
+        }
         Order searchedOrder = BaseHelper.getOrderByOrderId(orderId);
         if (!BaseHelper.isNullOrEmpty(searchedOrder) && !searchedOrder.getPaid()) {
             System.out.println(searchedOrder);
@@ -216,10 +219,15 @@ public class OrderService implements OrderInterface {
 
     // Using product ID to add to Cart
     public void addProductToCart() throws IOException {
+        printCart();
+        System.out.println("Note: Type 'B' to go back.");
         System.out.print("Please input the product Id you want to add to cart: ");
         String productId = Utils.reader.readLine();
 
         Product product = BaseHelper.getProductByProductId(productId);
+        if (productId.equalsIgnoreCase("B")) {
+            return;
+        }
         if (!BaseHelper.isNullOrEmpty(product)) {
             Utils.cart.add(productId);
             System.out.println("Product " + product.getProductName() + " added to cart!");
@@ -232,19 +240,17 @@ public class OrderService implements OrderInterface {
     }
 
     private void printCart() {
-        if (Utils.cart.size() > 0) {
-            System.out.println("");
-            System.out.println("Shopping cart: ");                          // The first and second line only print once
-            System.out.println("-----------------------------------------");
-            for (String productId : Utils.cart) {
+        System.out.println("Shopping cart: ");
+        System.out.println("-----------------------------------------");
+        for (String productId : Utils.cart) {
+            if (Utils.cart.size() > 0) {
                 System.out.println(BaseHelper.getProductByProductId(productId).getProductName());
+            } else {
+                System.out.println("Empty cart!");
             }
-            System.out.println("-----------------------------------------");
-        } else {
-            System.out.println("Empty cart!");
         }
+        System.out.println("-----------------------------------------");
     }
-
 
     private Double calculateTotalPrice() {
         List<Product> productObjectList = new ArrayList<>();
@@ -259,7 +265,7 @@ public class OrderService implements OrderInterface {
     public void placeOrder() throws IOException {
         LocalDateTime now = LocalDateTime.now();
         if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
-            Order newOrder = new Order(BaseHelper.generateIdForOrder(), Utils.current_user.getId(), new ArrayList<String>(Utils.cart),      //Mat em 1 buoi sang
+            Order newOrder = new Order(BaseHelper.generateUniqueId(Order.class), Utils.current_user.getId(), new ArrayList<String>(Utils.cart),      //Mat em 1 buoi sang
                     now,                                    //When clearing Utils.cart, the products in this order are deleted too
                     false,                                  //Have to make separate object by copying the origin Utils.cart
                     this.calculateTotalPrice());

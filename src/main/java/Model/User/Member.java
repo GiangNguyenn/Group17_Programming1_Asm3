@@ -1,23 +1,15 @@
 package Model.User;
 
 import Model.Productions.Order;
-import Service.OrderService;
-import common.BaseConstant;
-import common.BaseConstant.*;
-import common.BaseHelper;
+import common.BaseConstant.TypeMember;
 import common.Utils;
 
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
-import static common.Utils.*;
+import static common.Utils.lstOrder;
 
 public class Member extends User {
-
-    public String getName() {
-        return name;
-    }
-
     private String name;
     private String phoneNumber;
     private TypeMember memberType;
@@ -33,7 +25,6 @@ public class Member extends User {
     public Member(String userName, String password, String name, String phoneNumber) {
         // TODO
         super();
-
     }
 
     public Member() {
@@ -48,6 +39,10 @@ public class Member extends User {
     public String toString() {
         return "Member [name=" + name + ", phoneNumber=" + phoneNumber + ", totalSpending=" + totalSpending
                 + ", typeMember=" + memberType + "]";
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void showInfo() {
@@ -81,19 +76,19 @@ public class Member extends User {
         Double totalSpending = lstOrder.stream().filter(order -> order.getMemberID().equalsIgnoreCase(Utils.current_user.getId())).mapToDouble(Order::getTotalPrice).sum();
         return totalSpending;
     }
-    
-    TypeMember processMemberType(){        //5 10 25
-        if (totalSpending > 25000000){
-            return TypeMember.PLATINUM;
-        } else if (totalSpending > 10000000) {
-            return TypeMember.GOLD;
-        } else if (totalSpending > 5000000) {
-            return TypeMember.SILVER;
-        } else {
-            return TypeMember.NORMAL;
-        }
 
-    }
+        TypeMember processMemberType(){        //5 10 25
+            if (totalSpending > 25000000){
+                return TypeMember.PLATINUM;
+            } else if (totalSpending > 10000000) {
+                return TypeMember.GOLD;
+            } else if (totalSpending > 5000000) {
+                return TypeMember.SILVER;
+            } else {
+                return TypeMember.NORMAL;
+            }
+
+        }
 
     public void updateMemberInfo(){
         this.setTotalSpending(this.calculateTotalSpending());

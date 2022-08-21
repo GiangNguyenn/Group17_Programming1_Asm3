@@ -17,5 +17,5 @@ public class BaseConstant {
     public static final String PRODUCT_DATA_PATH = "src/main/resources/data/production.csv";
     public static final String ORDER_DATA_PATH = "src/main/resources/data/order.csv";
 
-
+    public static final String PRODUCT_TABLE_FORMAT = "%20s%15s%15s";
 }
