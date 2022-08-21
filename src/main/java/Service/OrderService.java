@@ -14,10 +14,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Stream;
+
 
 import static common.Utils.lstOrder;
 
@@ -272,9 +271,64 @@ public class OrderService implements OrderInterface {
         }
     }
 
-    public void revenueInOneDay(){
-        LocalDate targetDate = LocalDate.now();
-        double totalSpendingToday = lstOrder.stream().filter(order -> order.getCreated_at().toLocalDate().equals(targetDate)).mapToDouble(Order::getTotalPrice).sum();
-        System.out.println("Revenue made in "+targetDate+" : "+totalSpendingToday);
+    public void revenueInOneDay() throws IOException {
+        LocalDate targetDate = null;
+
+        System.out.println("Please choose actions:");
+        System.out.println("1. See revenue today");
+        System.out.println("2. See revenue specific day");
+        try {
+            String choice = Utils.reader.readLine();
+            switch (choice) {
+                case "1" -> {
+                    targetDate = LocalDate.now();
+                    break;
+                }
+                case "2" -> {
+                    LocalDate tempt;
+                    if ( (tempt = findSpecificDay()) != null){
+                        targetDate = tempt;
+                    }
+                    break;
+                }
+                default -> {
+                    System.out.println("Invalid input! Please try again");
+                    System.out.println("");
+                    revenueInOneDay();
+                }
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        LocalDate finalTargetDate = targetDate;                 // IDE suggest to do so
+        if (finalTargetDate != null) {                          // To prevent wrong answers from before getting printed
+            double totalSpendingDay = lstOrder.stream().filter(order -> order.getCreated_at().toLocalDate().equals(finalTargetDate)).mapToDouble(Order::getTotalPrice).sum();
+            System.out.println("Revenue made in "+finalTargetDate+" : "+totalSpendingDay);
+        }
+
+    }
+    private LocalDate findSpecificDay() throws IOException{
+        String targetYearString;
+        String targetMonthString;
+        String targetDayString;
+        System.out.print("Please enter the year yyyy: ");
+        targetYearString = Utils.reader.readLine().trim();
+        System.out.print("Please enter the month mm: ");
+        targetMonthString = Utils.reader.readLine().trim();
+        System.out.print("Please enter the day dd: ");
+        targetDayString = Utils.reader.readLine().trim();
+
+        if (!(targetDayString.matches("\\d{1,2}") && targetMonthString.matches("\\d{1,2}") && targetYearString.matches("\\d{4}"))){
+            System.out.println("Invalid input! Please try again.");
+            System.out.println("");
+            revenueInOneDay();
+            return null;
+        }
+        targetMonthString = String.format("%02d",Integer.parseInt(targetMonthString));              // Adding zeros before numbers
+        targetDayString = String.format("%02d",Integer.parseInt(targetDayString));                  // for the LocalDate.parse to work
+
+        String targetDateString = targetYearString+"-"+targetMonthString+"-"+targetDayString;
+        return LocalDate.parse(targetDateString, DateTimeFormatter.ISO_DATE);
+
     }
 }
