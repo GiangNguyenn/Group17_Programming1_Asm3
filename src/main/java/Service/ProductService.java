@@ -1,5 +1,6 @@
 package Service;
 
+import Model.Productions.Order;
 import Model.Productions.Product;
 import common.BaseConstant;
 import common.BaseHelper;
@@ -12,6 +13,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static common.BaseConstant.PRODUCT_DATA_PATH;
+import static common.Utils.lstOrder;
 import static common.Utils.lstProduct;
 
 public class ProductService implements ProductInterface {
@@ -103,22 +105,27 @@ public class ProductService implements ProductInterface {
     }
 
     // TODO
-    public void viewOrderDetails() {
-
+    public void viewOrderDetails() throws IOException {
+        System.out.println("List of order");
+        BaseHelper.orderTable(lstOrder);
+        System.out.println("Enter the id of the order you want to view: ");
+        Pattern p = Pattern.compile("^[0-9]+$");
+        boolean notMatchedRegex = true;
+        while (notMatchedRegex) {
+            String orderId = Utils.reader.readLine();
+            Order searchOrder = BaseHelper.getOrderByOrderId(orderId);
+            if (!BaseHelper.isNullOrEmpty(searchOrder) && p.matcher(orderId).find()) {
+                BaseHelper.orderItemTable(searchOrder);
+                notMatchedRegex = false;
+            } else {
+                System.out.println(
+                        "The your input is in the correct format! Please re-enter: ");
+            }
+        }
     }
 
     public void manageProductPrice() throws IOException {
-        System.out.println("========================================================");
-        System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
-        System.out.println("");
-        System.out.println("========================================================");
-
-        for (Product product : lstProduct) {
-            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ",
-                    "   " + product.getPrice() + "$");
-            System.out.println("");
-            System.out.println("========================================================");
-        }
+        BaseHelper.productTable(lstProduct);
         System.out.println("Enter the id of the product you want to change the price of: ");
 
         while (true) {

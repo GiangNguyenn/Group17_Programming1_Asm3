@@ -34,13 +34,37 @@ public class BaseHelper {
         System.out.println("========================================================");
 
         for (Product product : input) {
-            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ",
+            System.out.printf(BaseConstant.PRODUCT_TABLE_FORMAT, "   " + product.getId() + "   ", "   " + product.getProductName() + "   ",
                     "   " + product.getPrice() + "$");
             System.out.println("");
             System.out.println("========================================================");
         }
     }
 
+    public static void orderTable(List<Order> input) {
+        System.out.println("========================================================");
+        System.out.printf(BaseConstant.ORDER_TABLE_FORMNAT, "   ID   ", "   Product's IDs   ", "   Order created date   ");
+        System.out.println("");
+        System.out.println("========================================================");
+
+        for (Order order : input) {
+            System.out.printf(BaseConstant.ORDER_TABLE_FORMNAT, "   " + order.getId() + "   ", "   " + order.getProductsID() + "   ",
+                    "   " + order.getCreated_at() + "   ");
+            System.out.println("");
+            System.out.println("========================================================");
+        }
+    }
+
+    public static void orderItemTable(Order input){
+        System.out.println("================================================================================================================");
+        System.out.printf(BaseConstant.ORDER_ITEM_TABLE_FORMNAT, "ID   ", "   Product's IDs   ", "   Order created date   ", "   Order's status   ", "   Order's total   ");
+        System.out.println("");
+        System.out.println("================================================================================================================");
+        System.out.printf(BaseConstant.ORDER_ITEM_TABLE_FORMNAT, input.getId() + "   ", "   " + input.getProductsID() + "   ",
+                "   " + input.getCreated_at() + "   ", "   " + input.getPaid() + "   ", "   " + input.getTotalPrice() + "   ");
+        System.out.println("");
+        System.out.println("================================================================================================================");
+    }
     public static Boolean isLogin() {
         return Utils.isLogin;
     }

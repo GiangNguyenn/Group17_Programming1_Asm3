@@ -18,4 +18,6 @@ public class BaseConstant {
     public static final String ORDER_DATA_PATH = "src/main/resources/data/order.csv";
 
     public static final String PRODUCT_TABLE_FORMAT = "%20s%15s%15s";
+    public static final String ORDER_TABLE_FORMNAT = "%20s%15s%15s";
+    public static final String ORDER_ITEM_TABLE_FORMNAT = "%20s%15s%15s%15s%15s";
 }
