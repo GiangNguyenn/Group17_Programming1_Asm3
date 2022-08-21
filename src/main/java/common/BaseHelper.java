@@ -29,7 +29,7 @@ public class BaseHelper {
     }
     public static void productTable(List<Product> input) {
         System.out.println("========================================================");
-        System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
+        System.out.printf(BaseConstant.PRODUCT_TABLE_FORMAT, "   ID   ", "   Product's name   ", "   Product's price   ");
         System.out.println("");
         System.out.println("========================================================");
 

@@ -155,13 +155,15 @@ public class ProductService implements ProductInterface {
 
     public void sortProductByPrice(String sortFunction) throws IOException {
         BaseHelper.productTable(lstProduct);
-        List<Product> ascProductList = lstProduct.stream().sorted(Comparator.comparing(Product::getPrice))
-                .collect(Collectors.toList());
-        List<Product> descProductList = lstProduct.stream().sorted(Comparator.comparing(Product::getPrice).reversed())
-                .collect(Collectors.toList());
         if (sortFunction.equals("asc")) {
+            List<Product> ascProductList = lstProduct.stream()
+                    .sorted(Comparator.comparing(Product::getPrice))
+                    .collect(Collectors.toList());
             BaseHelper.productTable(ascProductList);
         } else if (sortFunction.equals("desc")) {
+            List<Product> descProductList = lstProduct.stream()
+                    .sorted(Comparator.comparing(Product::getPrice).reversed())
+                    .collect(Collectors.toList());
             BaseHelper.productTable(descProductList);
         }
     }
