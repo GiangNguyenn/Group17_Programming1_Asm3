@@ -48,14 +48,18 @@ public class OrderService implements OrderInterface {
             System.out.println(indexOfOrder + ". " + order.toString());
             indexOfOrder += 1;
         }
+        System.out.println("Note: Type 'B' in any input to go back.");
         System.out.print("Please enter the index of the order: ");
         String targetOrderIndex = Utils.reader.readLine().trim();
+        if (targetOrderIndex.equalsIgnoreCase("B")) {
+            return;
+        }
         if (!targetOrderIndex.matches("[0-9]+")) {
             System.out.println("Input Invalid!");
             viewCustomerOrder();
         }
         if (Integer.parseInt(targetOrderIndex) > ordersOfCustomer.size()) {
-            System.out.println("\nOrder not found");
+            System.out.println("Order not found");
             System.out.println("Please enter again");
             viewCustomerOrder();
         }
@@ -67,10 +71,14 @@ public class OrderService implements OrderInterface {
      * Take user input as customer ID to get associated Orders
      */
     public void viewOrderByCustomerId() throws IOException {
+        System.out.println("Note: Type 'B' to go back.");
         System.out.print("Please enter the ID of the customer:");
         String customerID = Utils.reader.readLine();
         Member targetCustomer = BaseHelper.getMemberById(customerID);       //Finds customer
 
+        if (customerID.equalsIgnoreCase("B")) {
+            return;
+        }
         if (targetCustomer == null) {
             System.out.println("Customer not found!");
             viewOrderByCustomerId();
@@ -95,7 +103,6 @@ public class OrderService implements OrderInterface {
         try {
             BufferedReader orderData = Utils.fileReader(BaseConstant.ORDER_DATA_PATH);
             String dataRow;
-            lstOrder.clear();
             String idString;
             String memberString;
             String productsString;
@@ -172,6 +179,9 @@ public class OrderService implements OrderInterface {
     public void manageOrderStatus() throws IOException {
         System.out.println("Enter an Order ID: ");
         String orderId = Utils.reader.readLine();
+        if (orderId.equalsIgnoreCase("B")) {
+            return;
+        }
         Order searchedOrder = BaseHelper.getOrderByOrderId(orderId);
         if (!BaseHelper.isNullOrEmpty(searchedOrder) && !searchedOrder.getPaid()) {
             System.out.println(searchedOrder);
@@ -209,10 +219,15 @@ public class OrderService implements OrderInterface {
     }
 
     public void addProductToCart() throws IOException {
+        printCart();
+        System.out.println("Note: Type 'B' to go back.");
         System.out.println("Please input the product Id you want to add to cart: ");
         String productId = Utils.reader.readLine();
 
         Product product = BaseHelper.getProductByProductId(productId);
+        if (productId.equalsIgnoreCase("B")) {
+            return;
+        }
         if (!BaseHelper.isNullOrEmpty(product)) {
             Utils.cart.add(productId);
             System.out.println("Product " + product.getProductName() + " added to cart!");
@@ -225,17 +240,16 @@ public class OrderService implements OrderInterface {
     }
 
     private void printCart() {
+        System.out.println("Shopping cart: ");
+        System.out.println("-----------------------------------------");
         for (String productId : Utils.cart) {
             if (Utils.cart.size() > 0) {
-                System.out.println("Shopping cart: ");
-                System.out.println("-----------------------------------------");
                 System.out.println(BaseHelper.getProductByProductId(productId).getProductName());
-                System.out.println("-----------------------------------------");
             } else {
                 System.out.println("Empty cart!");
             }
         }
-
+        System.out.println("-----------------------------------------");
     }
 
     private Double calculateTotalPrice() {
@@ -252,7 +266,7 @@ public class OrderService implements OrderInterface {
         LocalDateTime now = LocalDateTime.now();
 
         if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
-            Order newOrder = new Order(BaseHelper.generateIdForOrder(), Utils.current_user.getId(), new ArrayList<String>(Utils.cart),      //Mat em 1 buoi sang
+            Order newOrder = new Order(BaseHelper.generateUniqueId(Order.class), Utils.current_user.getId(), new ArrayList<String>(Utils.cart),      //Mat em 1 buoi sang
                     now,                                    //When clearing Utils.cart, the products in this order are deleted too
                     false,                                  //Have to make separate object by copying the origin Utils.cart
                     this.calculateTotalPrice());

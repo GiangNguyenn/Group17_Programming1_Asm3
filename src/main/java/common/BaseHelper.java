@@ -106,19 +106,19 @@ public class BaseHelper {
     }
 
 
-    public static String generateIdForUser() {
+    private static String generateIdForUser() {
         List<Integer> idArray = lstMember.stream().map(user -> Integer.valueOf(user.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }
 
-    public static String generateIdForProduct() {
+    private static String generateIdForProduct() {
         List<Integer> idArray = lstProduct.stream().map(product -> Integer.valueOf(product.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }
 
-    public static String generateIdForOrder() {
+    private static String generateIdForOrder() {
         List<Integer> idArray = lstProduct.stream().map(order -> Integer.valueOf(order.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);

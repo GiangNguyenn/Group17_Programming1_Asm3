@@ -4,7 +4,6 @@ import Model.Productions.Order;
 import Model.Productions.Product;
 import Model.User.Admin;
 import Model.User.Member;
-import Model.User.User;
 import Service.MenuService;
 import Service.OrderService;
 import Service.ProductService;
@@ -24,7 +23,7 @@ import java.util.Random;
 public class Utils {
     //login infor
     public static Boolean isLogin = false;
-    public static User current_user = null;
+    public static Member current_user = null;
     public static boolean isAdmin = false;
 
     // Instant services
