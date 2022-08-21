@@ -23,10 +23,19 @@ import static common.Utils.lstOrder;
 
 public class OrderService implements OrderInterface {
 
+    private static OrderService INSTANT;
+
+    public static void start() {
+        INSTANT = new OrderService();
+    }
+
+    public static OrderService getInstant() {
+        return INSTANT;
+    }
+
     /**
      * Take user input as orderID to get specific order
      */
-
     public void viewCustomerOrder() throws IOException {
         ArrayList<Order> ordersOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
         for (Order order : lstOrder) {
@@ -87,15 +96,20 @@ public class OrderService implements OrderInterface {
             BufferedReader orderData = Utils.fileReader(BaseConstant.ORDER_DATA_PATH);
             String dataRow;
             lstOrder.clear();
+            String idString;
+            String memberString;
+            String productsString;
+            String dateString;
+            boolean statusString;
+            String priceString;
             while ((dataRow = orderData.readLine()) != null) {
                 String[] detailed = dataRow.split(",");
-
-                String idString = detailed[0];
-                String memberString = detailed[1];
-                String productsString = detailed[2];
-                String dateString = detailed[3];
-                Boolean statusString = Boolean.valueOf(detailed[4]);
-                String priceString = detailed[5];
+                idString = detailed[0];
+                memberString = detailed[1];
+                productsString = detailed[2];
+                dateString = detailed[3];
+                statusString = Boolean.parseBoolean(detailed[4]);
+                priceString = detailed[5];
                 lstOrder.add(new Order(idString, memberString, convertToProductIdList(productsString), LocalDateTime.parse(dateString, DateTimeFormatter.ISO_DATE_TIME), statusString, Double.valueOf(priceString)));
             }
             orderData.close();
@@ -126,12 +140,12 @@ public class OrderService implements OrderInterface {
     }
 
     // Datatype to String
-    public static String convertToString(LocalDateTime date) {
+    private static String convertToString(LocalDateTime date) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         return date.format(formatter);
     }
 
-    public static String convertToString(List<String> productIDList) {
+    private static String convertToString(List<String> productIDList) {
         StringBuilder resString = new StringBuilder();
         for (String product : productIDList) {
             resString.append(product).append("and");
@@ -141,7 +155,7 @@ public class OrderService implements OrderInterface {
     }
 
     //String to other datatype
-    static ArrayList<String> convertToProductIdList(String inputString) {
+    private static ArrayList<String> convertToProductIdList(String inputString) {
         String[] array = inputString.split("and");
         List<String> resultArray = new ArrayList<String>(Arrays.asList(array));
         return (ArrayList<String>) resultArray;
@@ -224,7 +238,7 @@ public class OrderService implements OrderInterface {
 
     }
 
-    public Double calculateTotalPrice() {
+    private Double calculateTotalPrice() {
         List<Product> productObjectList = new ArrayList<>();
         for (String ProductId : Utils.cart) {
             Product productObject = BaseHelper.getProductByProductId(ProductId);

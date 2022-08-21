@@ -19,6 +19,16 @@ import static common.Utils.lstMember;
 
 public class UserService implements UserInterface {
 
+    private static UserService INSTANT;
+
+    public static void start() {
+        INSTANT = new UserService();
+    }
+
+    public static UserService getInstant() {
+        return INSTANT;
+    }
+
     /**
      * @throws IOException
      */
@@ -103,20 +113,27 @@ public class UserService implements UserInterface {
         try {
             BufferedReader userData = Utils.fileReader(BaseConstant.USER_DATA_PATH);
             String dataRow;
-
+            String id;
+            String name;
+            String phone;
+            String userName;
+            String password;
+            String adminId;
+            String adminUsername;
+            String adminPassword;
             while ((dataRow = userData.readLine()) != null) {
                 String[] detailed = dataRow.split(",");
                 if (detailed.length == 5) {
-                    String id = detailed[0];
-                    String name = detailed[1];
-                    String phone = detailed[2];
-                    String userName = detailed[3];
-                    String password = detailed[4];
+                    id = detailed[0];
+                    name = detailed[1];
+                    phone = detailed[2];
+                    userName = detailed[3];
+                    password = detailed[4];
                     lstMember.add(new Member(id, name, phone, userName, password));
                 } else {
-                    String adminId = detailed[0];
-                    String adminUsername = detailed[1];
-                    String adminPassword = detailed[2];
+                    adminId = detailed[0];
+                    adminUsername = detailed[1];
+                    adminPassword = detailed[2];
                     lstAdmin.add(new Admin(adminId, adminUsername, adminPassword));
                 }
             }
