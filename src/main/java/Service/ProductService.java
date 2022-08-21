@@ -131,34 +131,16 @@ public class ProductService implements ProductInterface {
         }
     }
 
-    public void ascendProductByPrice(){
-        List<Product> ascendProductList = lstProduct.stream().sorted(Comparator.comparing(Product::getPrice)).collect(Collectors.toList());
-        System.out.println("========================================================");
-        System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
-        System.out.println("");
-        System.out.println("========================================================");
-
-        for (Product product : ascendProductList) {
-            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ", "   " + product.getPrice() + "$");
-            System.out.println("");
-            System.out.println("========================================================");
+    public void sortProductByPrice(String input) throws IOException {
+        BaseHelper.productTable(lstProduct);
+        List<Product> ascProductList = lstProduct.stream().sorted(Comparator.comparing(Product::getPrice)).collect(Collectors.toList());
+        List<Product> descProductList = lstProduct.stream().sorted(Comparator.comparing(Product::getPrice).reversed()).collect(Collectors.toList());
+        if(input == "1"){
+        BaseHelper.productTable(ascProductList);
+        } else if (input == "2") {
+        BaseHelper.productTable(descProductList);
         }
     }
-    public void descendProductByPrice(){
-        List<Product> descendProductList = lstProduct.stream().sorted(Comparator.comparing(Product::getPrice).reversed()).collect(Collectors.toList());
-
-        System.out.println("========================================================");
-        System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
-        System.out.println("");
-        System.out.println("========================================================");
-
-        for (Product product : descendProductList) {
-            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ", "   " + product.getPrice() + "$");
-            System.out.println("");
-            System.out.println("========================================================");
-        }
-    }
-
 
     @Override
     public void addProduct() throws IOException {
