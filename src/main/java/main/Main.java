@@ -10,6 +10,6 @@ public class Main {
 
         BaseHelper.loadData();
         BaseHelper.printWelcomePage();
-        Utils.menuService.mainMenu();
+        Utils.menuService.startUpMenu();
     }
 }

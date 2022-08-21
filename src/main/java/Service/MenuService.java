@@ -1,21 +1,14 @@
 package Service;
 
-import Model.Productions.Product;
-import Model.User.Member;
 import common.BaseHelper;
 import common.Utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static common.Utils.lstProduct;
 
 public class MenuService {
-    UserService userService = new UserService();
-    ProductService productService = new ProductService();
-    OrderService orderService = new OrderService();
-
     private static MenuService INSTANT;
 
     public static void start() {
@@ -49,45 +42,105 @@ public class MenuService {
 
     }
 
-    private static void printMainMenu() {
+    private static void printStartUpMenu() {
+        System.out.println("1. Enter admin mode");
+        System.out.println("2. Enter customer mode");
+        System.out.println("E. Exit");
+        System.out.println("Your choice: ");
+    }
+
+    public void startUpMenu() {
+        printStartUpMenu();
+        try {
+            String choice = Utils.reader.readLine();
+            switch (choice) {
+                case "1" -> {
+                    adminMainMenu();
+                    break;
+                }
+                case "2" -> {
+                    memberMainMenu();
+                    break;
+                }
+                case "E" -> exit();
+                default -> System.out.println("Invalid choice, please try again!");
+            }
+            System.out.println("press enter to continue...");
+            Utils.reader.read();
+            startUpMenu();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    private static void printAdminMainMenu() {
         System.out.println("Select function: ");
-        System.out.println("1. Login");
-        System.out.println("2. Register");
-        System.out.println("3. Show all production");
-        System.out.println("4. Show all order");
-        System.out.println("5. add order");
-        System.out.println("6. add production");
+        System.out.println("1. Admin login");
+        System.out.println("E. Exit");
         System.out.println("Your choice: ");
     }
 
     /**
      * Print out the main menu with customer options
      */
-    public void mainMenu() {
+    public void adminMainMenu() {
         BaseHelper.clearConsole();
-        printMainMenu();
+        printAdminMainMenu();
         try {
             String choice = Utils.reader.readLine();
             switch (choice) {
                 case "1" -> {
-                    userService.login();
+                    Utils.userService.login();
+                    printMenuByUserRole();
+                    break;
+                }
+                case "E" -> exit();
+                default -> System.out.println("Invalid choice, please try again!");
+            }
+            System.out.println("press enter to continue...");
+            Utils.reader.read();
+            adminMainMenu();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    private static void printMemberMainMenu() {
+        System.out.println("Select function: ");
+        System.out.println("1. Member login");
+        System.out.println("2. Register");
+        System.out.println("3. Browse products");
+        System.out.println("E. Exit");
+        System.out.println("Your choice: ");
+    }
+
+    public void memberMainMenu() {
+        BaseHelper.clearConsole();
+        printMemberMainMenu();
+        try {
+            String choice = Utils.reader.readLine();
+            switch (choice) {
+                case "1" -> {
+                    Utils.userService.login();
                     printMenuByUserRole();
                     break;
                 }
                 case "2" -> {
-                    userService.register();
+                    Utils.userService.register();
                     break;
                 }
                 case "3" -> {
-                    productService.showAllProduct();
+                    Utils.productService.showAllProduct();
                     break;
                 }
+                case "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
-
             System.out.println("press enter to continue...");
             Utils.reader.read();
-            mainMenu();
+            memberMainMenu();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -99,30 +152,31 @@ public class MenuService {
         System.out.println("Select function: ");
         System.out.println("1. View all products");
         System.out.println("2. Browse products by categories");
-        System.out.println("3. View order by OrderID"); // done
+        System.out.println("3. View your orders");   //done
         System.out.println("4. View my profile");
         System.out.println("5. Log out");
+        System.out.println("E. Exit");
         System.out.println("Your choice: ");
     }
 
     private void memberMenu() {
         BaseHelper.clearConsole();
         printMemberMenu();
-
         try {
             String choice = Utils.reader.readLine();
             switch (choice) {
                 case "1" -> {
-                    productService.showAllProduct();
+                    Utils.productService.showAllProduct();
                     placeOrderMenu();
                 }
-                case "2" -> productService.showProductsByCategory();
-                case "3" -> orderService.viewCustomerOrder();
-                case "4" -> userService.printUserProfile((Member) Utils.current_user);
+                case "2" -> Utils.productService.showProductsByCategory();
+                case "3" -> Utils.orderService.viewCustomerOrder();
+                case "4" -> Utils.userService.printUserProfile(Utils.current_user);
                 case "5" -> {
-                    userService.logout();
+                    Utils.userService.logout();
                     return;
                 }
+                case "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -138,6 +192,8 @@ public class MenuService {
         System.out.println("Select action: ");
         System.out.println("1. Add product to cart");
         System.out.println("2. Checkout");
+        System.out.println("B. Go back");
+        System.out.println("E. Exit");
         System.out.println("Your choice:");
     }
 
@@ -147,11 +203,15 @@ public class MenuService {
         try {
             String choice = Utils.reader.readLine();
             switch (choice) {
-                case "1" -> orderService.addProductToCart();
+                case "1" -> Utils.orderService.addProductToCart();
                 case "2" -> {
-                    orderService.placeOrder();
+                    Utils.orderService.placeOrder();
                     return;
                 }
+                case "B" -> {
+                    return;
+                }
+                case "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -167,6 +227,7 @@ public class MenuService {
         System.out.println("1. Sort product from low to high");
         System.out.println("2. Sort product from high to low");
     }
+
     public void sortProductByPriceMenu() {
         BaseHelper.clearConsole();
         BaseHelper.productTable(lstProduct);
@@ -174,8 +235,8 @@ public class MenuService {
         try {
             String choice = Utils.reader.readLine();
             switch (choice) {
-                case "1" -> productService.sortProductByPrice("asc");
-                case "2" -> productService.sortProductByPrice("desc");
+                case "1" -> Utils.productService.sortProductByPrice("asc");
+                case "2" -> Utils.productService.sortProductByPrice("desc");
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -193,6 +254,8 @@ public class MenuService {
         System.out.println("3. View all orders of a Customer ID");
         System.out.println("4. Manage order status");
         System.out.println("5. Delete a product");
+        System.out.println("6. Log out");
+        System.out.println("E. exit");
         System.out.println("Your choice: ");
     }
 
@@ -202,23 +265,26 @@ public class MenuService {
         printAdminMenu();
         try {
             String choice = Utils.reader.readLine();
+
             switch (choice) {
                 case "1":
-                    productService.addProduct();
+                    Utils.productService.addProduct();
                 case "2":
-                    productService.manageProductPrice();
-                    break;
+                    Utils.productService.manageProductPrice();
                 case "3":
-                    orderService.viewOrderByCustomerId();
+                    Utils.orderService.viewOrderByCustomerId();
                     break;
-                case "exit":
-                    exit();
                 case "4":
-                    orderService.manageOrderStatus();
+                    Utils.orderService.manageOrderStatus();
                     break;
                 case "5":
-                    productService.deleteProduct();
+                    Utils.productService.deleteProduct();
                     break;
+                case "6":
+                    Utils.userService.logout();
+                    return;
+                case "E":
+                    exit();
                 default:
                     System.out.println("Invalid choice, please try again!");
             }
@@ -243,15 +309,8 @@ public class MenuService {
         }
     }
 
-
     private static void exit() throws FileNotFoundException {
-        UserService userService = new UserService();
-        ProductService productService = new ProductService();
-        OrderService orderService = new OrderService();
-
-        userService.writeData();
-        productService.writeData();
-        orderService.writeData();
+        BaseHelper.writeData();
         System.exit(-1);
     }
 

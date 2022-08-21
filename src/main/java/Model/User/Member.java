@@ -1,23 +1,14 @@
 package Model.User;
 
 import Model.Productions.Order;
-import Service.OrderService;
-import common.BaseConstant;
-import common.BaseConstant.*;
-import common.BaseHelper;
+import common.BaseConstant.TypeMember;
 import common.Utils;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static common.Utils.lstOrder;
 
 public class Member extends User {
-
-    public String getName() {
-        return name;
-    }
-
     private String name;
     private String phoneNumber;
     private TypeMember memberType;
@@ -35,7 +26,6 @@ public class Member extends User {
     public Member(String userName, String password, String name, String phoneNumber) {
         // TODO
         super();
-
     }
 
     public Member() {
@@ -50,6 +40,10 @@ public class Member extends User {
     public String toString() {
         return "Member [name=" + name + ", phoneNumber=" + phoneNumber + ", totalSpending=" + totalSpending
                 + ", typeMember=" + memberType + "]";
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void showInfo() {
@@ -70,7 +64,7 @@ public class Member extends User {
         return this.memberType;
     }
 
-    double totalSpending(){
+    double totalSpending() {
         ArrayList<Double> totalSpendingOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
         double resultDouble = 0;
         for (Order order : lstOrder) {
@@ -78,18 +72,18 @@ public class Member extends User {
                 totalSpendingOfCustomer.add(order.getTotalPrice());
             }
         }
-        for (int i = 0; i < totalSpendingOfCustomer.size(); i++){
+        for (int i = 0; i < totalSpendingOfCustomer.size(); i++) {
             resultDouble += totalSpendingOfCustomer.get(0);
         }
         return resultDouble;
     }
-    
-    TypeMember memberType(){        //5 10 25
-        if (totalSpending > 25000000){
+
+    TypeMember memberType() {        //5 10 25
+        if (totalSpending > 25000000.0) {
             return TypeMember.PLATINUM;
-        } else if (totalSpending > 10000000) {
+        } else if (totalSpending > 10000000.0) {
             return TypeMember.GOLD;
-        } else if (totalSpending > 5000000) {
+        } else if (totalSpending > 5000000.0) {
             return TypeMember.SILVER;
         } else {
             return TypeMember.NORMAL;
@@ -97,8 +91,8 @@ public class Member extends User {
 
     }
 
-    public double discountAmount(){
-        switch (this.getMemberType()){
+    public double discountAmount() {
+        switch (this.getMemberType()) {
             case SILVER -> {
                 return 0.95;
             }
