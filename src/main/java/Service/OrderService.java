@@ -15,10 +15,12 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import static common.Utils.lstOrder;
+import static common.Utils.lstProduct;
 
 public class OrderService implements OrderInterface {
 
@@ -58,10 +60,32 @@ public class OrderService implements OrderInterface {
             }
         }
 
-        for (Order order : ordersOfCustomer) {
-            System.out.println(order.toString());
+        if(ordersOfCustomer.size()==0){
+            System.out.println("This customer has not made any order");
+        } else {
+            System.out.println("This customer has made " + ordersOfCustomer.size() + " orders which details are as following: ");
         }
 
+//        ordersOfCustomer.forEach(System.out::println);
+        String[][] order = ordersOfCustomer.stream()
+                .map(p -> new String[]
+                        {
+                                p.getId(),
+                                p.getProducts().toString(),
+                                String.valueOf(p.getTotalPrice()),
+                                String.valueOf(p.getCreated_at())
+                        })
+                .toArray(String[][]::new);
+//        System.out.println(Arrays.deepToString(order));
+
+        for ( int i = 0; i < order.length; ++i ) {
+            for ( int j = 0; j < Arrays.stream(order).count(); ++j ) {
+                if(order[i][j] == order[i][1]){
+                    System.out.println("Order ID: " + order[i][0]);
+                    System.out.println(order[i][j]);
+                }
+            }
+        }
     }
 
 

@@ -6,7 +6,10 @@ import common.BaseHelper;
 import interfaces.ProductInterface;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Scanner;
 
 import static common.BaseConstant.PRODUCT_DATA_PATH;
 import static common.Utils.lstProduct;
@@ -77,16 +80,11 @@ public class ProductService implements ProductInterface {
 
     @Override
     public void showAllProduct() {
-        System.out.println("---------------------------------------------------------------------------------------------");
-        System.out.printf("%30s %25s %15s %15s", "PRODUCT NAME", "CATEGORY", "SUPPLIER", "PRICE");
-        System.out.println();
-        System.out.println("---------------------------------------------------------------------------------------------");
-        
-        for (Product product : lstProduct) {
-            System.out.format("%30s %25s %15s %15s", product.getProductName(), product.getCategory(), product.getSupplier(), product.getPrice());
-            System.out.println();
-        }
-        System.out.println("---------------------------------------------------------------------------------------------");
+        String[][] table = lstProduct.stream()
+                .map(p -> new String[]
+                {p.getId(), p.getProductName(), p.getCategory(), p.getSupplier(), p.getPrice()})
+                .toArray(String[][]::new);
+        BaseHelper.outputTable(table);
     }
 
     public void viewOrderDetails() {
