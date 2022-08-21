@@ -133,24 +133,6 @@ public class ProductService implements ProductInterface {
         writeData();
     }
 
-    private void changeProductPrice(Product searchedProduct) throws IOException {
-        System.out.println("The current Price of the product is: " + searchedProduct.getPrice());
-        System.out.println("============================");
-        System.out.println("Enter your desire product's price: ");
-        Pattern p = Pattern.compile("^[1-9][0-9]{3,}$");
-        boolean notMatchedRegex = true;
-        while (notMatchedRegex) {
-            String newPrice = String.valueOf(Utils.reader.readLine());
-            if (p.matcher(newPrice).find()) {
-                searchedProduct.setPrice(Double.parseDouble(newPrice));
-                System.out.println("The new Product price is: " + searchedProduct.getPrice() + " VND");
-                notMatchedRegex = false;
-            } else {
-                System.out.println("The your input must be larger than 1000(VND) and in the correct format! Please re-enter: ");
-            }
-        }
-    }
-
     public void ascendProductByPrice(){
         List<Product> ascendProductList = lstProduct.stream().sorted(Comparator.comparing(Product::getPrice)).collect(Collectors.toList());
         System.out.println("========================================================");
