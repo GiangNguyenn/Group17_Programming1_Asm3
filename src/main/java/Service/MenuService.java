@@ -292,16 +292,9 @@ public class MenuService {
             return;
         }
     }
-
-
+    
     private static void exit() throws FileNotFoundException {
-        UserService userService = new UserService();
-        ProductService productService = new ProductService();
-        OrderService orderService = new OrderService();
-
-        userService.writeData();
-        productService.writeData();
-        orderService.writeData();
+        BaseHelper.writeData();
         System.exit(-1);
     }
 
