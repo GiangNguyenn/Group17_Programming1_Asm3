@@ -15,8 +15,11 @@ import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import static common.Utils.lstOrder;
 
@@ -163,6 +166,7 @@ public class OrderService implements OrderInterface {
             System.out.println(order.toStringCustom());
         }
     }
+
     /**
      * get user's order Id input to find the order object.
      * then continue getting an input to see if user want to change the input
@@ -234,12 +238,12 @@ public class OrderService implements OrderInterface {
             System.out.println("-----------------------------------------");
             for (String productId : Utils.cart) {
                 System.out.println(BaseHelper.getProductByProductId(productId).getProductName());
-                }
+            }
             System.out.println("-----------------------------------------");
         } else {
-                System.out.println("Empty cart!");
-            }
+            System.out.println("Empty cart!");
         }
+    }
 
 
     private Double calculateTotalPrice() {
@@ -285,8 +289,8 @@ public class OrderService implements OrderInterface {
                     break;
                 }
                 case "2" -> {
-                    LocalDate tempt;
-                    if ( (tempt = findSpecificDay()) != null){
+                    LocalDate tempt = findSpecificDay();
+                    if (!BaseHelper.isNullOrEmpty(tempt)) {
                         targetDate = tempt;
                     }
                     break;
@@ -297,38 +301,48 @@ public class OrderService implements OrderInterface {
                     revenueInOneDay();
                 }
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         LocalDate finalTargetDate = targetDate;                 // IDE suggest to do so
         if (finalTargetDate != null) {                          // To prevent wrong answers from before getting printed
             double totalSpendingDay = lstOrder.stream().filter(order -> order.getCreated_at().toLocalDate().equals(finalTargetDate)).mapToDouble(Order::getTotalPrice).sum();
-            System.out.println("Revenue made in "+finalTargetDate+" : "+totalSpendingDay);
+            System.out.println("Revenue made in " + finalTargetDate + " : " + totalSpendingDay);
         }
 
     }
-    private LocalDate findSpecificDay() throws IOException{
-        String targetYearString;
-        String targetMonthString;
-        String targetDayString;
-        System.out.print("Please enter the year yyyy: ");
-        targetYearString = Utils.reader.readLine().trim();
-        System.out.print("Please enter the month mm: ");
-        targetMonthString = Utils.reader.readLine().trim();
-        System.out.print("Please enter the day dd: ");
-        targetDayString = Utils.reader.readLine().trim();
 
-        if (!(targetDayString.matches("\\d{1,2}") && targetMonthString.matches("\\d{1,2}") && targetYearString.matches("\\d{4}"))){
-            System.out.println("Invalid input! Please try again.");
+    private LocalDate findSpecificDay() throws IOException {
+        try {
+            String targetYearString;
+            String targetMonthString;
+            String targetDayString;
+            System.out.print("Please enter the year yyyy: ");
+            targetYearString = Utils.reader.readLine().trim();
+            System.out.print("Please enter the month mm: ");
+            targetMonthString = Utils.reader.readLine().trim();
+            System.out.print("Please enter the day dd: ");
+            targetDayString = Utils.reader.readLine().trim();
+
+            if (!(targetDayString.matches("\\d{1,2}") && targetMonthString.matches("\\d{1,2}") && targetYearString.matches("\\d{4}"))) {
+                System.out.println("Invalid input! Please try again.");
+                System.out.println("");
+                revenueInOneDay();
+                return null;
+            }
+            targetMonthString = String.format("%02d", Integer.parseInt(targetMonthString));              // Adding zeros before numbers
+            targetDayString = String.format("%02d", Integer.parseInt(targetDayString));                  // for the LocalDate.parse to work
+
+            String targetDateString = targetYearString + "-" + targetMonthString + "-" + targetDayString;
+            return LocalDate.parse(targetDateString, DateTimeFormatter.ISO_DATE);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (DateTimeParseException ex) {
+            System.out.println("Invalid date! Please try again.");
             System.out.println("");
             revenueInOneDay();
-            return null;
         }
-        targetMonthString = String.format("%02d",Integer.parseInt(targetMonthString));              // Adding zeros before numbers
-        targetDayString = String.format("%02d",Integer.parseInt(targetDayString));                  // for the LocalDate.parse to work
-
-        String targetDateString = targetYearString+"-"+targetMonthString+"-"+targetDayString;
-        return LocalDate.parse(targetDateString, DateTimeFormatter.ISO_DATE);
-
+        return null;
     }
 }
