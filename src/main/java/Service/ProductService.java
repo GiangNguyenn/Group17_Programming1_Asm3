@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static common.BaseConstant.PRODUCT_DATA_PATH;
+import static common.BaseHelper.orderTableGenerator;
+import static common.BaseHelper.productTableGenerator;
 import static common.Utils.lstOrder;
 import static common.Utils.lstProduct;
 
@@ -107,7 +109,7 @@ public class ProductService implements ProductInterface {
     // TODO
     public void viewOrderDetails() throws IOException {
         System.out.println("List of order");
-        BaseHelper.orderTable(lstOrder);
+        BaseHelper.simpleTable(orderTableGenerator(lstOrder));
         System.out.println("Enter the id of the order you want to view: ");
         Pattern p = Pattern.compile("^[0-9]+$");
         boolean notMatchedRegex = true;
@@ -125,7 +127,7 @@ public class ProductService implements ProductInterface {
     }
 
     public void manageProductPrice() throws IOException {
-        BaseHelper.productTable(lstProduct);
+        BaseHelper.simpleTable(productTableGenerator(lstProduct));
         System.out.println("Enter the id of the product you want to change the price of: ");
 
         while (true) {
@@ -161,17 +163,16 @@ public class ProductService implements ProductInterface {
     }
 
     public void sortProductByPrice(String sortFunction) throws IOException {
-        BaseHelper.productTable(lstProduct);
         if (sortFunction.equals("asc")) {
             List<Product> ascProductList = lstProduct.stream()
                     .sorted(Comparator.comparing(Product::getPrice))
                     .collect(Collectors.toList());
-            BaseHelper.productTable(ascProductList);
+            BaseHelper.simpleTable(productTableGenerator(ascProductList));
         } else if (sortFunction.equals("desc")) {
             List<Product> descProductList = lstProduct.stream()
                     .sorted(Comparator.comparing(Product::getPrice).reversed())
                     .collect(Collectors.toList());
-            BaseHelper.productTable(descProductList);
+            BaseHelper.simpleTable(productTableGenerator(descProductList));
         }
     }
 

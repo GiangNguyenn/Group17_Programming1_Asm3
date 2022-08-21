@@ -1,15 +1,13 @@
 package Model.User;
 
 import Model.Productions.Order;
-import Service.OrderService;
 import common.BaseConstant;
 import common.BaseConstant.*;
-import common.BaseHelper;
 import common.Utils;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
+import static common.BaseConstant.TypeMember;
 import static common.Utils.lstOrder;
 
 public class Member extends User {
@@ -45,7 +43,19 @@ public class Member extends User {
         super(userName, password);
     }
 
-
+    public String converMemberTypeToString(){
+        if(this.memberType.equals(TypeMember.NORMAL)){
+            return"Normal";
+        } else if (this.memberType.equals(TypeMember.SILVER)) {
+            return"Silver";
+        } else if (this.memberType.equals(TypeMember.GOLD)) {
+            return "Gold";
+        } else if( this.memberType.equals(TypeMember.PLATINUM)){
+            return "Platinum";
+        } else {
+        return "";
+        }
+    }
     @Override
     public String toString() {
         return "Member [name=" + name + ", phoneNumber=" + phoneNumber + ", totalSpending=" + totalSpending
@@ -57,7 +67,7 @@ public class Member extends User {
     }
 
 
-    public Object getPhoneNumber() {
+    public String getPhoneNumber() {
         return this.phoneNumber;
     }
 
