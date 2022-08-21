@@ -142,7 +142,7 @@ public class OrderService implements OrderInterface {
     @Override
     public void showAllOder() {
         for (Order order : lstOrder) {
-            System.out.print(order.toString());
+            System.out.println(order.toString());
         }
     }
 
