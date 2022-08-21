@@ -84,22 +84,22 @@ public class UserService implements UserInterface {
 
             System.out.println("Enter your name: ");
             String name = Utils.reader.readLine();
-            if (name.equals("B")) {
+            if (name.equalsIgnoreCase("B")) {
                 return;
             }
             System.out.println("Enter your phone number: ");
             String phoneNumber = Utils.reader.readLine();
-            if (phoneNumber.equals("B")) {
+            if (phoneNumber.equalsIgnoreCase("B")) {
                 return;
             }
             System.out.println("Enter your username: ");
             String username = Utils.reader.readLine();
-            if (username.equals("B")) {
+            if (username.equalsIgnoreCase("B")) {
                 return;
             }
             System.out.println("Enter your password: ");
             String password = Utils.reader.readLine();
-            if (password.equals("B")) {
+            if (password.equalsIgnoreCase("B")) {
                 return;
             }
 
