@@ -10,7 +10,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 
 import static common.BaseConstant.PRODUCT_DATA_PATH;
 import static common.Utils.lstProduct;
@@ -65,7 +68,8 @@ public class ProductService implements ProductInterface {
             System.out.println("The List is empty");
         } else {
             for (Product product : lstProduct) {
-                out.printf("%s,%s,%s,%s,%s\n", product.getId(), product.getProductName(), product.getPrice(), product.getCategory(), product.getSupplier());
+                out.printf("%s,%s,%s,%s,%s\n", product.getId(), product.getProductName(), product.getPrice(),
+                        product.getCategory(), product.getSupplier());
             }
         }
         out.close();
@@ -99,7 +103,6 @@ public class ProductService implements ProductInterface {
         }
     }
 
-
     private static void printListOfCategories() {
         List<String> uniqueCategories = lstProduct.stream().map(Product::getCategory).distinct().toList();
         for (int i = 0; i < uniqueCategories.size(); i++) {
@@ -107,7 +110,9 @@ public class ProductService implements ProductInterface {
         }
     }
 
+    // TODO
     public void viewOrderDetails() {
+
     }
 
     public void manageProductPrice() throws IOException {
@@ -117,7 +122,8 @@ public class ProductService implements ProductInterface {
         System.out.println("========================================================");
 
         for (Product product : lstProduct) {
-            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ", "   " + product.getPrice() + "$");
+            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ",
+                    "   " + product.getPrice() + "$");
             System.out.println("");
             System.out.println("========================================================");
         }
@@ -136,7 +142,7 @@ public class ProductService implements ProductInterface {
         writeData();
     }
 
-    public void changeProductPrice(Product searchedProduct) throws IOException {
+    private void changeProductPrice(Product searchedProduct) throws IOException {
         System.out.println("The current Price of the product is: " + searchedProduct.getPrice());
         System.out.println("============================");
         System.out.println("Enter your desire product's price: ");
@@ -149,11 +155,26 @@ public class ProductService implements ProductInterface {
                 System.out.println("The new Product price is: " + searchedProduct.getPrice() + " VND");
                 notMatchedRegex = false;
             } else {
-                System.out.println("The your input must be larger than 1000(VND) and in the correct format! Please re-enter: ");
+                System.out.println(
+                        "The your input must be larger than 1000(VND) and in the correct format! Please re-enter: ");
             }
         }
     }
 
+    public void sortProductByPrice(String sortFunction) throws IOException {
+        BaseHelper.productTable(lstProduct);
+        if (sortFunction.equals("asc")) {
+            List<Product> ascProductList = lstProduct.stream()
+                    .sorted(Comparator.comparing(Product::getPrice))
+                    .collect(Collectors.toList());
+            BaseHelper.productTable(ascProductList);
+        } else if (sortFunction.equals("desc")) {
+            List<Product> descProductList = lstProduct.stream()
+                    .sorted(Comparator.comparing(Product::getPrice).reversed())
+                    .collect(Collectors.toList());
+            BaseHelper.productTable(descProductList);
+        }
+    }
 
     @Override
     public void addProduct() throws IOException {
@@ -172,7 +193,8 @@ public class ProductService implements ProductInterface {
             String supplier = reader.readLine();
 
             if (BaseHelper.checkExistProduct(productName, supplier)) {
-                System.out.println(productName + " of supplier " + supplier + " has already been added! Please add another product");
+                System.out.println(productName + " of supplier " + supplier
+                        + " has already been added! Please add another product");
                 productExists = true;
             } else {
                 String id = BaseHelper.generateUniqueId(Product.class);

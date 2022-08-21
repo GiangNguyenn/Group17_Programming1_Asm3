@@ -6,11 +6,9 @@ import common.Utils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class MenuService {
-    UserService userService = new UserService();
-    ProductService productService = new ProductService();
-    OrderService orderService = new OrderService();
+import static common.Utils.lstProduct;
 
+public class MenuService {
     private static MenuService INSTANT;
 
     public static void start() {
@@ -93,7 +91,7 @@ public class MenuService {
             String choice = Utils.reader.readLine();
             switch (choice) {
                 case "1" -> {
-                    userService.login();
+                    Utils.userService.login();
                     printMenuByUserRole();
                     break;
                 }
@@ -125,16 +123,16 @@ public class MenuService {
             String choice = Utils.reader.readLine();
             switch (choice) {
                 case "1" -> {
-                    userService.login();
+                    Utils.userService.login();
                     printMenuByUserRole();
                     break;
                 }
                 case "2" -> {
-                    userService.register();
+                    Utils.userService.register();
                     break;
                 }
                 case "3" -> {
-                    productService.showAllProduct();
+                    Utils.productService.showAllProduct();
                     break;
                 }
                 case "E" -> exit();
@@ -163,20 +161,19 @@ public class MenuService {
 
     private void memberMenu() {
         BaseHelper.clearConsole();
-
         printMemberMenu();
         try {
             String choice = Utils.reader.readLine();
             switch (choice) {
                 case "1" -> {
-                    productService.showAllProduct();
+                    Utils.productService.showAllProduct();
                     placeOrderMenu();
                 }
-                case "2" -> productService.showProductsByCategory();
-                case "3" -> orderService.viewCustomerOrder();
-                case "4" -> userService.printUserProfile(Utils.current_user);
+                case "2" -> Utils.productService.showProductsByCategory();
+                case "3" -> Utils.orderService.viewCustomerOrder();
+                case "4" -> Utils.userService.printUserProfile(Utils.current_user);
                 case "5" -> {
-                    userService.logout();
+                    Utils.userService.logout();
                     return;
                 }
                 case "E" -> exit();
@@ -198,7 +195,6 @@ public class MenuService {
         System.out.println("B. Go back");
         System.out.println("E. Exit");
         System.out.println("Your choice:");
-
     }
 
     private void placeOrderMenu() {
@@ -207,9 +203,9 @@ public class MenuService {
         try {
             String choice = Utils.reader.readLine();
             switch (choice) {
-                case "1" -> orderService.addProductToCart();
+                case "1" -> Utils.orderService.addProductToCart();
                 case "2" -> {
-                    orderService.placeOrder();
+                    Utils.orderService.placeOrder();
                     return;
                 }
                 case "B" -> {
@@ -224,10 +220,32 @@ public class MenuService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
+    public void printSortProductByPrice() {
+        System.out.println("Select action: ");
+        System.out.println("1. Sort product from low to high");
+        System.out.println("2. Sort product from high to low");
+    }
+
+    public void sortProductByPriceMenu() {
+        BaseHelper.clearConsole();
+        BaseHelper.productTable(lstProduct);
+        printSortProductByPrice();
+        try {
+            String choice = Utils.reader.readLine();
+            switch (choice) {
+                case "1" -> Utils.productService.sortProductByPrice("asc");
+                case "2" -> Utils.productService.sortProductByPrice("desc");
+                default -> System.out.println("Invalid choice, please try again!");
+            }
+            System.out.println("press enter to continue...");
+            Utils.reader.read();
+            // sortProductByPriceMenu();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void printAdminMenu() {
         System.out.println("Select function: ");
@@ -250,21 +268,20 @@ public class MenuService {
 
             switch (choice) {
                 case "1":
-                    productService.addProduct();
+                    Utils.productService.addProduct();
                 case "2":
-                    return;
-//                    break;
+                    Utils.productService.manageProductPrice();
                 case "3":
-                    orderService.viewOrderByCustomerId();
+                    Utils.orderService.viewOrderByCustomerId();
                     break;
                 case "4":
-                    orderService.manageOrderStatus();
+                    Utils.orderService.manageOrderStatus();
                     break;
                 case "5":
-                    productService.deleteProduct();
+                    Utils.productService.deleteProduct();
                     break;
                 case "6":
-                    userService.logout();
+                    Utils.userService.logout();
                     return;
                 case "E":
                     exit();
@@ -280,7 +297,6 @@ public class MenuService {
         }
     }
 
-
     public void printMenuByUserRole() {
         BaseHelper.clearConsole();
         if (Utils.isLogin && Utils.isAdmin) {
@@ -292,7 +308,7 @@ public class MenuService {
             return;
         }
     }
-    
+
     private static void exit() throws FileNotFoundException {
         BaseHelper.writeData();
         System.exit(-1);
