@@ -1,28 +1,30 @@
 package Model.Productions;
 
 import Model.User.Member;
+import common.BaseHelper;
+import common.Utils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
     private String id;
-    private Member member;
-    private List<Product> products;
+    private String memberID;
+    private List<String> productsID;
     private LocalDateTime created_at;
     private Boolean isPaid;
     private Double totalPrice;
 
 
-    public Order(String id, Member member, List<Product> products, LocalDateTime created_at, Boolean isPaid, Double totalPrice) {
+    public Order(String id, String memberID, List<String> productsID, LocalDateTime created_at, Boolean isPaid, Double totalPrice) {
         this.id = id;
-        this.member = member;
-        this.products = products;
+        this.memberID = memberID;
+        this.productsID = productsID;
         this.created_at = created_at;
         this.isPaid = isPaid;
         this.totalPrice = totalPrice;
     }
-
 
     public String getId() {
         return id;
@@ -32,20 +34,20 @@ public class Order {
         this.id = id;
     }
 
-    public Member getMember() {
-        return member;
+    public String getMemberID() {
+        return memberID;
     }
 
-    public void setMember(Member member) {
-        this.member = member;
+    public void setMemberID(String memberID) {
+        this.memberID = memberID;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<String> getProductsID() {
+        return productsID;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setProductsID(List<String> productsID) {
+        this.productsID = productsID;
     }
 
     public LocalDateTime getCreated_at() {
@@ -76,8 +78,8 @@ public class Order {
     public String toString() {
         return "Order{" +
                 "id='" + id + '\'' +
-                ", member=" + member +
-                ", products=" + products +
+                ", member=" + memberID +
+                ", products=" + productsID +
                 ", created_at=" + created_at +
                 ", isPaid=" + isPaid +
                 ", totalPrice=" + totalPrice +
@@ -85,19 +87,24 @@ public class Order {
     }
 
     public String toStringCustom() {
-        return "Order{" +
-                "\nid='" + id + '\'' +
-                ", member=" + member +
-                ", \nproducts=" + products.toString() +
-                ", \ncreated_at=" + created_at +
-                ", totalPrice=" + totalPrice +
+        StringBuilder productInfo = new StringBuilder();
+        List<Product> productObjectsOfCustomer = new ArrayList<>();
+        for (String productID : productsID){
+            Product productObject = BaseHelper.getProductByProductId(productID);
+            assert productObject != null;
+            productInfo.append("\n").append(productObject.toString());
+        }
+
+        return "\nOrder{" +
+                "id='" + id + '\'' +
+                ", member=" + BaseHelper.getMemberById(memberID).getName() +
+                ", \nproducts=" + productInfo +
+                " \ncreated_at=" + created_at +
+                ", \ntotalPrice=" + totalPrice +
                 ", isPaid=" + isPaid +
                 '}';
     }
-
-
-    public void calculateTotalPrice() {
-
-
-    }
 }
+
+
+

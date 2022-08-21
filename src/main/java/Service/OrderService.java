@@ -24,38 +24,70 @@ import static common.Utils.lstProduct;
 
 public class OrderService implements OrderInterface {
 
+    private static OrderService INSTANT;
+
+    public static void start() {
+        INSTANT = new OrderService();
+    }
+
+    public static OrderService getInstant() {
+        return INSTANT;
+    }
+
     /**
      * Take user input as orderID to get specific order
      */
-    public void viewOrderByIdMenu() throws IOException {
-        System.out.print("Please enter the ID of the order: ");
-        String targetOrderId = Utils.reader.readLine();
-        Order order = BaseHelper.getOrderByOrderId(targetOrderId);
-        if (order != null) {
-            System.out.println(order.toStringCustom());
-        } else {
-            System.out.println("Order ID not found!");
-
+    public void viewCustomerOrder() throws IOException {
+        ArrayList<Order> ordersOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
+        for (Order order : lstOrder) {
+            if (Objects.equals(order.getMemberID(), Utils.current_user.getId())) {
+                ordersOfCustomer.add(order);
+            }
         }
+        int indexOfOrder = 1;
+        for (Order order : ordersOfCustomer) {                          //Print out the belonging orders and the indexes of it
+            System.out.println(indexOfOrder + ". " + order.toString());
+            indexOfOrder += 1;
+        }
+        System.out.println("Note: Type 'B' in any input to go back.");
+        System.out.print("Please enter the index of the order: ");
+        String targetOrderIndex = Utils.reader.readLine().trim();
+        if (targetOrderIndex.equalsIgnoreCase("B")) {
+            return;
+        }
+        if (!targetOrderIndex.matches("[0-9]+")) {
+            System.out.println("Input Invalid!");
+            viewCustomerOrder();
+        }
+        if (Integer.parseInt(targetOrderIndex) > ordersOfCustomer.size()) {
+            System.out.println("Order not found");
+            System.out.println("Please enter again");
+            viewCustomerOrder();
+        }
+        Order order = ordersOfCustomer.get(Integer.parseInt(targetOrderIndex) - 1);
+        System.out.println(order.toStringCustom());
     }
 
     /**
      * Take user input as customer ID to get associated Orders
-     *
-     * @throws IOException
      */
     public void viewOrderByCustomerId() throws IOException {
+        System.out.println("Note: Type 'B' to go back.");
         System.out.print("Please enter the ID of the customer:");
         String customerID = Utils.reader.readLine();
         Member targetCustomer = BaseHelper.getMemberById(customerID);       //Finds customer
 
+        if (customerID.equalsIgnoreCase("B")) {
+            return;
+        }
         if (targetCustomer == null) {
             System.out.println("Customer not found!");
+            viewOrderByCustomerId();
         }
 
         ArrayList<Order> ordersOfCustomer = new ArrayList<>();
         for (Order order : lstOrder) {
-            if (Objects.equals(order.getMember(), targetCustomer)) {          // Returns Empty List if no customer is found
+            if (Objects.equals(order.getMemberID(), targetCustomer.getId())) {          // Returns Empty List if no customer is found
                 ordersOfCustomer.add(order);
             }
         }
@@ -88,33 +120,29 @@ public class OrderService implements OrderInterface {
         }
     }
 
-
+    /**
+     * ORDER LOAD FIRST TO CALCULATE USER TOTAL SPENDING
+     */
     @Override
     public void loadData() {
-        //REQUIRES PRODUCT, MEMBER OBJECT LIST TO LOAD FIRST
-        //IN ORDER TO USE THE GET***BY*** FUNCTIONS
         try {
             BufferedReader orderData = Utils.fileReader(BaseConstant.ORDER_DATA_PATH);
             String dataRow;
-            lstOrder.clear();
+            String idString;
+            String memberString;
+            String productsString;
+            String dateString;
+            boolean statusString;
+            String priceString;
             while ((dataRow = orderData.readLine()) != null) {
                 String[] detailed = dataRow.split(",");
-
-                String idString = detailed[0];
-                String memberString = detailed[1];
-                String productsString = detailed[2];
-                String dateString = detailed[3];
-                String statusString = detailed[4];
-                String priceString = detailed[5];
-
-                lstOrder.add(new Order(
-                        idString,
-                        (Model.User.Member) BaseHelper.getMemberById(memberString),
-                        convertToProductList(productsString),
-                        LocalDateTime.parse(dateString, DateTimeFormatter.ISO_DATE_TIME),
-                        convertToBoolean(statusString),
-                        Double.valueOf(statusString)
-                ));
+                idString = detailed[0];
+                memberString = detailed[1];
+                productsString = detailed[2];
+                dateString = detailed[3];
+                statusString = Boolean.parseBoolean(detailed[4]);
+                priceString = detailed[5];
+                lstOrder.add(new Order(idString, memberString, convertToProductIdList(productsString), LocalDateTime.parse(dateString, DateTimeFormatter.ISO_DATE_TIME), statusString, Double.valueOf(priceString)));
             }
             orderData.close();
         } catch (IOException e) {
@@ -122,19 +150,15 @@ public class OrderService implements OrderInterface {
         }
     }
 
-
     @Override
     public void writeData() throws FileNotFoundException {
         PrintWriter out = new PrintWriter(BaseConstant.ORDER_DATA_PATH);
         if (!BaseHelper.isNullOrEmpty(lstOrder)) {
             for (Order order : lstOrder) {
-                out.printf("%s,%s,%s,%s,%s,%s\n",
-                        order.getId(),
-                        order.getMember().getId(),            //Stores username for customer
-                        convertToString(order.getProducts()),       //Stores ID for product
-                        convertToString(order.getCreated_at()),     //String of ISO dateformat
-                        convertToString(order.getPaid()),
-                        order.getTotalPrice());
+                out.write(order.getId() + "," + order.getMemberID() + "," +            //Stores userID for customer
+                        convertToString(order.getProductsID()) + "," +        //Stores ID for product
+                        convertToString(order.getCreated_at()) + "," +     //String of ISO dateformat
+                        order.getPaid() + "," + order.getTotalPrice() + "\n");
             }
         }
         out.close();
@@ -142,59 +166,144 @@ public class OrderService implements OrderInterface {
 
     @Override
     public void showAllOder() {
-        // TODO Auto-generated method stub
         for (Order order : lstOrder) {
-            System.out.print(order.toString());
-        }
-    }
-
-    public void findAllOrderOfCustomer(Member member) {
-        ArrayList<Order> customerOrders = new ArrayList<>();
-        for (Order order : lstOrder) {
-            if (order.getMember().equals(member)) {
-                customerOrders.add(order);
-            }
-        }
-        for (Order order : customerOrders) {
             System.out.println(order.toString());
         }
     }
 
     // Datatype to String
-    public static String convertToString(LocalDateTime date) {
+    private static String convertToString(LocalDateTime date) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         return date.format(formatter);
     }
 
-    public static String convertToString(List<Product> productList) {
+    private static String convertToString(List<String> productIDList) {
         StringBuilder resString = new StringBuilder();
-        for (Product product : productList) {
-            resString.append(product.getId()).append("and");
+        for (String product : productIDList) {
+            resString.append(product).append("and");
         }
+        resString = new StringBuilder(resString.substring(0, resString.length() - 3));        //Deleting the last "and"
         return resString.toString();
     }
 
-    public static String convertToString(Boolean blean) {
-        if (blean) {
-            return "1";
-        } else {
-            return "0";
-        }
-    }
-
     //String to other datatype
-    static ArrayList<Product> convertToProductList(String inputString) {
-        ArrayList<Product> resultArray = new ArrayList<>();
-        String[] productStringList = inputString.split("and");
-        for (String productIdString : productStringList) {
-            resultArray.add(BaseHelper.getProductByProductId(productIdString));
+    private static ArrayList<String> convertToProductIdList(String inputString) {
+        String[] array = inputString.split("and");
+        List<String> resultArray = new ArrayList<String>(Arrays.asList(array));
+        return (ArrayList<String>) resultArray;
+    }
+
+
+    /**
+     * get user's order Id input to find the order object.
+     * then continue getting an input to see if user want to change the input
+     * call method changeOrderStatus using that input and order's status
+     *
+     * @throws IOException
+     */
+    public void manageOrderStatus() throws IOException {
+        System.out.println("Enter an Order ID: ");
+        String orderId = Utils.reader.readLine();
+        if (orderId.equalsIgnoreCase("B")) {
+            return;
         }
-        return resultArray;
+        Order searchedOrder = BaseHelper.getOrderByOrderId(orderId);
+        if (!BaseHelper.isNullOrEmpty(searchedOrder) && !searchedOrder.getPaid()) {
+            System.out.println(searchedOrder);
+            System.out.println("===================");
+            System.out.println("Order's status: UNPAID.\n Do you want to change the status to PAID? (Y/N): ");
+            String answer = Utils.reader.readLine();
+            searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
+            System.out.println("Order status: Paid");
+        } else if (!BaseHelper.isNullOrEmpty(searchedOrder) && searchedOrder.getPaid()) {
+            System.out.println(searchedOrder);
+            System.out.println("===================");
+            System.out.println("Order's status: PAID.\n Do you want to change the status to UNPAID? (Y/N): ");
+            String answer = Utils.reader.readLine();
+            searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
+            System.out.println("Order status: Unpaid");
+        }
     }
 
-    static boolean convertToBoolean(String string) {
-        return Objects.equals(string, "1");
+    /**
+     * @param input
+     * @param orderStatus
+     * @return true if user's input is y or yes, and vice versa with n or no
+     */
+    private Boolean changeOrderStatus(String input, Boolean orderStatus) {
+        if (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes")) {
+            System.out.println("Order status changed successfully!");
+            return !orderStatus;
+        } else if (input.equalsIgnoreCase("n") || input.equalsIgnoreCase("no")) {
+            System.out.println("Order status has not been changed!");
+            return orderStatus;
+        } else {
+            System.out.println("Invalid input!");
+            return orderStatus;
+        }
+    }
+
+    public void addProductToCart() throws IOException {
+        printCart();
+        System.out.println("Note: Type 'B' to go back.");
+        System.out.println("Please input the product Id you want to add to cart: ");
+        String productId = Utils.reader.readLine();
+
+        Product product = BaseHelper.getProductByProductId(productId);
+        if (productId.equalsIgnoreCase("B")) {
+            return;
+        }
+        if (!BaseHelper.isNullOrEmpty(product)) {
+            Utils.cart.add(productId);
+            System.out.println("Product " + product.getProductName() + " added to cart!");
+            printCart();
+        } else {
+            System.out.println("Product Id not found! Please try again!");
+//            addProductToCart();
+            // Deleting this because the user will be stuck in the loop if they don't know the ID
+        }
+    }
+
+    private void printCart() {
+        System.out.println("Shopping cart: ");
+        System.out.println("-----------------------------------------");
+        for (String productId : Utils.cart) {
+            if (Utils.cart.size() > 0) {
+                System.out.println(BaseHelper.getProductByProductId(productId).getProductName());
+            } else {
+                System.out.println("Empty cart!");
+            }
+        }
+        System.out.println("-----------------------------------------");
+    }
+
+    private Double calculateTotalPrice() {
+        List<Product> productObjectList = new ArrayList<>();
+        for (String ProductId : Utils.cart) {
+            Product productObject = BaseHelper.getProductByProductId(ProductId);
+            productObjectList.add(productObject);
+        }
+        return productObjectList.stream().mapToDouble(Product::getPrice).sum() * ((Member) Utils.current_user).discountAmount();
     }
 
 
+    public void placeOrder() throws IOException {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
+            Order newOrder = new Order(BaseHelper.generateUniqueId(Order.class), Utils.current_user.getId(), new ArrayList<String>(Utils.cart),      //Mat em 1 buoi sang
+                    now,                                    //When clearing Utils.cart, the products in this order are deleted too
+                    false,                                  //Have to make separate object by copying the origin Utils.cart
+                    this.calculateTotalPrice());
+            lstOrder.add(newOrder);
+            System.out.println("Order placed successfully!");
+            System.out.println(newOrder);
+            Utils.cart.clear();
+        } else {
+            System.out.println("Your shopping cart is empty!");
+            ProductService productService = new ProductService();
+            productService.showAllProduct();
+            addProductToCart();
+        }
+    }
 }

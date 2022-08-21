@@ -5,7 +5,7 @@ import common.BaseHelper;
 public class Product {
     String id;
     String productName;
-    String price;
+    Double price;
     String category;
     String supplier;
 
@@ -20,7 +20,7 @@ public class Product {
                 '}';
     }
 
-    public Product(String id, String productName, String price, String category, String supplier) {
+    public Product(String id, String productName, Double price, String category, String supplier) {
         this.id = id;
         this.productName = productName;
         this.price = price;
@@ -29,8 +29,8 @@ public class Product {
     }
 
 
-    public Product(String productName, String price, String category, String supplier) {
-        this.id = BaseHelper.generateIdForProduction();
+    public Product(String productName, Double price, String category, String supplier) {
+        this.id = BaseHelper.generateUniqueId(Product.class);
         this.productName = productName;
         this.price = price;
         this.category = category;
@@ -53,11 +53,11 @@ public class Product {
         this.productName = productName;
     }
 
-    public String getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
