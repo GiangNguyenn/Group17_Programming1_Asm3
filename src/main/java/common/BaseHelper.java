@@ -6,6 +6,7 @@ import Model.User.Admin;
 import Model.User.Member;
 import Model.User.User;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -127,19 +128,19 @@ public class BaseHelper {
     }
 
 
-    public static String generateIdForUser() {
+    private static String generateIdForUser() {
         List<Integer> idArray = lstMember.stream().map(user -> Integer.valueOf(user.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }
 
-    public static String generateIdForProduct() {
+    private static String generateIdForProduct() {
         List<Integer> idArray = lstProduct.stream().map(product -> Integer.valueOf(product.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }
 
-    public static String generateIdForOrder() {
+    private static String generateIdForOrder() {
         List<Integer> idArray = lstProduct.stream().map(order -> Integer.valueOf(order.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
@@ -169,6 +170,16 @@ public class BaseHelper {
         Utils.orderService.loadData();
     }
 
+    public static void writeData() throws FileNotFoundException {
+        Utils.userService.writeData();
+        Utils.productService.writeData();
+        Utils.orderService.writeData();
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static void simpleTable(List<Object> objects, Class objClass) {
+
+        Field[] fields = objClass.getDeclaredFields();
 
     @SuppressWarnings("rawtypes")
     public static void simpleTable(String[][] table) {

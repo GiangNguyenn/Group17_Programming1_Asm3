@@ -16,15 +16,6 @@ public class Main {
 
         BaseHelper.loadData();
         BaseHelper.printWelcomePage();
-//        Utils.menuService.mainMenu();
-        ProductService productService = new ProductService();
-//        productService.viewOrderDetails();
-//        BaseHelper.productTable(lstProduct);
-//        BaseHelper.simpleTable(memberTableGenerator(lstMember));
-//        BaseHelper.simpleTable(adminTableGenerator(lstAdmin));
-//        BaseHelper.simpleTable(productTableGenerator(lstProduct));
-//        BaseHelper.simpleTable(orderTableGenerator(lstOrder));
-        menuService.sortProductByPriceMenu();
-
+        Utils.menuService.startUpMenu();
     }
 }
