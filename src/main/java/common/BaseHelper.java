@@ -149,12 +149,8 @@ public class BaseHelper {
     }
 
     @SuppressWarnings("rawtypes")
-    public static void simpleTable(List<Object> objects, Class objClass) {
+    public static void simpleTable(String[][] table) {
 
-        Field[] fields = objClass.getDeclaredFields();
-
-        int columnSize = fields.length;
-        int rowSize = objects.size() + 1;
 
         /*
          * leftJustifiedRows - If true, it will add "-" as a flag to format string to
@@ -170,20 +166,13 @@ public class BaseHelper {
         /*
          * Table to print in console in 2-dimensional array. Each sub-array is a row.
          */
-        String[][] table = new String[][]{{"id", "First Name", "Last Name", "Age", "Profile"},
-                {"1", "John", "Johnson", "45", "My name is John Johnson. My id is 1. My age is 45."},
-                {"2", "Tom", "", "35", "My name is Tom. My id is 2. My age is 35."},
-                {"3", "Rose", "Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson", "22",
-                        "My name is Rose Johnson. My id is 3. My age is 22."},
-                {"4", "Jimmy", "Kimmel", "", "My name is Jimmy Kimmel. My id is 4. My age is not specified. "
-                        + "I am the host of the late night show. I am not fan of Matt Damon. "}};
-
-        String[][] tables = new String[rowSize][columnSize];
-        int index = 0;
-        for (Field field : fields) {
-            table[0][index] = field.getName();
-            index++;
-        }
+        // String[][] tables = new String[][]{{"id", "First Name", "Last Name", "Age", "Profile"},
+        //         {"1", "John", "Johnson", "45", "My name is John Johnson. My id is 1. My age is 45."},
+        //         {"2", "Tom", "", "35", "My name is Tom. My id is 2. My age is 35."},
+        //         {"3", "Rose", "Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson", "22",
+        //                 "My name is Rose Johnson. My id is 3. My age is 22."},
+        //         {"4", "Jimmy", "Kimmel", "", "My name is Jimmy Kimmel. My id is 4. My age is not specified. "
+        //                 + "I am the host of the late night show. I am not fan of Matt Damon. "}};
 
         /*
          * Create new table array with wrapped rows
@@ -272,4 +261,20 @@ public class BaseHelper {
         System.out.print(line);
     }
 
+    public static String[][] tableGenerator() {
+
+        if(isNullOrEmpty(Utils.lstMember)) {
+            return new String[][]{};
+        }
+
+        String[][] contents = new String[Utils.lstMember.size() + 1][4];
+
+        contents[0] = new String[]{"id", "name", "phone number", "total spending", "member type"};
+        int index = 1;
+        for (Member member : Utils.lstMember) {
+            contents[index] = new String[]{member.getId(),member.getName(), member.getPhoneNumber(), String.valueOf(member.getTotalSpending()), member.convertTypeMemeberToString()};
+            index++;   
+        }
+        return contents;
+    }
 }

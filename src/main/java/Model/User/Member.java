@@ -57,8 +57,22 @@ public class Member extends User {
     }
 
 
-    public Object getPhoneNumber() {
+    public String getPhoneNumber() {
         return this.phoneNumber;
+    }
+
+    public String convertTypeMemeberToString() {
+        if(this.memberType.equals(TypeMember.NORMAL)) {
+            return "Normal";
+        } else if (this.memberType.equals(TypeMember.GOLD)) {
+            return "Gold"; 
+        } else if (this.memberType.equals(TypeMember.PLATINUM)) {
+            return "Platinum";
+        } else if(this.memberType.equals(TypeMember.SILVER)) {
+            return "Silver";
+        } else {
+            return "";
+        }
     }
 
 
