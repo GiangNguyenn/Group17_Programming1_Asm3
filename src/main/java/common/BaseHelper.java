@@ -16,6 +16,29 @@ public class BaseHelper {
 
     public static void printWelcomePage() {
         System.out.println("********* Here is welcome page *********");
+        System.out.println("COSC2081 GROUP ASSIGNMENT");
+        System.out.println("STORE ORDER MANAGEMENT SYSTEM ");
+        System.out.println("Instructor: Mr. Minh Vu ");
+        System.out.println("Group: Group Name ");
+        System.out.println("Nguyen Thi Quynh Giang - S3866617");
+        System.out.println("Vo Khai Minh - S3879953");
+        System.out.println("Nguyen Huu Minh Khang - s3927067");
+        System.out.println("Nguyen Chau Loan - s3880115");
+        System.out.println("****************************************");
+        System.out.println(" ");
+    }
+    public static void productTable(List<Product> input) {
+        System.out.println("========================================================");
+        System.out.printf(BaseConstant.PRODUCT_TABLE_FORMAT, "   ID   ", "   Product's name   ", "   Product's price   ");
+        System.out.println("");
+        System.out.println("========================================================");
+
+        for (Product product : input) {
+            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ",
+                    "   " + product.getPrice() + "$");
+            System.out.println("");
+            System.out.println("========================================================");
+        }
     }
 
     public static Boolean isLogin() {

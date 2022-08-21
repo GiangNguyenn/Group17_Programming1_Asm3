@@ -1,11 +1,15 @@
 package Service;
 
+import Model.Productions.Product;
 import Model.User.Member;
 import common.BaseHelper;
 import common.Utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+
+import static common.Utils.lstProduct;
 
 public class MenuService {
     UserService userService = new UserService();
@@ -95,7 +99,7 @@ public class MenuService {
         System.out.println("Select function: ");
         System.out.println("1. View all products");
         System.out.println("2. Browse products by categories");
-        System.out.println("3. View your orders");   //done
+        System.out.println("3. View order by OrderID"); // done
         System.out.println("4. View my profile");
         System.out.println("5. Log out");
         System.out.println("Your choice: ");
@@ -103,7 +107,6 @@ public class MenuService {
 
     private void memberMenu() {
         BaseHelper.clearConsole();
-
         printMemberMenu();
 
         try {
@@ -136,7 +139,6 @@ public class MenuService {
         System.out.println("1. Add product to cart");
         System.out.println("2. Checkout");
         System.out.println("Your choice:");
-
     }
 
     private void placeOrderMenu() {
@@ -158,10 +160,31 @@ public class MenuService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
+    public void printSortProductByPrice() {
+        System.out.println("Select action: ");
+        System.out.println("1. Sort product from low to high");
+        System.out.println("2. Sort product from high to low");
+    }
+    public void sortProductByPriceMenu() {
+        BaseHelper.clearConsole();
+        BaseHelper.productTable(lstProduct);
+        printSortProductByPrice();
+        try {
+            String choice = Utils.reader.readLine();
+            switch (choice) {
+                case "1" -> productService.sortProductByPrice("asc");
+                case "2" -> productService.sortProductByPrice("desc");
+                default -> System.out.println("Invalid choice, please try again!");
+            }
+            System.out.println("press enter to continue...");
+            Utils.reader.read();
+            // sortProductByPriceMenu();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void printAdminMenu() {
         System.out.println("Select function: ");
@@ -207,7 +230,6 @@ public class MenuService {
             e.printStackTrace();
         }
     }
-
 
     public void printMenuByUserRole() {
         BaseHelper.clearConsole();
