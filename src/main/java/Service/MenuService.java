@@ -174,8 +174,8 @@ public class MenuService {
         try {
             String choice = Utils.reader.readLine();
             switch (choice) {
-                case "1" -> productService.sortProductByPrice("1");
-                case "2" -> productService.sortProductByPrice("2");
+                case "1" -> productService.sortProductByPrice("asc");
+                case "2" -> productService.sortProductByPrice("desc");
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
