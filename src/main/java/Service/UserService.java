@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Scanner;
 
 import static common.Utils.lstAdmin;
 import static common.Utils.lstMember;
@@ -39,12 +38,20 @@ public class UserService implements UserInterface {
             System.out.println("This user has been logged.");
             return;
         }
+        System.out.println("Note: Type 'B' in any input to go back.");
 
         System.out.println("Process login:");
         System.out.println("Username: ");
         String username = Utils.reader.readLine();
+        if (username.equals("B")) {
+            return;
+        }
         System.out.println("Password: ");
         String password = Utils.reader.readLine();
+        if (password.equals("B")) {
+            return;
+        }
+
 
         Member member = BaseHelper.getMemberByUserName(username);
 
@@ -53,15 +60,14 @@ public class UserService implements UserInterface {
         if (!BaseHelper.isNullOrEmpty(member) && BaseHelper.checkingMemberLoginInfo(username, password)) {
             Utils.isLogin = true;
             Utils.current_user = member;
-            System.out.println("Login success! " + member);
+            BaseHelper.clearConsole();
+            System.out.println("Login success! Hello " + member.getName());
             return;
         }
 
         if (!BaseHelper.isNullOrEmpty(admin) && BaseHelper.checkingAdminLoginInfo(username, password)) {
             Utils.isLogin = true;
             Utils.isAdmin = true;
-            Utils.current_user = admin;
-            System.out.println(Utils.current_user);
             return;
         }
 
@@ -71,24 +77,38 @@ public class UserService implements UserInterface {
     @Override
     public void register() throws IOException {
         // TODO: process get input to login
-        Scanner scanner = new Scanner(System.in);
         boolean userExists = false;
 
         while (!userExists) {
+            System.out.println("Note: Type 'B' in any input to go back.");
+
             System.out.println("Enter your name: ");
-            String name = scanner.nextLine();
+            String name = Utils.reader.readLine();
+            if (name.equalsIgnoreCase("B")) {
+                return;
+            }
             System.out.println("Enter your phone number: ");
-            String phoneNumber = scanner.nextLine();
+            String phoneNumber = Utils.reader.readLine();
+            if (phoneNumber.equalsIgnoreCase("B")) {
+                return;
+            }
             System.out.println("Enter your username: ");
-            String username = scanner.nextLine();
+            String username = Utils.reader.readLine();
+            if (username.equalsIgnoreCase("B")) {
+                return;
+            }
             System.out.println("Enter your password: ");
-            String password = scanner.nextLine();
+            String password = Utils.reader.readLine();
+            if (password.equalsIgnoreCase("B")) {
+                return;
+            }
+
 
             if (BaseHelper.checkExistUsername(username)) {
                 System.out.println("This username has been used! Please register with another one.");
                 userExists = true;
             } else {
-                String id = BaseHelper.generateIdForUser();
+                String id = BaseHelper.generateUniqueId(Member.class);
                 lstMember.add(new Member(id, name, phoneNumber, username, password));
                 System.out.println(lstMember);
                 break;

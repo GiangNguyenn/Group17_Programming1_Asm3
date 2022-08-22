@@ -8,9 +8,13 @@ import common.Utils;
 import interfaces.ProductInterface;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 
 import static common.BaseConstant.PRODUCT_DATA_PATH;
 import static common.BaseHelper.orderTableGenerator;
@@ -62,6 +66,7 @@ public class ProductService implements ProductInterface {
         File productionCsvFile = new File(PRODUCT_DATA_PATH);
         File csvFile = new File(productionCsvFile.toURI());
         PrintWriter out = new PrintWriter(csvFile);
+
         boolean ans = lstProduct.isEmpty();
         if (ans) {
             System.out.println("The List is empty");
@@ -79,12 +84,15 @@ public class ProductService implements ProductInterface {
         BaseHelper.simpleTable(BaseHelper.productTableGenerator(lstProduct));
     }
 
-    public void showProductsByCategory() {
+    public void showProductsByCategory() throws IOException {
         printListOfCategories();
         List<Product> searchedProducts = new ArrayList<>();
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("Note: Type 'B' to go back.");
         System.out.println("Input categories: ");
-        String categoryInput = scanner.nextLine();
+        String categoryInput = Utils.reader.readLine();
+        if (categoryInput.equalsIgnoreCase("B")) {
+            return;
+        }
         for (Product product : lstProduct) {
             if (Objects.equals(product.getCategory(), categoryInput)) {
                 searchedProducts.add(product);
@@ -193,7 +201,7 @@ public class ProductService implements ProductInterface {
                         + " has already been added! Please add another product");
                 productExists = true;
             } else {
-                String id = BaseHelper.generateIdForProduct();
+                String id = BaseHelper.generateUniqueId(Product.class);
                 lstProduct.add(new Product(id, productName, Double.parseDouble(price), category, supplier));
                 System.out.println(lstProduct);
                 break;
@@ -206,7 +214,7 @@ public class ProductService implements ProductInterface {
             Scanner scanner = new Scanner(System.in);
             BaseHelper.productTableGenerator(lstProduct);
             System.out.println("Please input Product ID you want to delete:");
-            String userInput = scanner.nextLine();
+            String userInput = Utils.reader.readLine();
             for (int i = 0; i < lstProduct.size(); i++) {
                 if (lstProduct.get(i).getId().equals(userInput)) {
                     lstProduct.remove(i);
