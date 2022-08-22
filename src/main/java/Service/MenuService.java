@@ -1,12 +1,16 @@
 package Service;
 
+import Model.Productions.Order;
 import common.BaseHelper;
 import common.Utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
-import static common.Utils.lstProduct;
+import static common.Utils.*;
 
 public class MenuService {
     private static MenuService INSTANT;
@@ -27,11 +31,11 @@ public class MenuService {
     public void utilMenu(String choice) {
         try {
             switch (choice) {
-                case "B" -> {
+                case "b", "B" -> {
                     System.out.println("going ");
                     return;
                 }
-                case "E" -> exit();
+                case "e", "E" -> exit();
                 default -> {
                     break;
                 }
@@ -62,7 +66,7 @@ public class MenuService {
                     memberMainMenu();
                     break;
                 }
-                case "E" -> exit();
+                case "e", "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -95,7 +99,7 @@ public class MenuService {
                     printMenuByUserRole();
                     break;
                 }
-                case "E" -> exit();
+                case "e", "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -135,7 +139,7 @@ public class MenuService {
                     Utils.productService.showAllProduct();
                     break;
                 }
-                case "E" -> exit();
+                case "e", "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -152,11 +156,11 @@ public class MenuService {
         System.out.println("Select function: ");
         System.out.println("1. View all products");
         System.out.println("2. Browse products by categories");
-        System.out.println("3. View your orders");   //done
+        System.out.println("3. View your orders");
         System.out.println("4. View my profile");
         System.out.println("5. Log out");
         System.out.println("E. Exit");
-        System.out.println("Your choice: ");
+        System.out.print("Your choice: ");
     }
 
     private void memberMenu() {
@@ -176,7 +180,7 @@ public class MenuService {
                     Utils.userService.logout();
                     return;
                 }
-                case "E" -> exit();
+                case "e", "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -194,7 +198,7 @@ public class MenuService {
         System.out.println("2. Checkout");
         System.out.println("B. Go back");
         System.out.println("E. Exit");
-        System.out.println("Your choice:");
+        System.out.print("Your choice: ");
     }
 
     private void placeOrderMenu() {
@@ -208,10 +212,10 @@ public class MenuService {
                     Utils.orderService.placeOrder();
                     return;
                 }
-                case "B" -> {
+                case "b", "B" -> {
                     return;
                 }
-                case "E" -> exit();
+                case "e", "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -247,6 +251,7 @@ public class MenuService {
         }
     }
 
+
     private void printAdminMenu() {
         System.out.println("Select function: ");
         System.out.println("1. Add a new product");
@@ -254,9 +259,10 @@ public class MenuService {
         System.out.println("3. View all orders of a Customer ID");
         System.out.println("4. Manage order status");
         System.out.println("5. Delete a product");
-        System.out.println("6. Log out");
+        System.out.println("6. View revenue");
+        System.out.println("7. Log out");
         System.out.println("E. exit");
-        System.out.println("Your choice: ");
+        System.out.print("Your choice: ");
     }
 
     private void adminMenu() {
@@ -281,9 +287,12 @@ public class MenuService {
                     Utils.productService.deleteProduct();
                     break;
                 case "6":
+                    revenueMenu();
+                    break;
+                case "7":
                     Utils.userService.logout();
                     return;
-                case "E":
+                case "e","E":
                     exit();
                 default:
                     System.out.println("Invalid choice, please try again!");
@@ -308,6 +317,38 @@ public class MenuService {
             return;
         }
     }
+
+    public void revenueMenu() throws IOException {
+        LocalDate targetDate = null;
+
+        System.out.println("Please choose actions:");
+        System.out.println("1. See revenue today");
+        System.out.println("2. See revenue specific day");
+        try {
+            String choice = Utils.reader.readLine();
+            switch (choice) {
+                case "1" -> {
+                    orderService.revenueTodayMenu();
+                    break;
+                }
+                case "2" -> {
+                    orderService.revenueSpecificDayMenu();
+                }
+                case "b", "B" -> {
+                    return;
+                }
+                default -> {
+                    System.out.println("Invalid input! Please try again");
+                    System.out.println("");
+                    revenueMenu();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     private static void exit() throws FileNotFoundException {
         BaseHelper.writeData();
