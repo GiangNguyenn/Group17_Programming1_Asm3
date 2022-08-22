@@ -76,9 +76,7 @@ public class ProductService implements ProductInterface {
 
     @Override
     public void showAllProduct() {
-        for (Product product : lstProduct) {
-            System.out.println(product);
-        }
+        BaseHelper.simpleTable(BaseHelper.productTableGenerator(lstProduct));
     }
 
     public void showProductsByCategory() {
@@ -117,7 +115,7 @@ public class ProductService implements ProductInterface {
             String orderId = Utils.reader.readLine();
             Order searchOrder = BaseHelper.getOrderByOrderId(orderId);
             if (!BaseHelper.isNullOrEmpty(searchOrder) && p.matcher(orderId).find()) {
-                BaseHelper.orderItemTable(searchOrder);
+                BaseHelper.simpleTable(BaseHelper.orderTableGenerator(BaseHelper.addSingleOrderToOrderList(searchOrder)));
                 notMatchedRegex = false;
             } else {
                 System.out.println(
@@ -179,9 +177,7 @@ public class ProductService implements ProductInterface {
     @Override
     public void addProduct() throws IOException {
         boolean productExists = false;
-
         BufferedReader reader = Utils.reader;
-
         while (!productExists) {
             System.out.println("Enter product name: ");
             String productName = reader.readLine();
@@ -208,6 +204,7 @@ public class ProductService implements ProductInterface {
     public void deleteProduct() {
         try {
             Scanner scanner = new Scanner(System.in);
+            BaseHelper.productTableGenerator(lstProduct);
             System.out.println("Please input Product ID you want to delete:");
             String userInput = scanner.nextLine();
             for (int i = 0; i < lstProduct.size(); i++) {

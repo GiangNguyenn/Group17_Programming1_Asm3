@@ -28,17 +28,7 @@ public class BaseHelper {
         System.out.println("****************************************");
         System.out.println(" ");
     }
-
-    public static void orderItemTable(Order input){
-        System.out.println("================================================================================================================");
-        System.out.printf(BaseConstant.ORDER_ITEM_TABLE_FORMNAT, "ID   ", "   Product's IDs   ", "   Order created date   ", "   Order's status   ", "   Order's total   ");
-        System.out.println("");
-        System.out.println("================================================================================================================");
-        System.out.printf(BaseConstant.ORDER_ITEM_TABLE_FORMNAT, input.getId() + "   ", "   " + input.getProductsID() + "   ",
-                "   " + input.getCreated_at() + "   ", "   " + input.getPaid() + "   ", "   " + input.getTotalPrice() + "   ");
-        System.out.println("");
-        System.out.println("================================================================================================================");
-    }
+    
     public static Boolean isLogin() {
         return Utils.isLogin;
     }
@@ -232,6 +222,30 @@ public class BaseHelper {
         System.out.print(line);
     }
 
+    public static List<Order> addSingleOrderToOrderList(Order input){
+        List<Order> singleOrder = new ArrayList<>();
+        singleOrder.add(input);
+        return singleOrder;
+    }
+
+    public static List<Product> addSingleOrderToOrderList(Product input){
+        List<Product> singleProduct = new ArrayList<>();
+        singleProduct.add(input);
+        return singleProduct;
+    }
+
+    public static List<Admin> addSingleOrderToOrderList(Admin input){
+        List<Admin> singleAdmin = new ArrayList<>();
+        singleAdmin.add(input);
+        return singleAdmin;
+    }
+
+    public static List<Member> addSingleOrderToOrderList(Member input){
+        List<Member> singleMember = new ArrayList<>();
+        singleMember.add(input);
+        return singleMember;
+    }
+
     public static String[][] memberTableGenerator(List<Member> input){
         if(isNullOrEmpty(input)) {
             return new String[][]{};
@@ -272,7 +286,6 @@ public class BaseHelper {
         return table;
     }
 
-
     public static String[][] productTableGenerator(List<Product> input){
         if(isNullOrEmpty(input)) {
             return new String[][]{};
@@ -287,3 +300,21 @@ public class BaseHelper {
         return table;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
