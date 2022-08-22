@@ -8,6 +8,7 @@ import common.BaseConstant.TypeMember;
 import common.Utils;
 
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 import static common.BaseConstant.TypeMember;
 import static common.Utils.lstOrder;
@@ -23,8 +24,6 @@ public class Member extends User {
         super(id, username, password);
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.totalSpending = totalSpending();
-        this.memberType = memberType();
     }
 
     public Member(String userName, String password, String name, String phoneNumber) {
@@ -76,39 +75,44 @@ public class Member extends User {
         return this.totalSpending;
     }
 
+    public void setTotalSpending(Double totalSpending) {
+        this.totalSpending = totalSpending;
+    }
+
     public TypeMember getMemberType() {
         return this.memberType;
     }
 
-    double totalSpending() {
+    public void setMemberType(TypeMember memberType) {
+        this.memberType = memberType;
+    }
+
+    double calculateTotalSpending(){
         ArrayList<Double> totalSpendingOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
-        double resultDouble = 0;
-        for (Order order : lstOrder) {
-            if (order.getMemberID().equalsIgnoreCase(Utils.current_user.getId())) {
-                totalSpendingOfCustomer.add(order.getTotalPrice());
+        Double totalSpending = lstOrder.stream().filter(order -> order.getMemberID().equalsIgnoreCase(Utils.current_user.getId())).mapToDouble(Order::getTotalPrice).sum();
+        return totalSpending;
+    }
+
+        TypeMember processMemberType(){        //5 10 25
+            if (totalSpending > BaseConstant.LITMIT_PLATINUM){
+                return TypeMember.PLATINUM;
+            } else if (totalSpending > BaseConstant.LITMIT_GOLD) {
+                return TypeMember.GOLD;
+            } else if (totalSpending > BaseConstant.LITMIT_SILVER) {
+                return TypeMember.SILVER;
+            } else {
+                return TypeMember.NORMAL;
             }
+
         }
-        for (int i = 0; i < totalSpendingOfCustomer.size(); i++) {
-            resultDouble += totalSpendingOfCustomer.get(0);
-        }
-        return resultDouble;
+
+    public void updateMemberInfo(){
+        this.setTotalSpending(this.calculateTotalSpending());
+        this.setMemberType(this.processMemberType());
     }
 
-    TypeMember memberType() {        //5 10 25
-        if (totalSpending > 25000000.0) {
-            return TypeMember.PLATINUM;
-        } else if (totalSpending > 10000000.0) {
-            return TypeMember.GOLD;
-        } else if (totalSpending > 5000000.0) {
-            return TypeMember.SILVER;
-        } else {
-            return TypeMember.NORMAL;
-        }
-
-    }
-
-    public double discountAmount() {
-        switch (this.getMemberType()) {
+    public double discountAmount(){
+        switch (this.getMemberType()){
             case SILVER -> {
                 return 0.95;
             }
