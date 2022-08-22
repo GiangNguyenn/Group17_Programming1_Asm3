@@ -1,6 +1,7 @@
 package Model.User;
 
 import Model.Productions.Order;
+import common.BaseConstant;
 import common.BaseConstant.TypeMember;
 import common.Utils;
 
@@ -78,11 +79,11 @@ public class Member extends User {
     }
 
         TypeMember processMemberType(){        //5 10 25
-            if (totalSpending > 25000000){
+            if (totalSpending > BaseConstant.LITMIT_PLATINUM){
                 return TypeMember.PLATINUM;
-            } else if (totalSpending > 10000000) {
+            } else if (totalSpending > BaseConstant.LITMIT_GOLD) {
                 return TypeMember.GOLD;
-            } else if (totalSpending > 5000000) {
+            } else if (totalSpending > BaseConstant.LITMIT_SILVER) {
                 return TypeMember.SILVER;
             } else {
                 return TypeMember.NORMAL;

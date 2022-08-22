@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static common.Utils.lstOrder;
+import static common.Utils.*;
 
 public class OrderService implements OrderInterface {
 
@@ -295,11 +295,15 @@ public class OrderService implements OrderInterface {
                     break;
                 }
                 case "2" -> {
-                    LocalDate tempt = findSpecificDay();
+                    LocalDate tempt = menuService.findSpecificDay();
                     if (!BaseHelper.isNullOrEmpty(tempt)) {
                         targetDate = tempt;
                     }
                     break;
+                }
+                case "b", "B" -> {
+                    menuService.adminMainMenu();
+                    return;
                 }
                 default -> {
                     System.out.println("Invalid input! Please try again");
@@ -318,37 +322,5 @@ public class OrderService implements OrderInterface {
 
     }
 
-    private LocalDate findSpecificDay() throws IOException {
-        try {
-            String targetYearString;
-            String targetMonthString;
-            String targetDayString;
-            System.out.print("Please enter the year yyyy: ");
-            targetYearString = Utils.reader.readLine().trim();
-            System.out.print("Please enter the month mm: ");
-            targetMonthString = Utils.reader.readLine().trim();
-            System.out.print("Please enter the day dd: ");
-            targetDayString = Utils.reader.readLine().trim();
 
-            if (!(targetDayString.matches("\\d{1,2}") && targetMonthString.matches("\\d{1,2}") && targetYearString.matches("\\d{4}"))) {
-                System.out.println("Invalid input! Please try again.");
-                System.out.println("");
-                revenueInOneDay();
-                return null;
-            }
-            targetMonthString = String.format("%02d", Integer.parseInt(targetMonthString));              // Adding zeros before numbers
-            targetDayString = String.format("%02d", Integer.parseInt(targetDayString));                  // for the LocalDate.parse to work
-
-            String targetDateString = targetYearString + "-" + targetMonthString + "-" + targetDayString;
-            return LocalDate.parse(targetDateString, DateTimeFormatter.ISO_DATE);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (DateTimeParseException ex) {
-            System.out.println("Invalid date! Please try again.");
-            System.out.println("");
-            revenueInOneDay();
-        }
-        return null;
-    }
 }

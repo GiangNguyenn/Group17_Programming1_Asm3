@@ -5,8 +5,12 @@ import common.Utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import static common.Utils.lstProduct;
+import static common.Utils.orderService;
 
 public class MenuService {
     private static MenuService INSTANT;
@@ -27,11 +31,11 @@ public class MenuService {
     public void utilMenu(String choice) {
         try {
             switch (choice) {
-                case "B" -> {
+                case "b", "B" -> {
                     System.out.println("going ");
                     return;
                 }
-                case "E" -> exit();
+                case "e", "E" -> exit();
                 default -> {
                     break;
                 }
@@ -62,7 +66,7 @@ public class MenuService {
                     memberMainMenu();
                     break;
                 }
-                case "E" -> exit();
+                case "e", "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -95,7 +99,7 @@ public class MenuService {
                     printMenuByUserRole();
                     break;
                 }
-                case "E" -> exit();
+                case "e", "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -135,7 +139,7 @@ public class MenuService {
                     Utils.productService.showAllProduct();
                     break;
                 }
-                case "E" -> exit();
+                case "e", "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -176,7 +180,7 @@ public class MenuService {
                     Utils.userService.logout();
                     return;
                 }
-                case "E" -> exit();
+                case "e", "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -208,10 +212,10 @@ public class MenuService {
                     Utils.orderService.placeOrder();
                     return;
                 }
-                case "B" -> {
+                case "b", "B" -> {
                     return;
                 }
-                case "E" -> exit();
+                case "e", "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -288,7 +292,7 @@ public class MenuService {
                 case "7":
                     Utils.userService.logout();
                     return;
-                case "E":
+                case "e","E":
                     exit();
                 default:
                     System.out.println("Invalid choice, please try again!");
@@ -312,6 +316,41 @@ public class MenuService {
             memberMenu();
             return;
         }
+    }
+
+    public LocalDate findSpecificDay() throws IOException {
+        try {
+            String targetYearString;
+            String targetMonthString;
+            String targetDayString;
+            System.out.print("Please enter the year yyyy: ");
+            targetYearString = Utils.reader.readLine().trim();
+            System.out.print("Please enter the month mm: ");
+            targetMonthString = Utils.reader.readLine().trim();
+            System.out.print("Please enter the day dd: ");
+            targetDayString = Utils.reader.readLine().trim();
+
+            if (!(targetDayString.matches("\\d{1,2}") && targetMonthString.matches("\\d{1,2}") && targetYearString.matches("\\d{4}"))) {
+                System.out.println("Invalid format! Please write again.");
+                System.out.println("");
+                orderService.revenueInOneDay();
+                return null;
+            }
+            targetMonthString = String.format("%02d", Integer.parseInt(targetMonthString));              // Adding zeros before numbers
+            targetDayString = String.format("%02d", Integer.parseInt(targetDayString));                  // for the LocalDate.parse to work
+
+            String targetDateString = targetYearString + "-" + targetMonthString + "-" + targetDayString;
+            return LocalDate.parse(targetDateString, DateTimeFormatter.ISO_DATE);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (DateTimeParseException ex) {
+            System.out.println("Invalid date! Please try again.");
+            System.out.println("");
+            orderService.revenueInOneDay();
+            return null;
+        }
+        return null;
     }
 
     private static void exit() throws FileNotFoundException {
