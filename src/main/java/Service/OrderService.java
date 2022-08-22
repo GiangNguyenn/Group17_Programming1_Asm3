@@ -281,46 +281,57 @@ public class OrderService implements OrderInterface {
         }
     }
 
-    public void revenueInOneDay() throws IOException {
-        LocalDate targetDate = null;
-
-        System.out.println("Please choose actions:");
-        System.out.println("1. See revenue today");
-        System.out.println("2. See revenue specific day");
-        try {
-            String choice = Utils.reader.readLine();
-            switch (choice) {
-                case "1" -> {
-                    targetDate = LocalDate.now();
-                    break;
-                }
-                case "2" -> {
-                    LocalDate tempt = menuService.findSpecificDay();
-                    if (!BaseHelper.isNullOrEmpty(tempt)) {
-                        targetDate = tempt;
-                    }
-                    break;
-                }
-                case "b", "B" -> {
-                    menuService.adminMainMenu();
-                    return;
-                }
-                default -> {
-                    System.out.println("Invalid input! Please try again");
-                    System.out.println("");
-                    revenueInOneDay();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        LocalDate finalTargetDate = targetDate;                 // IDE suggest to do so
-        if (finalTargetDate != null) {                          // To prevent wrong answers from before getting printed
-            double totalSpendingDay = lstOrder.stream().filter(order -> order.getCreated_at().toLocalDate().equals(finalTargetDate)).mapToDouble(Order::getTotalPrice).sum();
-            System.out.println("Revenue made in " + finalTargetDate + " : " + totalSpendingDay);
-        }
-
+    private Double calculateRevenueOneDay(LocalDate targetDate){
+        return lstOrder.stream().filter(order -> order.getCreated_at().toLocalDate().equals(targetDate)).mapToDouble(Order::getTotalPrice).sum();
     }
 
+    private String dateAdjustmentHelper(String string){
+        return String.format("%02d", Integer.parseInt(string));          // Adding zeros before numbers for the LocalDate.parse to work
+                                                                        // Helps customers avoiding the Exception because of missing zero
+    }
+    private LocalDate userInputToDate(String targetYearString, String targetMonthString, String targetDayString){
+        if (!(targetDayString.matches("\\d{1,2}") && targetMonthString.matches("\\d{1,2}") && targetYearString.matches("\\d{4}"))) {
+            System.out.println("Invalid format! Please write again.");
+            System.out.println("");
+            revenueSpecificDayMenu();
+            return null;
+        }
+        targetMonthString = dateAdjustmentHelper(targetMonthString);
+        targetDayString = dateAdjustmentHelper(targetDayString);
+        String targetDateString = targetYearString + "-" + targetMonthString + "-" + targetDayString;
+        return LocalDate.parse(targetDateString, DateTimeFormatter.ISO_DATE);
+    }
+
+    public void revenueTodayMenu(){
+        LocalDate targetDate = LocalDate.now();
+        System.out.println("Revenue made in " + targetDate + " : " + calculateRevenueOneDay(targetDate));
+    }
+    public void revenueSpecificDayMenu() {
+        try {
+            String targetYearString;
+            String targetMonthString;
+            String targetDayString;
+            System.out.print("Please enter the year yyyy: ");
+            targetYearString = Utils.reader.readLine().trim();
+            System.out.print("Please enter the month mm: ");
+            targetMonthString = Utils.reader.readLine().trim();
+            System.out.print("Please enter the day dd: ");
+            targetDayString = Utils.reader.readLine().trim();
+            LocalDate targetDate = userInputToDate(targetYearString,targetMonthString,targetDayString);
+            if (targetDate != null){
+                System.out.println("Revenue made in " + targetDate + " : " + calculateRevenueOneDay(targetDate));}
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (DateTimeParseException ex) {
+            System.out.println("Invalid date! Please try again.");
+            System.out.println("");
+            orderService.revenueSpecificDayMenu();
+        }
+    }
 
 }
+
+
+
+
+

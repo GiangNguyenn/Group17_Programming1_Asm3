@@ -1,5 +1,6 @@
 package Service;
 
+import Model.Productions.Order;
 import common.BaseHelper;
 import common.Utils;
 
@@ -9,8 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import static common.Utils.lstProduct;
-import static common.Utils.orderService;
+import static common.Utils.*;
 
 public class MenuService {
     private static MenuService INSTANT;
@@ -287,7 +287,7 @@ public class MenuService {
                     Utils.productService.deleteProduct();
                     break;
                 case "6":
-                    Utils.orderService.revenueInOneDay();
+                    revenueMenu();
                     break;
                 case "7":
                     Utils.userService.logout();
@@ -318,40 +318,37 @@ public class MenuService {
         }
     }
 
-    public LocalDate findSpecificDay() throws IOException {
+    public void revenueMenu() throws IOException {
+        LocalDate targetDate = null;
+
+        System.out.println("Please choose actions:");
+        System.out.println("1. See revenue today");
+        System.out.println("2. See revenue specific day");
         try {
-            String targetYearString;
-            String targetMonthString;
-            String targetDayString;
-            System.out.print("Please enter the year yyyy: ");
-            targetYearString = Utils.reader.readLine().trim();
-            System.out.print("Please enter the month mm: ");
-            targetMonthString = Utils.reader.readLine().trim();
-            System.out.print("Please enter the day dd: ");
-            targetDayString = Utils.reader.readLine().trim();
-
-            if (!(targetDayString.matches("\\d{1,2}") && targetMonthString.matches("\\d{1,2}") && targetYearString.matches("\\d{4}"))) {
-                System.out.println("Invalid format! Please write again.");
-                System.out.println("");
-                orderService.revenueInOneDay();
-                return null;
+            String choice = Utils.reader.readLine();
+            switch (choice) {
+                case "1" -> {
+                    orderService.revenueTodayMenu();
+                    break;
+                }
+                case "2" -> {
+                    orderService.revenueSpecificDayMenu();
+                }
+                case "b", "B" -> {
+                    return;
+                }
+                default -> {
+                    System.out.println("Invalid input! Please try again");
+                    System.out.println("");
+                    revenueMenu();
+                }
             }
-            targetMonthString = String.format("%02d", Integer.parseInt(targetMonthString));              // Adding zeros before numbers
-            targetDayString = String.format("%02d", Integer.parseInt(targetDayString));                  // for the LocalDate.parse to work
-
-            String targetDateString = targetYearString + "-" + targetMonthString + "-" + targetDayString;
-            return LocalDate.parse(targetDateString, DateTimeFormatter.ISO_DATE);
-
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (DateTimeParseException ex) {
-            System.out.println("Invalid date! Please try again.");
-            System.out.println("");
-            orderService.revenueInOneDay();
-            return null;
         }
-        return null;
     }
+
+
 
     private static void exit() throws FileNotFoundException {
         BaseHelper.writeData();
