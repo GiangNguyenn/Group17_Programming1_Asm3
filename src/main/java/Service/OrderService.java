@@ -36,6 +36,7 @@ public class OrderService implements OrderInterface {
     /**
      * Take user input as orderID to get specific order
      */
+    @Override
     public void viewCustomerOrder() throws IOException {
         ArrayList<Order> ordersOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
         for (Order order : lstOrder) {
@@ -70,6 +71,7 @@ public class OrderService implements OrderInterface {
     /**
      * Take user input as customer ID to get associated Orders
      */
+    @Override
     public void viewOrderByCustomerId() throws IOException {
         System.out.println("Note: Type 'B' to go back.");
         System.out.print("Please enter the ID of the customer:");
@@ -140,7 +142,7 @@ public class OrderService implements OrderInterface {
     }
 
     @Override
-    public void showAllOder() {
+    public void showAllOders() {
         for (Order order : lstOrder) {
             System.out.println(order.toString());
         }
@@ -176,6 +178,7 @@ public class OrderService implements OrderInterface {
      *
      * @throws IOException
      */
+    @Override
     public void manageOrderStatus() throws IOException {
         System.out.println("Enter an Order ID: ");
         String orderId = Utils.reader.readLine();
@@ -234,8 +237,7 @@ public class OrderService implements OrderInterface {
             printCart();
         } else {
             System.out.println("Product Id not found! Please try again!");
-//            addProductToCart();
-            // Deleting this because the user will be stuck in the loop if they don't know the ID
+            addProductToCart();
         }
     }
 
@@ -266,7 +268,7 @@ public class OrderService implements OrderInterface {
         LocalDateTime now = LocalDateTime.now();
 
         if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
-            Order newOrder = new Order(BaseHelper.generateUniqueId(Order.class), Utils.current_user.getId(), new ArrayList<String>(Utils.cart),      //Mat em 1 buoi sang
+            Order newOrder = new Order(BaseHelper.generateUniqueId(Order.class), Utils.current_user.getId(), new ArrayList<String>(Utils.cart),
                     now,                                    //When clearing Utils.cart, the products in this order are deleted too
                     false,                                  //Have to make separate object by copying the origin Utils.cart
                     this.calculateTotalPrice());

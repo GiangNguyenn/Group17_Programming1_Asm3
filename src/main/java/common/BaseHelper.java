@@ -9,6 +9,7 @@ import Model.User.User;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static common.Utils.*;
@@ -20,7 +21,7 @@ public class BaseHelper {
         System.out.println("COSC2081 GROUP ASSIGNMENT");
         System.out.println("STORE ORDER MANAGEMENT SYSTEM ");
         System.out.println("Instructor: Mr. Minh Vu ");
-        System.out.println("Group: Group Name ");
+        System.out.println("Group: Group 17");
         System.out.println("Nguyen Thi Quynh Giang - S3866617");
         System.out.println("Vo Khai Minh - S3879953");
         System.out.println("Nguyen Huu Minh Khang - s3927067");
@@ -28,6 +29,7 @@ public class BaseHelper {
         System.out.println("****************************************");
         System.out.println(" ");
     }
+
     public static void productTable(List<Product> input) {
         System.out.println("========================================================");
         System.out.printf(BaseConstant.PRODUCT_TABLE_FORMAT, "   ID   ", "   Product's name   ", "   Product's price   ");
@@ -35,8 +37,7 @@ public class BaseHelper {
         System.out.println("========================================================");
 
         for (Product product : input) {
-            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ",
-                    "   " + product.getPrice() + "$");
+            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ", "   " + product.getPrice() + "$");
             System.out.println("");
             System.out.println("========================================================");
         }
@@ -78,6 +79,11 @@ public class BaseHelper {
         return op.isPresent() ? op.get() : null;
     }
 
+    public static Boolean validateUserInput(String input, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        return pattern.matcher(input).find();
+    }
+
     @SuppressWarnings("rawtypes")
     public static boolean isNullOrEmpty(Object value) {
         if (value == null) {
@@ -103,15 +109,11 @@ public class BaseHelper {
     }
 
     public static Boolean checkingMemberLoginInfo(String username, String password) {
-        return lstMember.stream()
-                .anyMatch(user -> Objects.equals(user.getPassword(), password)
-                        && Objects.equals(user.getUsername(), username));
+        return lstMember.stream().anyMatch(user -> Objects.equals(user.getPassword(), password) && Objects.equals(user.getUsername(), username));
     }
 
     public static Boolean checkingAdminLoginInfo(String username, String password) {
-        return lstAdmin.stream()
-                .anyMatch(admin -> Objects.equals(admin.getPassword(), password)
-                        && Objects.equals(admin.getUsername(), username));
+        return lstAdmin.stream().anyMatch(admin -> Objects.equals(admin.getPassword(), password) && Objects.equals(admin.getUsername(), username));
     }
 
     @SuppressWarnings("rawtypes")
@@ -200,13 +202,7 @@ public class BaseHelper {
         /*
          * Table to print in console in 2-dimensional array. Each sub-array is a row.
          */
-        String[][] table = new String[][]{{"id", "First Name", "Last Name", "Age", "Profile"},
-                {"1", "John", "Johnson", "45", "My name is John Johnson. My id is 1. My age is 45."},
-                {"2", "Tom", "", "35", "My name is Tom. My id is 2. My age is 35."},
-                {"3", "Rose", "Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson", "22",
-                        "My name is Rose Johnson. My id is 3. My age is 22."},
-                {"4", "Jimmy", "Kimmel", "", "My name is Jimmy Kimmel. My id is 4. My age is not specified. "
-                        + "I am the host of the late night show. I am not fan of Matt Damon. "}};
+        String[][] table = new String[][]{{"id", "First Name", "Last Name", "Age", "Profile"}, {"1", "John", "Johnson", "45", "My name is John Johnson. My id is 1. My age is 45."}, {"2", "Tom", "", "35", "My name is Tom. My id is 2. My age is 35."}, {"3", "Rose", "Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson", "22", "My name is Rose Johnson. My id is 3. My age is 22."}, {"4", "Jimmy", "Kimmel", "", "My name is Jimmy Kimmel. My id is 4. My age is not specified. " + "I am the host of the late night show. I am not fan of Matt Damon. "}};
 
         String[][] tables = new String[rowSize][columnSize];
         int index = 0;
@@ -282,8 +278,7 @@ public class BaseHelper {
          */
         String line = columnLengths.entrySet().stream().reduce("", (ln, b) -> {
             String templn = "+-";
-            templn = templn + Stream.iterate(0, (i -> i < b.getValue()), (i -> ++i)).reduce("", (ln1, b1) -> ln1 + "-",
-                    (a1, b1) -> a1 + b1);
+            templn = templn + Stream.iterate(0, (i -> i < b.getValue()), (i -> ++i)).reduce("", (ln1, b1) -> ln1 + "-", (a1, b1) -> a1 + b1);
             templn = templn + "-";
             return ln + templn;
         }, (a, b) -> a + b);
@@ -297,8 +292,7 @@ public class BaseHelper {
         Arrays.stream(finalTable).limit(1).forEach(a -> System.out.printf(formatString.toString(), a));
         System.out.print(line);
 
-        Stream.iterate(1, (i -> i < finalTable.length), (i -> ++i))
-                .forEach(a -> System.out.printf(formatString.toString(), finalTable[a]));
+        Stream.iterate(1, (i -> i < finalTable.length), (i -> ++i)).forEach(a -> System.out.printf(formatString.toString(), finalTable[a]));
         System.out.print(line);
     }
 

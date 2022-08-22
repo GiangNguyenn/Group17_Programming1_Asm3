@@ -8,12 +8,11 @@ import interfaces.ProductInterface;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 
 import static common.BaseConstant.PRODUCT_DATA_PATH;
 import static common.Utils.lstProduct;
@@ -115,6 +114,7 @@ public class ProductService implements ProductInterface {
 
     }
 
+    @Override
     public void manageProductPrice() throws IOException {
         System.out.println("========================================================");
         System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
@@ -152,6 +152,7 @@ public class ProductService implements ProductInterface {
             String newPrice = String.valueOf(Utils.reader.readLine());
             if (p.matcher(newPrice).find()) {
                 searchedProduct.setPrice(Double.parseDouble(newPrice));
+                System.out.println("Product price changed successfully!");
                 System.out.println("The new Product price is: " + searchedProduct.getPrice() + " VND");
                 notMatchedRegex = false;
             } else {

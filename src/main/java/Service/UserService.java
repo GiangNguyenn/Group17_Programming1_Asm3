@@ -5,6 +5,7 @@ import Model.User.Admin;
 import Model.User.Member;
 import common.BaseConstant;
 import common.BaseHelper;
+import common.RegexConstants;
 import common.Utils;
 import interfaces.UserInterface;
 
@@ -80,39 +81,63 @@ public class UserService implements UserInterface {
         boolean userExists = false;
 
         while (!userExists) {
+            System.out.println("Welcome! Please register your account to start purchasing.");
             System.out.println("Note: Type 'B' in any input to go back.");
+            boolean notMatchedRegex = true;
+            while (notMatchedRegex) {
+                System.out.println("Enter your name: ");
+                String name = Utils.reader.readLine();
+                if (name.equalsIgnoreCase("B")) {
+                    return;
+                }
 
-            System.out.println("Enter your name: ");
-            String name = Utils.reader.readLine();
-            if (name.equalsIgnoreCase("B")) {
-                return;
-            }
-            System.out.println("Enter your phone number: ");
-            String phoneNumber = Utils.reader.readLine();
-            if (phoneNumber.equalsIgnoreCase("B")) {
-                return;
-            }
-            System.out.println("Enter your username: ");
-            String username = Utils.reader.readLine();
-            if (username.equalsIgnoreCase("B")) {
-                return;
-            }
-            System.out.println("Enter your password: ");
-            String password = Utils.reader.readLine();
-            if (password.equalsIgnoreCase("B")) {
-                return;
+                System.out.println("Enter your phone number: ");
+                String phoneNumber = Utils.reader.readLine();
+                if (phoneNumber.equalsIgnoreCase("B")) {
+                    return;
+                }
+                System.out.println("Enter your username: ");
+                String username = Utils.reader.readLine();
+                if (username.equalsIgnoreCase("B")) {
+                    return;
+                }
+                System.out.println("Enter your password: ");
+                String password = Utils.reader.readLine();
+                if (password.equalsIgnoreCase("B")) {
+                    return;
+                }
+
+                if (!BaseHelper.validateUserInput(name, RegexConstants.NAME_REGEX)) {
+                    System.out.println("Name must be longer than 2 character and contains only letters!");
+                    System.out.println("Try register again.");
+                    register();
+                } else if (BaseHelper.validateUserInput(username, RegexConstants.USERNAME_REGEX)) {
+                    System.out.println("Username contains minimum of 2 letters!");
+                    System.out.println("Try register again.");
+                    register();
+                } else if (BaseHelper.validateUserInput(password, RegexConstants.PASSWORD_REGEX)) {
+                    System.out.println("Password contains minimum of 2 letters!");
+                    System.out.println("Try register again.");
+                    register();
+                } else if (BaseHelper.validateUserInput(phoneNumber, RegexConstants.PHONE_REGEX)) {
+                    System.out.println("Password contains minimum of 2 letters!");
+                    System.out.println("Try register again.");
+                    register();
+                } else {
+                    if (BaseHelper.checkExistUsername(username)) {
+                        System.out.println("This username has been used! Please register with another one.");
+                        userExists = true;
+                    } else {
+                        String id = BaseHelper.generateUniqueId(Member.class);
+                        lstMember.add(new Member(id, name, phoneNumber, username, password));
+                        System.out.println(lstMember);
+                        break;
+                    }
+                    notMatchedRegex = false;
+                }
             }
 
 
-            if (BaseHelper.checkExistUsername(username)) {
-                System.out.println("This username has been used! Please register with another one.");
-                userExists = true;
-            } else {
-                String id = BaseHelper.generateUniqueId(Member.class);
-                lstMember.add(new Member(id, name, phoneNumber, username, password));
-                System.out.println(lstMember);
-                break;
-            }
         }
         /*
          * TODO: Checking exits username
@@ -178,6 +203,7 @@ public class UserService implements UserInterface {
         out.close();
     }
 
+    @Override
     public void printUserProfile(Member currentUser) {
         if (Utils.isLogin) {
             System.out.println("My profile");

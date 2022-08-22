@@ -19,29 +19,6 @@ public class MenuService {
         return INSTANT;
     }
 
-    private static void printUtilMenu() {
-        System.out.println("B. Go Back");
-        System.out.println("E. Exit");
-    }
-
-    public void utilMenu(String choice) {
-        try {
-            switch (choice) {
-                case "B" -> {
-                    System.out.println("going ");
-                    return;
-                }
-                case "E" -> exit();
-                default -> {
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     private static void printStartUpMenu() {
         System.out.println("1. Enter admin mode");
         System.out.println("2. Enter customer mode");
@@ -62,7 +39,7 @@ public class MenuService {
                     memberMainMenu();
                     break;
                 }
-                case "E" -> exit();
+                case "E", "e" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -95,7 +72,7 @@ public class MenuService {
                     printMenuByUserRole();
                     break;
                 }
-                case "E" -> exit();
+                case "E", "e" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -135,7 +112,7 @@ public class MenuService {
                     Utils.productService.showAllProduct();
                     break;
                 }
-                case "E" -> exit();
+                case "E", "e" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -176,7 +153,7 @@ public class MenuService {
                     Utils.userService.logout();
                     return;
                 }
-                case "E" -> exit();
+                case "E", "e" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -211,7 +188,7 @@ public class MenuService {
                 case "B" -> {
                     return;
                 }
-                case "E" -> exit();
+                case "E", "e" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -226,6 +203,8 @@ public class MenuService {
         System.out.println("Select action: ");
         System.out.println("1. Sort product from low to high");
         System.out.println("2. Sort product from high to low");
+        System.out.println("B. Go back");
+        System.out.println("E. Exit");
     }
 
     public void sortProductByPriceMenu() {
@@ -237,6 +216,10 @@ public class MenuService {
             switch (choice) {
                 case "1" -> Utils.productService.sortProductByPrice("asc");
                 case "2" -> Utils.productService.sortProductByPrice("desc");
+                case "B", "b" -> {
+                    return;
+                }
+                case "E", "e" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -283,7 +266,7 @@ public class MenuService {
                 case "6":
                     Utils.userService.logout();
                     return;
-                case "E":
+                case "E", "e":
                     exit();
                 default:
                     System.out.println("Invalid choice, please try again!");
