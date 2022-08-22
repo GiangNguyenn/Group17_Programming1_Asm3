@@ -7,8 +7,6 @@ import Model.User.Member;
 import Model.User.User;
 
 import java.io.FileNotFoundException;
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -29,7 +27,7 @@ public class BaseHelper {
         System.out.println("****************************************");
         System.out.println(" ");
     }
-    
+
     public static Boolean isLogin() {
         return Utils.isLogin;
     }
@@ -91,15 +89,11 @@ public class BaseHelper {
     }
 
     public static Boolean checkingMemberLoginInfo(String username, String password) {
-        return lstMember.stream()
-                .anyMatch(user -> Objects.equals(user.getPassword(), password)
-                        && Objects.equals(user.getUsername(), username));
+        return lstMember.stream().anyMatch(user -> Objects.equals(user.getPassword(), password) && Objects.equals(user.getUsername(), username));
     }
 
     public static Boolean checkingAdminLoginInfo(String username, String password) {
-        return lstAdmin.stream()
-                .anyMatch(admin -> Objects.equals(admin.getPassword(), password)
-                        && Objects.equals(admin.getUsername(), username));
+        return lstAdmin.stream().anyMatch(admin -> Objects.equals(admin.getPassword(), password) && Objects.equals(admin.getUsername(), username));
     }
 
     @SuppressWarnings("rawtypes")
@@ -167,18 +161,13 @@ public class BaseHelper {
     }
 
     @SuppressWarnings("rawtypes")
-    public static void simpleTable(List<Object> objects, Class objClass) {
-
-        Field[] fields = objClass.getDeclaredFields();
-
-    @SuppressWarnings("rawtypes")
     public static void simpleTable(String[][] table) {
         boolean leftJustifiedRows = true;
         int maxWidth = 30;
         List<String[]> tableList = new ArrayList<>(Arrays.asList(table));
         List<String[]> finalTableList = new ArrayList<>();
         for (String[] row : tableList) {
-            boolean needExtraRow = false;
+            boolean needExtraRow;
             int splitRow = 0;
             do {
                 needExtraRow = false;
@@ -213,52 +202,49 @@ public class BaseHelper {
         }));
         final StringBuilder formatString = new StringBuilder("");
         String flag = leftJustifiedRows ? "-" : "";
-        columnLengths.entrySet().stream().forEach(e -> formatString.append("| %" + flag + e.getValue() + "s "));
+        columnLengths.forEach((key, value) -> formatString.append("| %").append(flag).append(value).append("s "));
         formatString.append("|\n");
         String line = columnLengths.entrySet().stream().reduce("", (ln, b) -> {
             String templn = "+-";
-            templn = templn + Stream.iterate(0, (i -> i < b.getValue()), (i -> ++i)).reduce("", (ln1, b1) -> ln1 + "-",
-                    (a1, b1) -> a1 + b1);
+            templn = templn + Stream.iterate(0, (i -> i < b.getValue()), (i -> ++i)).reduce("", (ln1, b1) -> ln1 + "-", (a1, b1) -> a1 + b1);
             templn = templn + "-";
             return ln + templn;
         }, (a, b) -> a + b);
         line = line + "+\n";
-        System.out.println(line);
         System.out.print(line);
         Arrays.stream(finalTable).limit(1).forEach(a -> System.out.printf(formatString.toString(), a));
         System.out.print(line);
 
-        Stream.iterate(1, (i -> i < finalTable.length), (i -> ++i))
-                .forEach(a -> System.out.printf(formatString.toString(), finalTable[a]));
+        Stream.iterate(1, (i -> i < finalTable.length), (i -> ++i)).forEach(a -> System.out.printf(formatString.toString(), finalTable[a]));
         System.out.print(line);
     }
 
-    public static List<Order> addSingleOrderToOrderList(Order input){
+    public static List<Order> addSingleOrderToOrderList(Order input) {
         List<Order> singleOrder = new ArrayList<>();
         singleOrder.add(input);
         return singleOrder;
     }
 
-    public static List<Product> addSingleOrderToOrderList(Product input){
+    public static List<Product> addSingleOrderToOrderList(Product input) {
         List<Product> singleProduct = new ArrayList<>();
         singleProduct.add(input);
         return singleProduct;
     }
 
-    public static List<Admin> addSingleOrderToOrderList(Admin input){
+    public static List<Admin> addSingleOrderToOrderList(Admin input) {
         List<Admin> singleAdmin = new ArrayList<>();
         singleAdmin.add(input);
         return singleAdmin;
     }
 
-    public static List<Member> addSingleOrderToOrderList(Member input){
+    public static List<Member> addSingleOrderToOrderList(Member input) {
         List<Member> singleMember = new ArrayList<>();
         singleMember.add(input);
         return singleMember;
     }
 
-    public static String[][] memberTableGenerator(List<Member> input){
-        if(isNullOrEmpty(input)) {
+    public static String[][] memberTableGenerator(List<Member> input) {
+        if (isNullOrEmpty(input)) {
             return new String[][]{};
         }
         String[][] table = new String[input.size() + 1][4];
@@ -270,8 +256,9 @@ public class BaseHelper {
         }
         return table;
     }
-    public static String[][] adminTableGenerator(List<Admin> input){
-        if(isNullOrEmpty(input)) {
+
+    public static String[][] adminTableGenerator(List<Admin> input) {
+        if (isNullOrEmpty(input)) {
             return new String[][]{};
         }
         String[][] table = new String[input.size() + 1][4];
@@ -283,12 +270,13 @@ public class BaseHelper {
         }
         return table;
     }
-    public static String[][] orderTableGenerator(List<Order> input){
-        if(isNullOrEmpty(input)) {
+
+    public static String[][] orderTableGenerator(List<Order> input) {
+        if (isNullOrEmpty(input)) {
             return new String[][]{};
         }
         String[][] table = new String[input.size() + 1][4];
-        table[0] = new String[]{"Order's ID", "Member's ID", "Product's IDs", "Created date", "Order's status","total Spending"};
+        table[0] = new String[]{"Order's ID", "Member's ID", "Product's IDs", "Created date", "Order's status", "total Spending"};
         int index = 1;
         for (Order order : input) {
             table[index] = new String[]{order.getId(), order.getMemberID(), order.getProductsID().toString(), String.valueOf(order.getCreated_at()), String.valueOf(order.getPaid()), String.valueOf(order.getTotalPrice())};
@@ -297,8 +285,8 @@ public class BaseHelper {
         return table;
     }
 
-    public static String[][] productTableGenerator(List<Product> input){
-        if(isNullOrEmpty(input)) {
+    public static String[][] productTableGenerator(List<Product> input) {
+        if (isNullOrEmpty(input)) {
             return new String[][]{};
         }
         String[][] table = new String[input.size() + 1][4];

@@ -211,8 +211,7 @@ public class ProductService implements ProductInterface {
 
     public void deleteProduct() {
         try {
-            Scanner scanner = new Scanner(System.in);
-            BaseHelper.productTableGenerator(lstProduct);
+            BaseHelper.simpleTable(BaseHelper.productTableGenerator(lstProduct));
             System.out.println("Please input Product ID you want to delete:");
             String userInput = Utils.reader.readLine();
             for (int i = 0; i < lstProduct.size(); i++) {
