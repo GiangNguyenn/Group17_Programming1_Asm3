@@ -12,14 +12,16 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static common.Utils.lstOrder;
+import static common.Utils.*;
 
 public class OrderService implements OrderInterface {
 
@@ -33,69 +35,6 @@ public class OrderService implements OrderInterface {
         return INSTANT;
     }
 
-    /**
-     * Take user input as orderID to get specific order
-     */
-    @Override
-    public void viewCustomerOrder() throws IOException {
-        ArrayList<Order> ordersOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
-        for (Order order : lstOrder) {
-            if (Objects.equals(order.getMemberID(), Utils.current_user.getId())) {
-                ordersOfCustomer.add(order);
-            }
-        }
-        int indexOfOrder = 1;
-        for (Order order : ordersOfCustomer) {                          //Print out the belonging orders and the indexes of it
-            System.out.println(indexOfOrder + ". " + order.toString());
-            indexOfOrder += 1;
-        }
-        System.out.println("Note: Type 'B' in any input to go back.");
-        System.out.print("Please enter the index of the order: ");
-        String targetOrderIndex = Utils.reader.readLine().trim();
-        if (targetOrderIndex.equalsIgnoreCase("B")) {
-            return;
-        }
-        if (!targetOrderIndex.matches("[0-9]+")) {
-            System.out.println("Input Invalid!");
-            viewCustomerOrder();
-        }
-        if (Integer.parseInt(targetOrderIndex) > ordersOfCustomer.size()) {
-            System.out.println("Order not found");
-            System.out.println("Please enter again");
-            viewCustomerOrder();
-        }
-        Order order = ordersOfCustomer.get(Integer.parseInt(targetOrderIndex) - 1);
-        System.out.println(order.toStringCustom());
-    }
-
-    /**
-     * Take user input as customer ID to get associated Orders
-     */
-    @Override
-    public void viewOrderByCustomerId() throws IOException {
-        System.out.println("Note: Type 'B' to go back.");
-        System.out.print("Please enter the ID of the customer:");
-        String customerID = Utils.reader.readLine();
-        Member targetCustomer = BaseHelper.getMemberById(customerID);       //Finds customer
-
-        if (customerID.equalsIgnoreCase("B")) {
-            return;
-        }
-        if (targetCustomer == null) {
-            System.out.println("Customer not found!");
-            viewOrderByCustomerId();
-        }
-
-        ArrayList<Order> ordersOfCustomer = new ArrayList<>();
-        for (Order order : lstOrder) {
-            if (Objects.equals(order.getMemberID(), targetCustomer.getId())) {          // Returns Empty List if no customer is found
-                ordersOfCustomer.add(order);
-            }
-        }
-        for (Order order : ordersOfCustomer) {
-            System.out.println(order.toStringCustom());
-        }
-    }
 
     /**
      * ORDER LOAD FIRST TO CALCULATE USER TOTAL SPENDING
@@ -105,6 +44,7 @@ public class OrderService implements OrderInterface {
         try {
             BufferedReader orderData = Utils.fileReader(BaseConstant.ORDER_DATA_PATH);
             String dataRow;
+            lstOrder.clear();
             String idString;
             String memberString;
             String productsString;
@@ -170,6 +110,62 @@ public class OrderService implements OrderInterface {
         return (ArrayList<String>) resultArray;
     }
 
+    //Menus
+
+    /**
+     * Take user input as orderID to get specific order
+     */
+    public void viewCustomerOrder() throws IOException {
+        int indexOfOrder = 1;
+        ArrayList<Order> ordersOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
+        for (Order order : lstOrder) {
+            if (Objects.equals(order.getMemberID(), Utils.current_user.getId())) {
+                ordersOfCustomer.add(order);
+            }
+        }
+
+        for (Order order : ordersOfCustomer) {                          //Print out the belonging orders and the indexes of it
+            System.out.println(indexOfOrder + ". " + order.toString());
+            indexOfOrder += 1;
+        }
+        System.out.print("Please enter the index of the order: ");
+        String targetOrderIndex = Utils.reader.readLine().trim();
+        if (!targetOrderIndex.matches("[0-9]+")) {
+            System.out.println("Input Invalid!");
+            viewCustomerOrder();
+        }
+        if (Integer.parseInt(targetOrderIndex) > ordersOfCustomer.size()) {
+            System.out.println("\nOrder not found");
+            System.out.println("Please enter again");
+            viewCustomerOrder();
+        }
+        Order order = ordersOfCustomer.get(Integer.parseInt(targetOrderIndex) - 1);
+        System.out.println(order.toStringCustom());
+    }
+
+    /**
+     * Take user input as customer ID to get associated Orders
+     */
+    public void viewOrderByCustomerId() throws IOException {
+        System.out.print("Please enter the ID of the customer:");
+        String customerID = Utils.reader.readLine();
+        Member targetCustomer = BaseHelper.getMemberById(customerID);       //Finds customer
+
+        if (targetCustomer == null) {
+            System.out.println("Customer not found!");
+            viewOrderByCustomerId();
+        }
+
+        ArrayList<Order> ordersOfCustomer = new ArrayList<>();
+        for (Order order : lstOrder) {
+            if (Objects.equals(order.getMemberID(), targetCustomer.getId())) {          // Returns Empty List if no customer is found
+                ordersOfCustomer.add(order);
+            }
+        }
+        for (Order order : ordersOfCustomer) {
+            System.out.println(order.toStringCustom());
+        }
+    }
 
     /**
      * get user's order Id input to find the order object.
@@ -178,6 +174,7 @@ public class OrderService implements OrderInterface {
      *
      * @throws IOException
      */
+
     @Override
     public void manageOrderStatus() throws IOException {
         System.out.println("Enter an Order ID: ");
@@ -221,10 +218,11 @@ public class OrderService implements OrderInterface {
         }
     }
 
+    // Using product ID to add to Cart
     public void addProductToCart() throws IOException {
         printCart();
         System.out.println("Note: Type 'B' to go back.");
-        System.out.println("Please input the product Id you want to add to cart: ");
+        System.out.print("Please input the product Id you want to add to cart: ");
         String productId = Utils.reader.readLine();
 
         Product product = BaseHelper.getProductByProductId(productId);
@@ -266,7 +264,6 @@ public class OrderService implements OrderInterface {
 
     public void placeOrder() throws IOException {
         LocalDateTime now = LocalDateTime.now();
-
         if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
             Order newOrder = new Order(BaseHelper.generateUniqueId(Order.class), Utils.current_user.getId(), new ArrayList<String>(Utils.cart),
                     now,                                    //When clearing Utils.cart, the products in this order are deleted too
@@ -283,4 +280,58 @@ public class OrderService implements OrderInterface {
             addProductToCart();
         }
     }
+
+    private Double calculateRevenueOneDay(LocalDate targetDate){
+        return lstOrder.stream().filter(order -> order.getCreated_at().toLocalDate().equals(targetDate)).mapToDouble(Order::getTotalPrice).sum();
+    }
+
+    private String dateAdjustmentHelper(String string){
+        return String.format("%02d", Integer.parseInt(string));          // Adding zeros before numbers for the LocalDate.parse to work
+                                                                        // Helps customers avoiding the Exception because of missing zero
+    }
+    private LocalDate userInputToDate(String targetYearString, String targetMonthString, String targetDayString){
+        if (!(targetDayString.matches("\\d{1,2}") && targetMonthString.matches("\\d{1,2}") && targetYearString.matches("\\d{4}"))) {
+            System.out.println("Invalid format! Please write again.");
+            System.out.println("");
+            revenueSpecificDayMenu();
+            return null;
+        }
+        targetMonthString = dateAdjustmentHelper(targetMonthString);
+        targetDayString = dateAdjustmentHelper(targetDayString);
+        String targetDateString = targetYearString + "-" + targetMonthString + "-" + targetDayString;
+        return LocalDate.parse(targetDateString, DateTimeFormatter.ISO_DATE);
+    }
+
+    public void revenueTodayMenu(){
+        LocalDate targetDate = LocalDate.now();
+        System.out.println("Revenue made in " + targetDate + " : " + calculateRevenueOneDay(targetDate));
+    }
+    public void revenueSpecificDayMenu() {
+        try {
+            String targetYearString;
+            String targetMonthString;
+            String targetDayString;
+            System.out.print("Please enter the year yyyy: ");
+            targetYearString = Utils.reader.readLine().trim();
+            System.out.print("Please enter the month mm: ");
+            targetMonthString = Utils.reader.readLine().trim();
+            System.out.print("Please enter the day dd: ");
+            targetDayString = Utils.reader.readLine().trim();
+            LocalDate targetDate = userInputToDate(targetYearString,targetMonthString,targetDayString);
+            if (targetDate != null){
+                System.out.println("Revenue made in " + targetDate + " : " + calculateRevenueOneDay(targetDate));}
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (DateTimeParseException ex) {
+            System.out.println("Invalid date! Please try again.");
+            System.out.println("");
+            orderService.revenueSpecificDayMenu();
+        }
+    }
+
 }
+
+
+
+
+

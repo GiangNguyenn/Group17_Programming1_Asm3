@@ -78,8 +78,8 @@ public class Order {
     public String toString() {
         return "Order{" +
                 "id='" + id + '\'' +
-                ", member=" + memberID +
-                ", products=" + productsID +
+                ", memberID=" + memberID +
+                ", productsID=" + productsID +
                 ", created_at=" + created_at +
                 ", isPaid=" + isPaid +
                 ", totalPrice=" + totalPrice +
