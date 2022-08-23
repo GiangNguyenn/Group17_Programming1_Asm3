@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import static common.BaseHelper.productTableGenerator;
+import static common.Utils.lstProduct;
 import static common.Utils.*;
 
 public class MenuService {
@@ -234,7 +236,7 @@ public class MenuService {
 
     public void sortProductByPriceMenu() {
         BaseHelper.clearConsole();
-        BaseHelper.productTable(lstProduct);
+        BaseHelper.simpleTable(productTableGenerator(lstProduct));
         printSortProductByPrice();
         try {
             String choice = Utils.reader.readLine();

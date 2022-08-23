@@ -1,5 +1,6 @@
 package Service;
 
+import Model.Productions.Order;
 import Model.Productions.Product;
 import common.BaseConstant;
 import common.BaseHelper;
@@ -16,6 +17,9 @@ import java.util.stream.Collectors;
 
 
 import static common.BaseConstant.PRODUCT_DATA_PATH;
+import static common.BaseHelper.orderTableGenerator;
+import static common.BaseHelper.productTableGenerator;
+import static common.Utils.lstOrder;
 import static common.Utils.lstProduct;
 
 public class ProductService implements ProductInterface {
@@ -77,9 +81,7 @@ public class ProductService implements ProductInterface {
 
     @Override
     public void showAllProduct() {
-        for (Product product : lstProduct) {
-            System.out.println(product);
-        }
+        BaseHelper.simpleTable(BaseHelper.productTableGenerator(lstProduct));
     }
 
     public void showProductsByCategory() throws IOException {
@@ -111,22 +113,27 @@ public class ProductService implements ProductInterface {
     }
 
     // TODO
-    public void viewOrderDetails() {
-
+    public void viewOrderDetails() throws IOException {
+        System.out.println("List of order");
+        BaseHelper.simpleTable(orderTableGenerator(lstOrder));
+        System.out.println("Enter the id of the order you want to view: ");
+        Pattern p = Pattern.compile("^[0-9]+$");
+        boolean notMatchedRegex = true;
+        while (notMatchedRegex) {
+            String orderId = Utils.reader.readLine();
+            Order searchOrder = BaseHelper.getOrderByOrderId(orderId);
+            if (!BaseHelper.isNullOrEmpty(searchOrder) && p.matcher(orderId).find()) {
+                BaseHelper.simpleTable(BaseHelper.orderTableGenerator(BaseHelper.addSingleOrderToOrderList(searchOrder)));
+                notMatchedRegex = false;
+            } else {
+                System.out.println(
+                        "The your input is in the correct format! Please re-enter: ");
+            }
+        }
     }
 
     public void manageProductPrice() throws IOException {
-        System.out.println("========================================================");
-        System.out.printf("%20s%15s%15s", "   ID   ", "   Product's name   ", "   Product's price   ");
-        System.out.println("");
-        System.out.println("========================================================");
-
-        for (Product product : lstProduct) {
-            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ",
-                    "   " + product.getPrice() + "$");
-            System.out.println("");
-            System.out.println("========================================================");
-        }
+        BaseHelper.simpleTable(productTableGenerator(lstProduct));
         System.out.println("Enter the id of the product you want to change the price of: ");
 
         while (true) {
@@ -162,26 +169,23 @@ public class ProductService implements ProductInterface {
     }
 
     public void sortProductByPrice(String sortFunction) throws IOException {
-        BaseHelper.productTable(lstProduct);
         if (sortFunction.equals("asc")) {
             List<Product> ascProductList = lstProduct.stream()
                     .sorted(Comparator.comparing(Product::getPrice))
                     .collect(Collectors.toList());
-            BaseHelper.productTable(ascProductList);
+            BaseHelper.simpleTable(productTableGenerator(ascProductList));
         } else if (sortFunction.equals("desc")) {
             List<Product> descProductList = lstProduct.stream()
                     .sorted(Comparator.comparing(Product::getPrice).reversed())
                     .collect(Collectors.toList());
-            BaseHelper.productTable(descProductList);
+            BaseHelper.simpleTable(productTableGenerator(descProductList));
         }
     }
 
     @Override
     public void addProduct() throws IOException {
         boolean productExists = false;
-
         BufferedReader reader = Utils.reader;
-
         while (!productExists) {
             System.out.println("Enter product name: ");
             String productName = reader.readLine();
@@ -207,6 +211,7 @@ public class ProductService implements ProductInterface {
 
     public void deleteProduct() {
         try {
+            BaseHelper.simpleTable(BaseHelper.productTableGenerator(lstProduct));
             System.out.println("Please input Product ID you want to delete:");
             String userInput = Utils.reader.readLine();
             for (int i = 0; i < lstProduct.size(); i++) {
