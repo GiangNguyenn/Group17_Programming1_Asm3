@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 
+import static common.BaseHelper.productTableGenerator;
 import static common.Utils.lstProduct;
 import static common.Utils.orderService;
 
@@ -223,7 +224,7 @@ public class MenuService {
 
     public void sortProductByPriceMenu() {
         BaseHelper.clearConsole();
-        BaseHelper.productTable(lstProduct);
+        BaseHelper.simpleTable(productTableGenerator(lstProduct));
         printSortProductByPrice();
         try {
             String choice = Utils.reader.readLine();

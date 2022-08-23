@@ -7,7 +7,6 @@ import Model.User.Member;
 import Model.User.User;
 
 import java.io.FileNotFoundException;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -28,19 +27,6 @@ public class BaseHelper {
         System.out.println("Nguyen Chau Loan - s3880115");
         System.out.println("****************************************");
         System.out.println(" ");
-    }
-
-    public static void productTable(List<Product> input) {
-        System.out.println("========================================================");
-        System.out.printf(BaseConstant.PRODUCT_TABLE_FORMAT, "   ID   ", "   Product's name   ", "   Product's price   ");
-        System.out.println("");
-        System.out.println("========================================================");
-
-        for (Product product : input) {
-            System.out.printf("%20s%15s%15s", "   " + product.getId() + "   ", "   " + product.getProductName() + "   ", "   " + product.getPrice() + "$");
-            System.out.println("");
-            System.out.println("========================================================");
-        }
     }
 
     public static Boolean isLogin() {
@@ -181,56 +167,21 @@ public class BaseHelper {
     }
 
     @SuppressWarnings("rawtypes")
-    public static void simpleTable(List<Object> objects, Class objClass) {
-
-        Field[] fields = objClass.getDeclaredFields();
-
-        int columnSize = fields.length;
-        int rowSize = objects.size() + 1;
-
-        /*
-         * leftJustifiedRows - If true, it will add "-" as a flag to format string to
-         * make it left justified. Otherwise right justified.
-         */
+    public static void simpleTable(String[][] table) {
         boolean leftJustifiedRows = true;
-
-        /*
-         * Maximum allowed width. Line will be wrapped beyond this width.
-         */
         int maxWidth = 30;
-
-        /*
-         * Table to print in console in 2-dimensional array. Each sub-array is a row.
-         */
-        String[][] table = new String[][]{{"id", "First Name", "Last Name", "Age", "Profile"}, {"1", "John", "Johnson", "45", "My name is John Johnson. My id is 1. My age is 45."}, {"2", "Tom", "", "35", "My name is Tom. My id is 2. My age is 35."}, {"3", "Rose", "Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson Johnson", "22", "My name is Rose Johnson. My id is 3. My age is 22."}, {"4", "Jimmy", "Kimmel", "", "My name is Jimmy Kimmel. My id is 4. My age is not specified. " + "I am the host of the late night show. I am not fan of Matt Damon. "}};
-
-        String[][] tables = new String[rowSize][columnSize];
-        int index = 0;
-        for (Field field : fields) {
-            table[0][index] = field.getName();
-            index++;
-        }
-
-        /*
-         * Create new table array with wrapped rows
-         */
         List<String[]> tableList = new ArrayList<>(Arrays.asList(table));
         List<String[]> finalTableList = new ArrayList<>();
         for (String[] row : tableList) {
-            // If any cell data is more than max width, then it will need extra row.
-            boolean needExtraRow = false;
-            // Count of extra split row.
+            boolean needExtraRow;
             int splitRow = 0;
             do {
                 needExtraRow = false;
                 String[] newRow = new String[row.length];
                 for (int i = 0; i < row.length; i++) {
-                    // If data is less than max width, use that as it is.
                     if (row[i].length() < maxWidth) {
                         newRow[i] = splitRow == 0 ? row[i] : "";
                     } else if ((row[i].length() > (splitRow * maxWidth))) {
-                        // If data is more than max width, then crop data at maxwidth.
-                        // Remaining cropped data will be part of next row.
                         int end = Math.min(row[i].length(), ((splitRow * maxWidth) + maxWidth));
                         newRow[i] = row[i].substring((splitRow * maxWidth), end);
                         needExtraRow = true;
@@ -248,13 +199,6 @@ public class BaseHelper {
         for (int i = 0; i < finalTable.length; i++) {
             finalTable[i] = finalTableList.get(i);
         }
-
-        /*
-         * Calculate appropriate Length of each column by looking at width of data in
-         * each column.
-         *
-         * Map columnLengths is <column_number, column_length>
-         */
         Map<Integer, Integer> columnLengths = new HashMap<>();
         Arrays.stream(finalTable).forEach(a -> Stream.iterate(0, (i -> i < a.length), (i -> ++i)).forEach(i -> {
             columnLengths.putIfAbsent(i, 0);
@@ -262,20 +206,10 @@ public class BaseHelper {
                 columnLengths.put(i, a[i].length());
             }
         }));
-        System.out.println("columnLengths = " + columnLengths);
-
-        /*
-         * Prepare format String
-         */
         final StringBuilder formatString = new StringBuilder("");
         String flag = leftJustifiedRows ? "-" : "";
-        columnLengths.entrySet().stream().forEach(e -> formatString.append("| %" + flag + e.getValue() + "s "));
+        columnLengths.forEach((key, value) -> formatString.append("| %").append(flag).append(value).append("s "));
         formatString.append("|\n");
-        System.out.println("formatString = " + formatString.toString());
-
-        /*
-         * Prepare line for top, bottom & below header row.
-         */
         String line = columnLengths.entrySet().stream().reduce("", (ln, b) -> {
             String templn = "+-";
             templn = templn + Stream.iterate(0, (i -> i < b.getValue()), (i -> ++i)).reduce("", (ln1, b1) -> ln1 + "-", (a1, b1) -> a1 + b1);
@@ -283,11 +217,6 @@ public class BaseHelper {
             return ln + templn;
         }, (a, b) -> a + b);
         line = line + "+\n";
-        System.out.println("Line = " + line);
-
-        /*
-         * Print table
-         */
         System.out.print(line);
         Arrays.stream(finalTable).limit(1).forEach(a -> System.out.printf(formatString.toString(), a));
         System.out.print(line);
@@ -296,4 +225,101 @@ public class BaseHelper {
         System.out.print(line);
     }
 
+    public static List<Order> addSingleOrderToOrderList(Order input) {
+        List<Order> singleOrder = new ArrayList<>();
+        singleOrder.add(input);
+        return singleOrder;
+    }
+
+    public static List<Product> addSingleOrderToOrderList(Product input) {
+        List<Product> singleProduct = new ArrayList<>();
+        singleProduct.add(input);
+        return singleProduct;
+    }
+
+    public static List<Admin> addSingleOrderToOrderList(Admin input) {
+        List<Admin> singleAdmin = new ArrayList<>();
+        singleAdmin.add(input);
+        return singleAdmin;
+    }
+
+    public static List<Member> addSingleOrderToOrderList(Member input) {
+        List<Member> singleMember = new ArrayList<>();
+        singleMember.add(input);
+        return singleMember;
+    }
+
+    public static String[][] memberTableGenerator(List<Member> input) {
+        if (isNullOrEmpty(input)) {
+            return new String[][]{};
+        }
+        String[][] table = new String[input.size() + 1][4];
+        table[0] = new String[]{"Member's ID", "Member's Name", "Member's Phone", "Type of member", "total Spending"};
+        int index = 1;
+        for (Member member : input) {
+            table[index] = new String[]{member.getId(), member.getName(), member.getPhoneNumber(), member.converMemberTypeToString(), String.valueOf(member.getTotalSpending())};
+            index++;
+        }
+        return table;
+    }
+
+    public static String[][] adminTableGenerator(List<Admin> input) {
+        if (isNullOrEmpty(input)) {
+            return new String[][]{};
+        }
+        String[][] table = new String[input.size() + 1][4];
+        table[0] = new String[]{"Admin's ID", "Admin's UserName", "Admin's Password"};
+        int index = 1;
+        for (Admin admin : input) {
+            table[index] = new String[]{admin.getId(), admin.getUsername(), admin.getPassword()};
+            index++;
+        }
+        return table;
+    }
+
+    public static String[][] orderTableGenerator(List<Order> input) {
+        if (isNullOrEmpty(input)) {
+            return new String[][]{};
+        }
+        String[][] table = new String[input.size() + 1][4];
+        table[0] = new String[]{"Order's ID", "Member's ID", "Product's IDs", "Created date", "Order's status", "total Spending"};
+        int index = 1;
+        for (Order order : input) {
+            table[index] = new String[]{order.getId(), order.getMemberID(), order.getProductsID().toString(), String.valueOf(order.getCreated_at()), String.valueOf(order.getPaid()), String.valueOf(order.getTotalPrice())};
+            index++;
+        }
+        return table;
+    }
+
+    public static String[][] productTableGenerator(List<Product> input) {
+        if (isNullOrEmpty(input)) {
+            return new String[][]{};
+        }
+        String[][] table = new String[input.size() + 1][4];
+        table[0] = new String[]{"Product's ID", "Product's name", "Product's price", "Product's category", "Supplier"};
+        int index = 1;
+        for (Product product : input) {
+            table[index] = new String[]{product.getId(), product.getProductName(), String.valueOf(product.getPrice()), product.getCategory(), product.getSupplier()};
+            index++;
+        }
+        return table;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
