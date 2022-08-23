@@ -1,16 +1,14 @@
 package Service;
 
-import Model.Productions.Order;
 import common.BaseHelper;
 import common.Utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
-import static common.Utils.*;
+import static common.Utils.lstProduct;
+import static common.Utils.orderService;
 
 public class MenuService {
     private static MenuService INSTANT;
@@ -60,6 +58,7 @@ public class MenuService {
         System.out.println("Select function: ");
         System.out.println("1. Admin login");
         System.out.println("E. Exit");
+        System.out.println("B. Go back");
         System.out.println("Your choice: ");
     }
 
@@ -76,6 +75,9 @@ public class MenuService {
                     Utils.userService.login();
                     printMenuByUserRole();
                     break;
+                }
+                case "b", "B" -> {
+                    return;
                 }
                 case "e", "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
@@ -94,6 +96,7 @@ public class MenuService {
         System.out.println("1. Member login");
         System.out.println("2. Register");
         System.out.println("3. Browse products");
+        System.out.println("B. Go back");
         System.out.println("E. Exit");
         System.out.println("Your choice: ");
     }
@@ -116,6 +119,9 @@ public class MenuService {
                 case "3" -> {
                     Utils.productService.showAllProduct();
                     break;
+                }
+                case "b", "B" -> {
+                    return;
                 }
                 case "E", "e" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
@@ -156,6 +162,9 @@ public class MenuService {
                 case "4" -> Utils.userService.printUserProfile(Utils.current_user);
                 case "5" -> {
                     Utils.userService.logout();
+                    return;
+                }
+                case "b", "B" -> {
                     return;
                 }
                 case "E", "e" -> exit();
@@ -331,7 +340,6 @@ public class MenuService {
             e.printStackTrace();
         }
     }
-
 
 
     private static void exit() throws FileNotFoundException {
