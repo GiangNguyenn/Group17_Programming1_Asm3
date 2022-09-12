@@ -82,7 +82,7 @@ public class OrderService implements OrderInterface {
     }
 
     @Override
-    public void showAllOder() {
+    public void showAllOders() {
         for (Order order : lstOrder) {
             System.out.println(order.toString());
         }
@@ -175,6 +175,7 @@ public class OrderService implements OrderInterface {
      * @throws IOException
      */
 
+    @Override
     public void manageOrderStatus() throws IOException {
         System.out.println("Enter an Order ID: ");
         String orderId = Utils.reader.readLine();
@@ -234,8 +235,7 @@ public class OrderService implements OrderInterface {
             printCart();
         } else {
             System.out.println("Product Id not found! Please try again!");
-//            addProductToCart();
-            // Deleting this because the user will be stuck in the loop if they don't know the ID
+            addProductToCart();
         }
     }
 
@@ -265,7 +265,7 @@ public class OrderService implements OrderInterface {
     public void placeOrder() throws IOException {
         LocalDateTime now = LocalDateTime.now();
         if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
-            Order newOrder = new Order(BaseHelper.generateUniqueId(Order.class), Utils.current_user.getId(), new ArrayList<String>(Utils.cart),      //Mat em 1 buoi sang
+            Order newOrder = new Order(BaseHelper.generateUniqueId(Order.class), Utils.current_user.getId(), new ArrayList<String>(Utils.cart),
                     now,                                    //When clearing Utils.cart, the products in this order are deleted too
                     false,                                  //Have to make separate object by copying the origin Utils.cart
                     this.calculateTotalPrice());

@@ -2,15 +2,11 @@ package Model.User;
 
 import Model.Productions.Order;
 import common.BaseConstant;
-import common.BaseConstant.*;
 import common.BaseConstant.TypeMember;
-
 import common.Utils;
 
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
-import static common.BaseConstant.TypeMember;
 import static common.Utils.lstOrder;
 
 public class Member extends User {
@@ -38,19 +34,20 @@ public class Member extends User {
         super(userName, password);
     }
 
-    public String converMemberTypeToString(){
-        if(this.memberType.equals(TypeMember.NORMAL)){
-            return"Normal";
+    public String converMemberTypeToString() {
+        if (this.memberType.equals(TypeMember.NORMAL)) {
+            return "Normal";
         } else if (this.memberType.equals(TypeMember.SILVER)) {
-            return"Silver";
+            return "Silver";
         } else if (this.memberType.equals(TypeMember.GOLD)) {
             return "Gold";
-        } else if( this.memberType.equals(TypeMember.PLATINUM)){
+        } else if (this.memberType.equals(TypeMember.PLATINUM)) {
             return "Platinum";
         } else {
-        return "";
+            return "";
         }
     }
+
     @Override
     public String toString() {
         return "Member [name=" + name + ", phoneNumber=" + phoneNumber + ", totalSpending=" + totalSpending
@@ -87,32 +84,32 @@ public class Member extends User {
         this.memberType = memberType;
     }
 
-    double calculateTotalSpending(){
+    double calculateTotalSpending() {
         ArrayList<Double> totalSpendingOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
         Double totalSpending = lstOrder.stream().filter(order -> order.getMemberID().equalsIgnoreCase(Utils.current_user.getId())).mapToDouble(Order::getTotalPrice).sum();
         return totalSpending;
     }
 
-        TypeMember processMemberType(){        //5 10 25
-            if (totalSpending > BaseConstant.LITMIT_PLATINUM){
-                return TypeMember.PLATINUM;
-            } else if (totalSpending > BaseConstant.LITMIT_GOLD) {
-                return TypeMember.GOLD;
-            } else if (totalSpending > BaseConstant.LITMIT_SILVER) {
-                return TypeMember.SILVER;
-            } else {
-                return TypeMember.NORMAL;
-            }
-
+    TypeMember processMemberType() {        //5 10 25
+        if (totalSpending > BaseConstant.LITMIT_PLATINUM) {
+            return TypeMember.PLATINUM;
+        } else if (totalSpending > BaseConstant.LITMIT_GOLD) {
+            return TypeMember.GOLD;
+        } else if (totalSpending > BaseConstant.LITMIT_SILVER) {
+            return TypeMember.SILVER;
+        } else {
+            return TypeMember.NORMAL;
         }
 
-    public void updateMemberInfo(){
+    }
+
+    public void updateMemberInfo() {
         this.setTotalSpending(this.calculateTotalSpending());
         this.setMemberType(this.processMemberType());
     }
 
-    public double discountAmount(){
-        switch (this.getMemberType()){
+    public double discountAmount() {
+        switch (this.getMemberType()) {
             case SILVER -> {
                 return 0.95;
             }

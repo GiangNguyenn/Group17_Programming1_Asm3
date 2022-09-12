@@ -8,6 +8,7 @@ import Model.User.User;
 
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static common.Utils.*;
@@ -19,7 +20,7 @@ public class BaseHelper {
         System.out.println("COSC2081 GROUP ASSIGNMENT");
         System.out.println("STORE ORDER MANAGEMENT SYSTEM ");
         System.out.println("Instructor: Mr. Minh Vu ");
-        System.out.println("Group: Group Name ");
+        System.out.println("Group: Group 17");
         System.out.println("Nguyen Thi Quynh Giang - S3866617");
         System.out.println("Vo Khai Minh - S3879953");
         System.out.println("Nguyen Huu Minh Khang - s3927067");
@@ -62,6 +63,11 @@ public class BaseHelper {
     public static Order getOrderByOrderId(String id) {
         Optional<Order> op = lstOrder.stream().filter(order -> order.getId().equalsIgnoreCase(id)).findFirst();
         return op.isPresent() ? op.get() : null;
+    }
+
+    public static Boolean validateUserInput(String input, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        return pattern.matcher(input).find();
     }
 
     @SuppressWarnings("rawtypes")

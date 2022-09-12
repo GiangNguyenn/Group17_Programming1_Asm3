@@ -1,18 +1,15 @@
 package Service;
 
-import Model.Productions.Order;
 import common.BaseHelper;
 import common.Utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 import static common.BaseHelper.productTableGenerator;
 import static common.Utils.lstProduct;
-import static common.Utils.*;
+import static common.Utils.orderService;
 
 public class MenuService {
     private static MenuService INSTANT;
@@ -25,28 +22,6 @@ public class MenuService {
         return INSTANT;
     }
 
-    private static void printUtilMenu() {
-        System.out.println("B. Go Back");
-        System.out.println("E. Exit");
-    }
-
-    public void utilMenu(String choice) {
-        try {
-            switch (choice) {
-                case "b", "B" -> {
-                    System.out.println("going ");
-                    return;
-                }
-                case "e", "E" -> exit();
-                default -> {
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     private static void printStartUpMenu() {
         System.out.println("1. Enter admin mode");
@@ -84,6 +59,7 @@ public class MenuService {
         System.out.println("Select function: ");
         System.out.println("1. Admin login");
         System.out.println("E. Exit");
+        System.out.println("B. Go back");
         System.out.println("Your choice: ");
     }
 
@@ -100,6 +76,9 @@ public class MenuService {
                     Utils.userService.login();
                     printMenuByUserRole();
                     break;
+                }
+                case "b", "B" -> {
+                    return;
                 }
                 case "e", "E" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
@@ -118,6 +97,7 @@ public class MenuService {
         System.out.println("1. Member login");
         System.out.println("2. Register");
         System.out.println("3. Browse products");
+        System.out.println("B. Go back");
         System.out.println("E. Exit");
         System.out.println("Your choice: ");
     }
@@ -141,7 +121,10 @@ public class MenuService {
                     Utils.productService.showAllProduct();
                     break;
                 }
-                case "e", "E" -> exit();
+                case "b", "B" -> {
+                    return;
+                }
+                case "E", "e" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -182,7 +165,10 @@ public class MenuService {
                     Utils.userService.logout();
                     return;
                 }
-                case "e", "E" -> exit();
+                case "b", "B" -> {
+                    return;
+                }
+                case "E", "e" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -217,7 +203,7 @@ public class MenuService {
                 case "b", "B" -> {
                     return;
                 }
-                case "e", "E" -> exit();
+                case "E", "e" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -232,6 +218,8 @@ public class MenuService {
         System.out.println("Select action: ");
         System.out.println("1. Sort product from low to high");
         System.out.println("2. Sort product from high to low");
+        System.out.println("B. Go back");
+        System.out.println("E. Exit");
     }
 
     public void sortProductByPriceMenu() {
@@ -243,6 +231,10 @@ public class MenuService {
             switch (choice) {
                 case "1" -> Utils.productService.sortProductByPrice("asc");
                 case "2" -> Utils.productService.sortProductByPrice("desc");
+                case "B", "b" -> {
+                    return;
+                }
+                case "E", "e" -> exit();
                 default -> System.out.println("Invalid choice, please try again!");
             }
             System.out.println("press enter to continue...");
@@ -294,7 +286,7 @@ public class MenuService {
                 case "7":
                     Utils.userService.logout();
                     return;
-                case "e","E":
+                case "E", "e":
                     exit();
                 default:
                     System.out.println("Invalid choice, please try again!");
@@ -349,7 +341,6 @@ public class MenuService {
             e.printStackTrace();
         }
     }
-
 
 
     private static void exit() throws FileNotFoundException {

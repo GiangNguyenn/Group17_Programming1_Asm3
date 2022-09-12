@@ -9,12 +9,11 @@ import interfaces.ProductInterface;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 
 import static common.BaseConstant.PRODUCT_DATA_PATH;
 import static common.BaseHelper.orderTableGenerator;
@@ -132,6 +131,7 @@ public class ProductService implements ProductInterface {
         }
     }
 
+    @Override
     public void manageProductPrice() throws IOException {
         BaseHelper.simpleTable(productTableGenerator(lstProduct));
         System.out.println("Enter the id of the product you want to change the price of: ");
@@ -159,6 +159,7 @@ public class ProductService implements ProductInterface {
             String newPrice = String.valueOf(Utils.reader.readLine());
             if (p.matcher(newPrice).find()) {
                 searchedProduct.setPrice(Double.parseDouble(newPrice));
+                System.out.println("Product price changed successfully!");
                 System.out.println("The new Product price is: " + searchedProduct.getPrice() + " VND");
                 notMatchedRegex = false;
             } else {
