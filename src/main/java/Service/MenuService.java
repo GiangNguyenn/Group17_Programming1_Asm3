@@ -3,6 +3,7 @@ package Service;
 import common.BaseHelper;
 import common.Utils;
 
+import javax.swing.plaf.basic.BasicEditorPaneUI;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -44,7 +45,7 @@ public class MenuService {
                     break;
                 }
                 case "e", "E" -> exit();
-                default -> System.out.println("Invalid choice, please try again!");
+                default -> System.out.println(BaseHelper.ANSI_RED + "Invalid choice, please try again!" + BaseHelper.ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -81,7 +82,7 @@ public class MenuService {
                     return;
                 }
                 case "e", "E" -> exit();
-                default -> System.out.println("Invalid choice, please try again!");
+                default -> System.out.println(BaseHelper.ANSI_RED + "Invalid choice, please try again!" + BaseHelper.ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -125,7 +126,7 @@ public class MenuService {
                     return;
                 }
                 case "E", "e" -> exit();
-                default -> System.out.println("Invalid choice, please try again!");
+                default -> System.out.println(BaseHelper.ANSI_RED + "Invalid choice, please try again!" + BaseHelper.ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -169,7 +170,7 @@ public class MenuService {
                     return;
                 }
                 case "E", "e" -> exit();
-                default -> System.out.println("Invalid choice, please try again!");
+                default -> System.out.println(BaseHelper.ANSI_RED + "Invalid choice, please try again!" + BaseHelper.ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -204,7 +205,7 @@ public class MenuService {
                     return;
                 }
                 case "E", "e" -> exit();
-                default -> System.out.println("Invalid choice, please try again!");
+                default -> System.out.println(BaseHelper.ANSI_RED + "Invalid choice, please try again!" + BaseHelper.ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -235,7 +236,7 @@ public class MenuService {
                     return;
                 }
                 case "E", "e" -> exit();
-                default -> System.out.println("Invalid choice, please try again!");
+                default -> System.out.println(BaseHelper.ANSI_RED + "Invalid choice, please try again!" + BaseHelper.ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -289,7 +290,7 @@ public class MenuService {
                 case "E", "e":
                     exit();
                 default:
-                    System.out.println("Invalid choice, please try again!");
+                    System.out.println(BaseHelper.ANSI_RED + "Invalid choice, please try again!" + BaseHelper.ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -332,7 +333,7 @@ public class MenuService {
                     return;
                 }
                 default -> {
-                    System.out.println("Invalid input! Please try again");
+                    System.out.println(BaseHelper.ANSI_RED + "Invalid input! Please try again" + BaseHelper.ANSI_RESET);
                     System.out.println("");
                     revenueMenu();
                 }

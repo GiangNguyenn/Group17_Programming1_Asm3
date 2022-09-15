@@ -15,12 +15,22 @@ import static common.Utils.*;
 
 public class BaseHelper {
 
+    //    Implement Color for better user experience
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+
+    // Bold
+    public static final String BLACK_BOLD = "\033[1;30m";  // BLACK
+    public static final String GREEN_BOLD = "\033[1;32m";  // GREEN
+    public static final String YELLOW_BOLD = "\033[1;33m"; // YELLOW
+    public static final String BLUE_BOLD = "\033[1;34m";   // BLUE
+
     public static void printWelcomePage() {
         System.out.println("********* Here is welcome page *********");
         System.out.println("COSC2081 GROUP ASSIGNMENT");
-        System.out.println("STORE ORDER MANAGEMENT SYSTEM ");
-        System.out.println("Instructor: Mr. Minh Vu ");
-        System.out.println("Group: Group 17");
+        System.out.println(BLACK_BOLD + "STORE ORDER MANAGEMENT SYSTEM " + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "Instructor: Mr. Minh Vu " + ANSI_RESET);
+        System.out.println(BLACK_BOLD + "Group: Group 17" + ANSI_RESET);
         System.out.println("Nguyen Thi Quynh Giang - S3866617");
         System.out.println("Vo Khai Minh - S3879953");
         System.out.println("Nguyen Huu Minh Khang - s3927067");
@@ -77,11 +87,9 @@ public class BaseHelper {
         }
         if (value instanceof String) {
             return "".equals(value.toString().trim());
-        } else if (value instanceof Collection) {
-            Collection c = (Collection) value;
+        } else if (value instanceof Collection c) {
             return c.isEmpty();
-        } else if (value instanceof Map) {
-            Map m = (Map) value;
+        } else if (value instanceof Map m) {
             return m.isEmpty();
         } else if (value.getClass().isArray()) {
             Object[] array = (Object[]) value;
@@ -206,7 +214,7 @@ public class BaseHelper {
                 columnLengths.put(i, a[i].length());
             }
         }));
-        final StringBuilder formatString = new StringBuilder("");
+        final StringBuilder formatString = new StringBuilder();
         String flag = leftJustifiedRows ? "-" : "";
         columnLengths.forEach((key, value) -> formatString.append("| %").append(flag).append(value).append("s "));
         formatString.append("|\n");
