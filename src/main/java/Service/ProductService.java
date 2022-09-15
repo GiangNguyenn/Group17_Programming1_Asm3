@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static common.BaseConstant.PRODUCT_DATA_PATH;
+import static common.BaseConstant.*;
 import static common.BaseHelper.orderTableGenerator;
 import static common.BaseHelper.productTableGenerator;
 import static common.Utils.lstOrder;
@@ -68,7 +68,7 @@ public class ProductService implements ProductInterface {
 
         boolean ans = lstProduct.isEmpty();
         if (ans) {
-            System.out.println("The List is empty");
+            System.out.println(ANSI_RED + "The List is empty" + ANSI_RESET);
         } else {
             for (Product product : lstProduct) {
                 out.printf("%s,%s,%s,%s,%s\n", product.getId(), product.getProductName(), product.getPrice(),
@@ -86,7 +86,7 @@ public class ProductService implements ProductInterface {
     public void showProductsByCategory() throws IOException {
         printListOfCategories();
         List<Product> searchedProducts = new ArrayList<>();
-        System.out.println("Note: Type 'B' to go back.");
+        System.out.println(BLUE_BOLD + "Note: Type 'B' to go back." + ANSI_RESET);
         System.out.println("Input categories: ");
         String categoryInput = Utils.reader.readLine();
         if (categoryInput.equalsIgnoreCase("B")) {
@@ -113,7 +113,7 @@ public class ProductService implements ProductInterface {
 
     // TODO
     public void viewOrderDetails() throws IOException {
-        System.out.println("List of order");
+        System.out.println(BLACK_BOLD + "List of order" + ANSI_RESET);
         BaseHelper.simpleTable(orderTableGenerator(lstOrder));
         System.out.println("Enter the id of the order you want to view: ");
         Pattern p = Pattern.compile("^[0-9]+$");
@@ -122,11 +122,10 @@ public class ProductService implements ProductInterface {
             String orderId = Utils.reader.readLine();
             Order searchOrder = BaseHelper.getOrderByOrderId(orderId);
             if (!BaseHelper.isNullOrEmpty(searchOrder) && p.matcher(orderId).find()) {
-                BaseHelper.simpleTable(BaseHelper.orderTableGenerator(BaseHelper.addSingleOrderToOrderList(searchOrder)));
+                BaseHelper.simpleTable(BaseHelper.orderTableGenerator(BaseHelper.addSingleObjectToList(searchOrder)));
                 notMatchedRegex = false;
             } else {
-                System.out.println(
-                        "The your input is in the correct format! Please re-enter: ");
+                System.out.println(ANSI_RED + "The your input is in the correct format! Please re-enter: " + ANSI_RESET);
             }
         }
     }
@@ -137,13 +136,17 @@ public class ProductService implements ProductInterface {
         System.out.println("Enter the id of the product you want to change the price of: ");
 
         while (true) {
+            System.out.println("Type B to go back!");
             String productId = Utils.reader.readLine();
+            if (productId.equalsIgnoreCase("b")) {
+                return;
+            }
             Product searchProduct = BaseHelper.getProductByProductId(productId);
             if (!BaseHelper.isNullOrEmpty(searchProduct)) {
                 changeProductPrice(searchProduct);
                 break;
             } else {
-                System.out.println("The id you entered is not correct! Please re-enter: ");
+                System.out.println(ANSI_RED + "The id you entered is not correct! Please re-enter: " + ANSI_RESET);
             }
         }
         writeData();
@@ -159,12 +162,11 @@ public class ProductService implements ProductInterface {
             String newPrice = String.valueOf(Utils.reader.readLine());
             if (p.matcher(newPrice).find()) {
                 searchedProduct.setPrice(Double.parseDouble(newPrice));
-                System.out.println("Product price changed successfully!");
+                System.out.println(GREEN_BOLD + "Product price changed successfully!" + ANSI_RESET);
                 System.out.println("The new Product price is: " + searchedProduct.getPrice() + " VND");
                 notMatchedRegex = false;
             } else {
-                System.out.println(
-                        "The your input must be larger than 1000(VND) and in the correct format! Please re-enter: ");
+                System.out.println(ANSI_RED + "The your input must be larger than 1000(VND) and in the correct format! Please re-enter: " + ANSI_RESET);
             }
         }
     }
@@ -187,6 +189,7 @@ public class ProductService implements ProductInterface {
     public void addProduct() throws IOException {
         boolean productExists = false;
         BufferedReader reader = Utils.reader;
+//      Supposing the product has not existed in the database, allow user to enter new product
         while (!productExists) {
             System.out.println("Enter product name: ");
             String productName = reader.readLine();
@@ -196,12 +199,13 @@ public class ProductService implements ProductInterface {
             String category = reader.readLine();
             System.out.println("Enter supplier: ");
             String supplier = reader.readLine();
-
+//      If the product has EXISTED in the database, display error message in red color
             if (BaseHelper.checkExistProduct(productName, supplier)) {
-                System.out.println(productName + " of supplier " + supplier
-                        + " has already been added! Please add another product");
+                System.out.println(ANSI_RED + productName + " of supplier " + supplier + " has already been added! Please add another product" + ANSI_RESET);
                 productExists = true;
             } else {
+//      If the product has NOT EXISTED in the database, insert the new product into the database
+//      Id is auto-generated using generateUniqueId
                 String id = BaseHelper.generateUniqueId(Product.class);
                 lstProduct.add(new Product(id, productName, Double.parseDouble(price), category, supplier));
                 System.out.println(lstProduct);

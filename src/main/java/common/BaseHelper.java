@@ -16,6 +16,7 @@ import static common.Utils.*;
 
 public class BaseHelper {
 
+
     public static void printWelcomePage() {
         System.out.println("********* Here is welcome page *********");
         System.out.println("COSC2081 GROUP ASSIGNMENT");
@@ -226,25 +227,25 @@ public class BaseHelper {
         System.out.print(line);
     }
 
-    public static List<Order> addSingleOrderToOrderList(Order input) {
+    public static List<Order> addSingleObjectToList(Order input) {
         List<Order> singleOrder = new ArrayList<>();
         singleOrder.add(input);
         return singleOrder;
     }
 
-    public static List<Product> addSingleOrderToOrderList(Product input) {
+    public static List<Product> addSingleObjectToList(Product input) {
         List<Product> singleProduct = new ArrayList<>();
         singleProduct.add(input);
         return singleProduct;
     }
 
-    public static List<Admin> addSingleOrderToOrderList(Admin input) {
+    public static List<Admin> addSingleObjectToList(Admin input) {
         List<Admin> singleAdmin = new ArrayList<>();
         singleAdmin.add(input);
         return singleAdmin;
     }
 
-    public static List<Member> addSingleOrderToOrderList(Member input) {
+    public static List<Member> addSingleObjectToList(Member input) {
         List<Member> singleMember = new ArrayList<>();
         singleMember.add(input);
         return singleMember;

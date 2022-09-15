@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 
+import static common.BaseConstant.ANSI_RED;
+import static common.BaseConstant.ANSI_RESET;
 import static common.BaseHelper.productTableGenerator;
 import static common.Utils.lstProduct;
 import static common.Utils.orderService;
@@ -44,7 +46,7 @@ public class MenuService {
                     break;
                 }
                 case "e", "E" -> exit();
-                default -> System.out.println("Invalid choice, please try again!");
+                default -> System.out.println(ANSI_RED + "Invalid choice, please try again!" + ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -81,7 +83,7 @@ public class MenuService {
                     return;
                 }
                 case "e", "E" -> exit();
-                default -> System.out.println("Invalid choice, please try again!");
+                default -> System.out.println(ANSI_RED + "Invalid choice, please try again!" + ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -125,7 +127,7 @@ public class MenuService {
                     return;
                 }
                 case "E", "e" -> exit();
-                default -> System.out.println("Invalid choice, please try again!");
+                default -> System.out.println(ANSI_RED + "Invalid choice, please try again!" + ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -158,7 +160,10 @@ public class MenuService {
                     Utils.productService.showAllProduct();
                     placeOrderMenu();
                 }
-                case "2" -> Utils.productService.showProductsByCategory();
+                case "2" -> {
+                    Utils.productService.showProductsByCategory();
+                    break;
+                }
                 case "3" -> Utils.orderService.viewCustomerOrder();
                 case "4" -> Utils.userService.printUserProfile(Utils.current_user);
                 case "5" -> {
@@ -169,7 +174,7 @@ public class MenuService {
                     return;
                 }
                 case "E", "e" -> exit();
-                default -> System.out.println("Invalid choice, please try again!");
+                default -> System.out.println(ANSI_RED + "Invalid choice, please try again!" + ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -204,7 +209,7 @@ public class MenuService {
                     return;
                 }
                 case "E", "e" -> exit();
-                default -> System.out.println("Invalid choice, please try again!");
+                default -> System.out.println(ANSI_RED + "Invalid choice, please try again!" + ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -235,7 +240,7 @@ public class MenuService {
                     return;
                 }
                 case "E", "e" -> exit();
-                default -> System.out.println("Invalid choice, please try again!");
+                default -> System.out.println(ANSI_RED + "Invalid choice, please try again!" + ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -269,8 +274,10 @@ public class MenuService {
             switch (choice) {
                 case "1":
                     Utils.productService.addProduct();
+                    break;
                 case "2":
                     Utils.productService.manageProductPrice();
+                    break;
                 case "3":
                     Utils.orderService.viewOrderByCustomerId();
                     break;
@@ -289,7 +296,7 @@ public class MenuService {
                 case "E", "e":
                     exit();
                 default:
-                    System.out.println("Invalid choice, please try again!");
+                    System.out.println(ANSI_RED + "Invalid choice, please try again!" + ANSI_RESET);
             }
             System.out.println("press enter to continue...");
             Utils.reader.read();
@@ -332,7 +339,7 @@ public class MenuService {
                     return;
                 }
                 default -> {
-                    System.out.println("Invalid input! Please try again");
+                    System.out.println(ANSI_RED + "Invalid input! Please try again" + ANSI_RESET);
                     System.out.println("");
                     revenueMenu();
                 }
@@ -344,6 +351,7 @@ public class MenuService {
 
 
     private static void exit() throws FileNotFoundException {
+        System.out.println("See you again!");
         BaseHelper.writeData();
         System.exit(-1);
     }

@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static common.BaseConstant.*;
 import static common.Utils.lstAdmin;
 import static common.Utils.lstMember;
 
@@ -36,12 +37,12 @@ public class UserService implements UserInterface {
     public void login() throws IOException {
 
         if (BaseHelper.isLogin()) {
-            System.out.println("This user has been logged.");
+            System.out.println(ANSI_RED + "This username has existed, please choose another one!" + ANSI_RESET);
             return;
         }
-        System.out.println("Note: Type 'B' in any input to go back.");
+        System.out.println(BLUE_BOLD + "Note: Type 'B' in any input to go back." + ANSI_RESET);
 
-        System.out.println("Process login:");
+        System.out.println(BLACK_BOLD + "Process login:" + ANSI_RESET);
         System.out.println("Username: ");
         String username = Utils.reader.readLine();
         if (username.equals("B")) {
@@ -62,9 +63,8 @@ public class UserService implements UserInterface {
             Utils.isLogin = true;
             Utils.current_user = member;
             member.updateMemberInfo();
-            System.out.println("Login success! " + member);
+            System.out.println(YELLOW_BOLD + "Login success! Hello " + member.getName() + ANSI_RESET);
             BaseHelper.clearConsole();
-            System.out.println("Login success! Hello " + member.getName());
             return;
         }
 
@@ -83,8 +83,8 @@ public class UserService implements UserInterface {
         boolean userExists = false;
 
         while (!userExists) {
-            System.out.println("Welcome! Please register your account to start purchasing.");
-            System.out.println("Note: Type 'B' in any input to go back.");
+            System.out.println(YELLOW_BOLD + "Welcome! Please register your account to start purchasing." + ANSI_RESET);
+            System.out.println(BLUE_BOLD + "Note: Type 'B' in any input to go back." + ANSI_RESET);
             boolean notMatchedRegex = true;
             while (notMatchedRegex) {
                 System.out.println("Enter your name: ");
@@ -110,24 +110,24 @@ public class UserService implements UserInterface {
                 }
 
                 if (!BaseHelper.validateUserInput(name, RegexConstants.NAME_REGEX)) {
-                    System.out.println("Name must be longer than 2 character and contains only letters!");
-                    System.out.println("Try register again.");
+                    System.out.println(ANSI_RED + "Name must be longer than 2 character and contains only letters!" + ANSI_RESET);
+                    System.out.println(ANSI_RED + "Try register again." + ANSI_RESET);
                     register();
                 } else if (BaseHelper.validateUserInput(username, RegexConstants.USERNAME_REGEX)) {
-                    System.out.println("Username contains minimum of 2 letters!");
-                    System.out.println("Try register again.");
+                    System.out.println(ANSI_RED + "Username contains minimum of 2 letters!" + ANSI_RESET);
+                    System.out.println(ANSI_RED + "Try register again." + ANSI_RESET);
                     register();
                 } else if (BaseHelper.validateUserInput(password, RegexConstants.PASSWORD_REGEX)) {
-                    System.out.println("Password contains minimum of 2 letters!");
-                    System.out.println("Try register again.");
+                    System.out.println(ANSI_RED + "Password contains minimum of 2 letters!" + ANSI_RESET);
+                    System.out.println(ANSI_RED + "Try register again." + ANSI_RESET);
                     register();
                 } else if (BaseHelper.validateUserInput(phoneNumber, RegexConstants.PHONE_REGEX)) {
-                    System.out.println("Password contains minimum of 2 letters!");
-                    System.out.println("Try register again.");
+                    System.out.println(ANSI_RED + "Password contains minimum of 2 letters!" + ANSI_RESET);
+                    System.out.println(ANSI_RED + "Try register again." + ANSI_RESET);
                     register();
                 } else {
                     if (BaseHelper.checkExistUsername(username)) {
-                        System.out.println("This username has been used! Please register with another one.");
+                        System.out.println(ANSI_RED + "This username has been used! Please register with another one." + ANSI_RESET);
                         userExists = true;
                     } else {
                         String id = BaseHelper.generateUniqueId(Member.class);
@@ -153,7 +153,7 @@ public class UserService implements UserInterface {
         Utils.isLogin = false;
         Utils.current_user = null;
         Utils.isAdmin = false;
-        System.out.println("You have logged out!");
+        System.out.println(BLUE_BOLD + "You have logged out!" + ANSI_RESET);
     }
 
     @Override
@@ -194,7 +194,7 @@ public class UserService implements UserInterface {
     public void writeData() throws FileNotFoundException {
         PrintWriter out = new PrintWriter(BaseConstant.USER_DATA_PATH);
         if (BaseHelper.isNullOrEmpty(lstMember) || BaseHelper.isNullOrEmpty(lstAdmin)) {
-            System.out.println("The List is empty or null");
+            System.out.println(ANSI_RED + "The List is empty or null" + ANSI_RESET);
         } else {
             for (Member member : lstMember) {
                 out.printf("%s,%s,%s,%s,%s\n", member.getId(), member.getName(), member.getPhoneNumber(), member.getUsername(), member.getPassword());
