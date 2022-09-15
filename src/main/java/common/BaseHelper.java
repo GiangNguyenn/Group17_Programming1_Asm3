@@ -11,19 +11,10 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static common.BaseConstant.*;
 import static common.Utils.*;
 
 public class BaseHelper {
-
-    //    Implement Color for better user experience
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_RED = "\u001B[31m";
-
-    // Bold
-    public static final String BLACK_BOLD = "\033[1;30m";  // BLACK
-    public static final String GREEN_BOLD = "\033[1;32m";  // GREEN
-    public static final String YELLOW_BOLD = "\033[1;33m"; // YELLOW
-    public static final String BLUE_BOLD = "\033[1;34m";   // BLUE
 
     public static void printWelcomePage() {
         System.out.println("********* Here is welcome page *********");
@@ -87,9 +78,11 @@ public class BaseHelper {
         }
         if (value instanceof String) {
             return "".equals(value.toString().trim());
-        } else if (value instanceof Collection c) {
+        } else if (value instanceof Collection) {
+            Collection c = (Collection) value;
             return c.isEmpty();
-        } else if (value instanceof Map m) {
+        } else if (value instanceof Map) {
+            Map m = (Map) value;
             return m.isEmpty();
         } else if (value.getClass().isArray()) {
             Object[] array = (Object[]) value;
@@ -214,7 +207,7 @@ public class BaseHelper {
                 columnLengths.put(i, a[i].length());
             }
         }));
-        final StringBuilder formatString = new StringBuilder();
+        final StringBuilder formatString = new StringBuilder("");
         String flag = leftJustifiedRows ? "-" : "";
         columnLengths.forEach((key, value) -> formatString.append("| %").append(flag).append(value).append("s "));
         formatString.append("|\n");
