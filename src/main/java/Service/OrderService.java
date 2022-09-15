@@ -21,7 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static common.Utils.*;
+import static common.BaseConstant.*;
+import static common.Utils.lstOrder;
+import static common.Utils.orderService;
 
 public class OrderService implements OrderInterface {
 
@@ -131,12 +133,12 @@ public class OrderService implements OrderInterface {
         System.out.print("Please enter the index of the order: ");
         String targetOrderIndex = Utils.reader.readLine().trim();
         if (!targetOrderIndex.matches("[0-9]+")) {
-            System.out.println(BaseHelper.ANSI_RED + "Input Invalid!" + BaseHelper.ANSI_RESET);
+            System.out.println(ANSI_RED + "Input Invalid!" + ANSI_RESET);
             viewCustomerOrder();
         }
         if (Integer.parseInt(targetOrderIndex) > ordersOfCustomer.size()) {
-            System.out.println(BaseHelper.ANSI_RED + "\nOrder not found");
-            System.out.println("Please enter again" + BaseHelper.ANSI_RESET);
+            System.out.println(ANSI_RED + "\nOrder not found");
+            System.out.println("Please enter again" + ANSI_RESET);
             viewCustomerOrder();
         }
         Order order = ordersOfCustomer.get(Integer.parseInt(targetOrderIndex) - 1);
@@ -152,12 +154,13 @@ public class OrderService implements OrderInterface {
         Member targetCustomer = BaseHelper.getMemberById(customerID);       //Finds customer
 
         if (targetCustomer == null) {
-            System.out.println(BaseHelper.ANSI_RED + "Customer not found!" + BaseHelper.ANSI_RESET);
+            System.out.println(ANSI_RED + "Customer not found!" + ANSI_RESET);
             viewOrderByCustomerId();
         }
 
         ArrayList<Order> ordersOfCustomer = new ArrayList<>();
         for (Order order : lstOrder) {
+            assert targetCustomer != null;
             if (Objects.equals(order.getMemberID(), targetCustomer.getId())) {          // Returns Empty List if no customer is found
                 ordersOfCustomer.add(order);
             }
@@ -189,14 +192,14 @@ public class OrderService implements OrderInterface {
             System.out.println("Order's status: UNPAID.\n Do you want to change the status to PAID? (Y/N): ");
             String answer = Utils.reader.readLine();
             searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
-            System.out.println(BaseHelper.YELLOW_BOLD + "Order status: Paid" + BaseHelper.ANSI_RESET);
+            System.out.println(YELLOW_BOLD + "Order status: Paid" + ANSI_RESET);
         } else if (!BaseHelper.isNullOrEmpty(searchedOrder) && searchedOrder.getPaid()) {
             System.out.println(searchedOrder);
             System.out.println("===================");
             System.out.println("Order's status: PAID.\n Do you want to change the status to UNPAID? (Y/N): ");
             String answer = Utils.reader.readLine();
             searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
-            System.out.println(BaseHelper.YELLOW_BOLD + "Order status: Unpaid" + BaseHelper.ANSI_RESET);
+            System.out.println(YELLOW_BOLD + "Order status: Unpaid" + ANSI_RESET);
         }
     }
 
@@ -207,13 +210,13 @@ public class OrderService implements OrderInterface {
      */
     private Boolean changeOrderStatus(String input, Boolean orderStatus) {
         if (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes")) {
-            System.out.println(BaseHelper.GREEN_BOLD + "Order status changed successfully!" + BaseHelper.ANSI_RESET);
+            System.out.println(GREEN_BOLD + "Order status changed successfully!" + ANSI_RESET);
             return !orderStatus;
         } else if (input.equalsIgnoreCase("n") || input.equalsIgnoreCase("no")) {
-            System.out.println(BaseHelper.ANSI_RED + "Order status has not been changed!" + BaseHelper.ANSI_RESET);
+            System.out.println(ANSI_RED + "Order status has not been changed!" + ANSI_RESET);
             return orderStatus;
         } else {
-            System.out.println(BaseHelper.ANSI_RED + "Invalid input!" + BaseHelper.ANSI_RESET);
+            System.out.println(ANSI_RED + "Invalid input!" + ANSI_RESET);
             return orderStatus;
         }
     }
@@ -221,8 +224,8 @@ public class OrderService implements OrderInterface {
     // Using product ID to add to Cart
     public void addProductToCart() throws IOException {
         printCart();
-        System.out.println(BaseHelper.BLUE_BOLD + "Note: Type 'B' to go back." + BaseHelper.ANSI_RESET);
-        System.out.print(BaseHelper.BLACK_BOLD + "Please input the product Id you want to add to cart: " + BaseHelper.ANSI_RESET);
+        System.out.println(BLUE_BOLD + "Note: Type 'B' to go back." + ANSI_RESET);
+        System.out.print(BLACK_BOLD + "Please input the product Id you want to add to cart: " + ANSI_RESET);
         String productId = Utils.reader.readLine();
 
         Product product = BaseHelper.getProductByProductId(productId);
@@ -231,22 +234,22 @@ public class OrderService implements OrderInterface {
         }
         if (!BaseHelper.isNullOrEmpty(product)) {
             Utils.cart.add(productId);
-            System.out.println(BaseHelper.GREEN_BOLD + "Product " + product.getProductName() + " added to cart!" + BaseHelper.ANSI_RESET);
+            System.out.println(GREEN_BOLD + "Product " + product.getProductName() + " added to cart!" + ANSI_RESET);
             printCart();
         } else {
-            System.out.println(BaseHelper.ANSI_RED + "Product Id not found! Please try again!" + BaseHelper.ANSI_RESET);
+            System.out.println(ANSI_RED + "Product Id not found! Please try again!" + ANSI_RESET);
             addProductToCart();
         }
     }
 
     private void printCart() {
-        System.out.println(BaseHelper.BLACK_BOLD + "Shopping cart: " + BaseHelper.ANSI_RESET);
+        System.out.println(BLACK_BOLD + "Shopping cart: " + ANSI_RESET);
         System.out.println("-----------------------------------------");
         for (String productId : Utils.cart) {
             if (Utils.cart.size() > 0) {
-                System.out.println(BaseHelper.getProductByProductId(productId).getProductName());
+                System.out.println(Objects.requireNonNull(BaseHelper.getProductByProductId(productId)).getProductName());
             } else {
-                System.out.println(BaseHelper.ANSI_RED + "Empty cart!" + BaseHelper.ANSI_RESET);
+                System.out.println(ANSI_RED + "Empty cart!" + ANSI_RESET);
             }
         }
         System.out.println("-----------------------------------------");
@@ -270,28 +273,29 @@ public class OrderService implements OrderInterface {
                     false,                                  //Have to make separate object by copying the origin Utils.cart
                     this.calculateTotalPrice());
             lstOrder.add(newOrder);
-            System.out.println(BaseHelper.GREEN_BOLD + "Order placed successfully!" + BaseHelper.ANSI_RESET);
+            System.out.println(GREEN_BOLD + "Order placed successfully!" + ANSI_RESET);
             System.out.println(newOrder);
             Utils.cart.clear();
         } else {
-            System.out.println(BaseHelper.ANSI_RED + "Your shopping cart is empty!" + BaseHelper.ANSI_RESET);
+            System.out.println(ANSI_RED + "Your shopping cart is empty!" + ANSI_RESET);
             ProductService productService = new ProductService();
             productService.showAllProduct();
             addProductToCart();
         }
     }
 
-    private Double calculateRevenueOneDay(LocalDate targetDate){
+    private Double calculateRevenueOneDay(LocalDate targetDate) {
         return lstOrder.stream().filter(order -> order.getCreated_at().toLocalDate().equals(targetDate)).mapToDouble(Order::getTotalPrice).sum();
     }
 
-    private String dateAdjustmentHelper(String string){
+    private String dateAdjustmentHelper(String string) {
         return String.format("%02d", Integer.parseInt(string));          // Adding zeros before numbers for the LocalDate.parse to work
-                                                                        // Helps customers avoiding the Exception because of missing zero
+        // Helps customers avoiding the Exception because of missing zero
     }
-    private LocalDate userInputToDate(String targetYearString, String targetMonthString, String targetDayString){
+
+    private LocalDate userInputToDate(String targetYearString, String targetMonthString, String targetDayString) {
         if (!(targetDayString.matches("\\d{1,2}") && targetMonthString.matches("\\d{1,2}") && targetYearString.matches("\\d{4}"))) {
-            System.out.println(BaseHelper.ANSI_RED + "Invalid format! Please write again." + BaseHelper.ANSI_RESET);
+            System.out.println(ANSI_RED + "Invalid format! Please write again." + ANSI_RESET);
             System.out.println("");
             revenueSpecificDayMenu();
             return null;
@@ -302,10 +306,11 @@ public class OrderService implements OrderInterface {
         return LocalDate.parse(targetDateString, DateTimeFormatter.ISO_DATE);
     }
 
-    public void revenueTodayMenu(){
+    public void revenueTodayMenu() {
         LocalDate targetDate = LocalDate.now();
-        System.out.println(BaseHelper.YELLOW_BOLD + "Revenue made in " + targetDate + " : " + calculateRevenueOneDay(targetDate) + BaseHelper.ANSI_RESET);
+        System.out.println(YELLOW_BOLD + "Revenue made in " + targetDate + " : " + calculateRevenueOneDay(targetDate) + ANSI_RESET);
     }
+
     public void revenueSpecificDayMenu() {
         try {
             String targetYearString;
@@ -317,13 +322,14 @@ public class OrderService implements OrderInterface {
             targetMonthString = Utils.reader.readLine().trim();
             System.out.print("Please enter the day dd: ");
             targetDayString = Utils.reader.readLine().trim();
-            LocalDate targetDate = userInputToDate(targetYearString,targetMonthString,targetDayString);
-            if (targetDate != null){
-                System.out.println(BaseHelper.YELLOW_BOLD + "Revenue made in " + targetDate + " : " + calculateRevenueOneDay(targetDate) + BaseHelper.ANSI_RESET);}
+            LocalDate targetDate = userInputToDate(targetYearString, targetMonthString, targetDayString);
+            if (targetDate != null) {
+                System.out.println(YELLOW_BOLD + "Revenue made in " + targetDate + " : " + calculateRevenueOneDay(targetDate) + ANSI_RESET);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (DateTimeParseException ex) {
-            System.out.println(BaseHelper.ANSI_RED + "Invalid date! Please try again." + BaseHelper.ANSI_RESET);
+            System.out.println(ANSI_RED + "Invalid date! Please try again." + ANSI_RESET);
             System.out.println("");
             orderService.revenueSpecificDayMenu();
         }

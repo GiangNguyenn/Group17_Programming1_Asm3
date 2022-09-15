@@ -24,7 +24,7 @@ public class Utils {
     //login infor
     public static Boolean isLogin = false;
     public static Member current_user = null;
-    public static boolean isAdmin = false;
+    public static Boolean isAdmin = false;
 
     // Instant services
     static {
