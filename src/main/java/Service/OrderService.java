@@ -112,7 +112,6 @@ public class OrderService implements OrderInterface {
         return (ArrayList<String>) resultArray;
     }
 
-    //Menus
 
     /**
      * Take user input as orderID to get specific order details
@@ -196,12 +195,10 @@ public class OrderService implements OrderInterface {
         } else if (!BaseHelper.isNullOrEmpty(searchedOrder) && searchedOrder.getPaid()) {
             System.out.println(searchedOrder);
             System.out.println("===================");
-            System.out.println("Order's status: PAID.\n Do you want to change the status to UNPAID? (Y/N): ");
-            String answer = Utils.reader.readLine();
-            searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
-            System.out.println(YELLOW_BOLD + "Order status: Unpaid" + ANSI_RESET);
+            System.out.println("Order's status: PAID.");
+            System.out.println(YELLOW_BOLD + "You cannot change it!" + ANSI_RESET);
         } else {
-            System.out.println();
+            System.out.println(ANSI_RED + "Invalid order Id, please try again!" + ANSI_RESET);
         }
     }
 
@@ -211,9 +208,9 @@ public class OrderService implements OrderInterface {
      * @return true if user's input is y or yes, and vice versa with n or no
      */
     private Boolean changeOrderStatus(String input, Boolean orderStatus) {
-        if (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes")) {
+        if ((input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes")) && orderStatus.equals(false)) {
             System.out.println(GREEN_BOLD + "Order status changed successfully!" + ANSI_RESET);
-            return !orderStatus;
+            return true;
         } else if (input.equalsIgnoreCase("n") || input.equalsIgnoreCase("no")) {
             System.out.println(ANSI_RED + "Order status has not been changed!" + ANSI_RESET);
             return orderStatus;
