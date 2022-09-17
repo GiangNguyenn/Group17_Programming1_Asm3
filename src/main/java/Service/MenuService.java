@@ -14,16 +14,16 @@ import static common.Utils.lstProduct;
 import static common.Utils.orderService;
 
 public class MenuService {
-    private static MenuService INSTANT;
+
+    private static MenuService INSTANCE;
 
     public static void start() {
-        INSTANT = new MenuService();
+        INSTANCE = new MenuService();
     }
 
     public static MenuService getInstant() {
-        return INSTANT;
+        return INSTANCE;
     }
-
 
     private static void printStartUpMenu() {
         System.out.println("1. Enter admin mode");
@@ -48,15 +48,17 @@ public class MenuService {
                 case "e", "E" -> exit();
                 default -> System.out.println(ANSI_RED + "Invalid choice, please try again!" + ANSI_RESET);
             }
-            System.out.println("press enter to continue...");
+            System.out.println("press Enter to continue...");
             Utils.reader.read();
             startUpMenu();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
+    /**
+     * Print out the admin main menu with admin's options
+     */
     private static void printAdminMainMenu() {
         System.out.println("Select function: ");
         System.out.println("1. Admin login");
@@ -66,7 +68,7 @@ public class MenuService {
     }
 
     /**
-     * Print out the main menu with customer options
+     * Call methods based on user input
      */
     public void adminMainMenu() {
         BaseHelper.clearConsole();
@@ -94,6 +96,9 @@ public class MenuService {
         }
     }
 
+    /**
+     * Print out the customer main menu with customer's options
+     */
     private static void printMemberMainMenu() {
         System.out.println("Select function: ");
         System.out.println("1. Member login");
@@ -143,9 +148,10 @@ public class MenuService {
         System.out.println("Select function: ");
         System.out.println("1. View all products");
         System.out.println("2. Browse products by categories");
-        System.out.println("3. View your orders");
-        System.out.println("4. View my profile");
-        System.out.println("5. Log out");
+        System.out.println("3. Sort Products by price");
+        System.out.println("4. View your orders");
+        System.out.println("5. View my profile");
+        System.out.println("6. Log out");
         System.out.println("E. Exit");
         System.out.print("Your choice: ");
     }
@@ -164,9 +170,13 @@ public class MenuService {
                     Utils.productService.showProductsByCategory();
                     break;
                 }
-                case "3" -> Utils.orderService.viewCustomerOrder();
-                case "4" -> Utils.userService.printUserProfile(Utils.current_user);
-                case "5" -> {
+                case "3" -> {
+                    sortProductByPriceMenu();
+                    break;
+                }
+                case "4" -> Utils.orderService.viewCustomerOrder();
+                case "5" -> Utils.userService.printUserProfile(BaseHelper.getCurrentUser());
+                case "6" -> {
                     Utils.userService.logout();
                     return;
                 }
@@ -221,8 +231,8 @@ public class MenuService {
 
     public void printSortProductByPrice() {
         System.out.println("Select action: ");
-        System.out.println("1. Sort product from low to high");
-        System.out.println("2. Sort product from high to low");
+        System.out.println("1. Sort product from price low to high");
+        System.out.println("2. Sort product from price high to low");
         System.out.println("B. Go back");
         System.out.println("E. Exit");
     }
@@ -332,15 +342,14 @@ public class MenuService {
                     orderService.revenueTodayMenu();
                     break;
                 }
-                case "2" -> {
-                    orderService.revenueSpecificDayMenu();
-                }
+                case "2" -> orderService.revenueSpecificDayMenu();
                 case "b", "B" -> {
                     return;
                 }
+
                 default -> {
                     System.out.println(ANSI_RED + "Invalid input! Please try again" + ANSI_RESET);
-                    System.out.println("");
+                    System.out.println();
                     revenueMenu();
                 }
             }

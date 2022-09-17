@@ -3,7 +3,7 @@ package Model.User;
 import Model.Productions.Order;
 import common.BaseConstant;
 import common.BaseConstant.TypeMember;
-import common.Utils;
+import common.BaseHelper;
 
 import java.util.ArrayList;
 
@@ -34,7 +34,7 @@ public class Member extends User {
         super(userName, password);
     }
 
-    public String converMemberTypeToString() {
+    public String convertMemberTypeToString() {
         if (this.memberType.equals(TypeMember.NORMAL)) {
             return "Normal";
         } else if (this.memberType.equals(TypeMember.SILVER)) {
@@ -56,10 +56,6 @@ public class Member extends User {
 
     public String getName() {
         return name;
-    }
-
-    public void showInfo() {
-        this.toString();
     }
 
 
@@ -86,7 +82,7 @@ public class Member extends User {
 
     double calculateTotalSpending() {
         ArrayList<Double> totalSpendingOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
-        Double totalSpending = lstOrder.stream().filter(order -> order.getMemberID().equalsIgnoreCase(Utils.current_user.getId())).mapToDouble(Order::getTotalPrice).sum();
+        Double totalSpending = lstOrder.stream().filter(order -> order.getMemberID().equalsIgnoreCase(BaseHelper.getCurrentUser().getId())).mapToDouble(Order::getTotalPrice).sum();
         return totalSpending;
     }
 

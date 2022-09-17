@@ -1,6 +1,5 @@
 package Service;
 
-
 import Model.User.Admin;
 import Model.User.Member;
 import common.BaseConstant;
@@ -20,14 +19,14 @@ import static common.Utils.lstMember;
 
 public class UserService implements UserInterface {
 
-    private static UserService INSTANT;
+    private static UserService INSTANCE;
 
     public static void start() {
-        INSTANT = new UserService();
+        INSTANCE = new UserService();
     }
 
     public static UserService getInstant() {
-        return INSTANT;
+        return INSTANCE;
     }
 
     /**
@@ -35,33 +34,37 @@ public class UserService implements UserInterface {
      */
     @Override
     public void login() throws IOException {
+        //Strings initialization
+        String username;
+        String password;
 
         if (BaseHelper.isLogin()) {
-            System.out.println(ANSI_RED + "This username has existed, please choose another one!" + ANSI_RESET);
+            System.out.println(ANSI_RED + "You are currently login!" + ANSI_RESET);
             return;
         }
         System.out.println(BLUE_BOLD + "Note: Type 'B' in any input to go back." + ANSI_RESET);
 
+        //prompt user to input login credentials
         System.out.println(BLACK_BOLD + "Process login:" + ANSI_RESET);
         System.out.println("Username: ");
-        String username = Utils.reader.readLine();
+        username = Utils.reader.readLine();
         if (username.equals("B")) {
             return;
         }
         System.out.println("Password: ");
-        String password = Utils.reader.readLine();
+        password = Utils.reader.readLine();
         if (password.equals("B")) {
             return;
         }
 
-
+        //Get either admin or member using the provided username
         Member member = BaseHelper.getMemberByUserName(username);
-
         Admin admin = BaseHelper.getAdminByUserName(username);
 
+        //if there is a member associated with that username -> check if password matched -> login or print login fail error
         if (!BaseHelper.isNullOrEmpty(member) && BaseHelper.checkingMemberLoginInfo(username, password)) {
             Utils.isLogin = true;
-            Utils.current_user = member;
+            BaseHelper.setCurrentUser(member);
             member.updateMemberInfo();
             System.out.println(YELLOW_BOLD + "Login success! Hello " + member.getName() + ANSI_RESET);
             BaseHelper.clearConsole();
@@ -74,13 +77,17 @@ public class UserService implements UserInterface {
             return;
         }
 
-        System.out.println("Login fail, please try again! ");
+        System.out.println(ANSI_RED + "Login fail, please try again! " + ANSI_RESET);
     }
 
     @Override
     public void register() throws IOException {
         // TODO: process get input to login
         boolean userExists = false;
+        String name;
+        String phoneNumber;
+        String username;
+        String password;
 
         while (!userExists) {
             System.out.println(YELLOW_BOLD + "Welcome! Please register your account to start purchasing." + ANSI_RESET);
@@ -88,27 +95,28 @@ public class UserService implements UserInterface {
             boolean notMatchedRegex = true;
             while (notMatchedRegex) {
                 System.out.println("Enter your name: ");
-                String name = Utils.reader.readLine();
+                name = Utils.reader.readLine();
                 if (name.equalsIgnoreCase("B")) {
                     return;
                 }
 
                 System.out.println("Enter your phone number: ");
-                String phoneNumber = Utils.reader.readLine();
+                phoneNumber = Utils.reader.readLine();
                 if (phoneNumber.equalsIgnoreCase("B")) {
                     return;
                 }
                 System.out.println("Enter your username: ");
-                String username = Utils.reader.readLine();
+                username = Utils.reader.readLine();
                 if (username.equalsIgnoreCase("B")) {
                     return;
                 }
                 System.out.println("Enter your password: ");
-                String password = Utils.reader.readLine();
+                password = Utils.reader.readLine();
                 if (password.equalsIgnoreCase("B")) {
                     return;
                 }
 
+                //User inputs' validation, if valid then continue
                 if (!BaseHelper.validateUserInput(name, RegexConstants.NAME_REGEX)) {
                     System.out.println(ANSI_RED + "Name must be longer than 2 character and contains only letters!" + ANSI_RESET);
                     System.out.println(ANSI_RED + "Try register again." + ANSI_RESET);
@@ -126,6 +134,9 @@ public class UserService implements UserInterface {
                     System.out.println(ANSI_RED + "Try register again." + ANSI_RESET);
                     register();
                 } else {
+                    /* creating new Member if this username is not exits
+                     * after that, switch to login page
+                     * */
                     if (BaseHelper.checkExistUsername(username)) {
                         System.out.println(ANSI_RED + "This username has been used! Please register with another one." + ANSI_RESET);
                         userExists = true;
@@ -141,13 +152,10 @@ public class UserService implements UserInterface {
 
 
         }
-        /*
-         * TODO: Checking exits username
-         * creating new Member if this username is not exits
-         * after that, switch to login page
-         * */
+
     }
 
+    //logout by setting all authentication flags to false, set currentUser back to null
     @Override
     public void logout() {
         Utils.isLogin = false;
@@ -206,6 +214,7 @@ public class UserService implements UserInterface {
         out.close();
     }
 
+    //display the user's details of the current user
     @Override
     public void printUserProfile(Member currentUser) {
         if (Utils.isLogin) {

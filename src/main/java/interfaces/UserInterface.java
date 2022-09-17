@@ -4,13 +4,19 @@ import Model.User.Member;
 
 import java.io.IOException;
 
+/**
+ * this interface inherit the main interface
+ * define method signatures associated with User's features
+ * implemented by the UserService class
+ */
+
 public interface UserInterface extends mainInterface {
 
-    public void login() throws IOException;
+    void login() throws IOException;
 
-    public void register() throws IOException;
+    void register() throws IOException;
 
-    public void logout();
+    void logout();
 
     void printUserProfile(Member currentUser);
 

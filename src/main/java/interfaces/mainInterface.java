@@ -2,9 +2,12 @@ package interfaces;
 
 import java.io.FileNotFoundException;
 
+/**
+ * define method signatures of load data and write data to csv files features
+ */
 public interface mainInterface {
 
-    public void loadData();
+    void loadData();
 
-    public void writeData() throws FileNotFoundException;
+    void writeData() throws FileNotFoundException;
 }
