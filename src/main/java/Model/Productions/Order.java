@@ -1,8 +1,6 @@
 package Model.Productions;
 
-import Model.User.Member;
 import common.BaseHelper;
-import common.Utils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -89,10 +87,10 @@ public class Order {
     public String toStringCustom() {
         StringBuilder productInfo = new StringBuilder();
         List<Product> productObjectsOfCustomer = new ArrayList<>();
-        for (String productID : productsID){
+        for (String productID : productsID) {
             Product productObject = BaseHelper.getProductByProductId(productID);
             assert productObject != null;
-            productInfo.append("\n").append(productObject.toString());
+            productInfo.append("\n").append(productObject);
         }
 
         return "\nOrder{" +

@@ -35,43 +35,55 @@ public class BaseHelper {
         return Utils.isLogin;
     }
 
-    public static User getCurrentUser() {
+    public static Member getCurrentUser() {
         return Utils.current_user;
+    }
+
+    public static void setCurrentUser(Member user) {
+        Utils.current_user = user;
     }
 
     //Customer
     public static Member getMemberByUserName(String userName) {
         Optional<Member> op = lstMember.stream().filter(user -> user.getUsername().equalsIgnoreCase(userName)).findFirst();
-        return op.isPresent() ? op.get() : null;
+        return op.orElse(null);
     }
 
+    //member
     public static Member getMemberById(String id) {
         Optional<Member> op = lstMember.stream().filter(user -> user.getId().equalsIgnoreCase(id)).findFirst();
-        return op.isPresent() ? op.get() : null;
+        return op.orElse(null);
     }
 
+    //admin
     public static Admin getAdminByUserName(String userName) {
         Optional<Admin> op = lstAdmin.stream().filter(admin -> admin.getUsername().equalsIgnoreCase(userName)).findFirst();
-        return op.isPresent() ? op.get() : null;
+        return op.orElse(null);
     }
 
     //Product
     public static Product getProductByProductId(String id) {
         Optional<Product> op = lstProduct.stream().filter(product -> product.getId().equalsIgnoreCase(id)).findFirst();
-        return op.isPresent() ? op.get() : null;
+        return op.orElse(null);
     }
 
     //Order
     public static Order getOrderByOrderId(String id) {
         Optional<Order> op = lstOrder.stream().filter(order -> order.getId().equalsIgnoreCase(id)).findFirst();
-        return op.isPresent() ? op.get() : null;
+        return op.orElse(null);
     }
 
+    /**
+     * @param input is a string read from user input
+     * @param regex is a regular expression string
+     * @return true if input matched regex
+     */
     public static Boolean validateUserInput(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(input).find();
     }
 
+    //check if object is null or empty
     @SuppressWarnings("rawtypes")
     public static boolean isNullOrEmpty(Object value) {
         if (value == null) {
@@ -79,11 +91,9 @@ public class BaseHelper {
         }
         if (value instanceof String) {
             return "".equals(value.toString().trim());
-        } else if (value instanceof Collection) {
-            Collection c = (Collection) value;
+        } else if (value instanceof Collection c) {
             return c.isEmpty();
-        } else if (value instanceof Map) {
-            Map m = (Map) value;
+        } else if (value instanceof Map m) {
             return m.isEmpty();
         } else if (value.getClass().isArray()) {
             Object[] array = (Object[]) value;
@@ -120,29 +130,34 @@ public class BaseHelper {
     }
 
 
-    public static String generateIdForUser() {
+    private static String generateIdForUser() {
         List<Integer> idArray = lstMember.stream().map(user -> Integer.valueOf(user.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }
 
-    public static String generateIdForProduct() {
+    private static String generateIdForProduct() {
         List<Integer> idArray = lstProduct.stream().map(product -> Integer.valueOf(product.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }
 
-    public static String generateIdForOrder() {
+
+    private static String generateIdForOrder() {
         List<Integer> idArray = lstOrder.stream().map(order -> Integer.valueOf(order.getId())).toList();
         Integer maxId = Collections.max(idArray);
         return String.valueOf(maxId + 1);
     }
 
-
+    /**
+     * @param username is a string
+     * @return true if username exists and vice versa
+     */
     public static boolean checkExistUsername(String username) {
         return lstMember.stream().map(User::getUsername).anyMatch(username::equals);
     }
 
+    //check if product with name and supplier has existed
     public static boolean checkExistProduct(String productName, String supplier) {
         if (lstProduct.stream().map(Product::getProductName).anyMatch(productName::equals)) {
             return lstProduct.stream().map(Product::getSupplier).anyMatch(supplier::equals);
@@ -151,24 +166,26 @@ public class BaseHelper {
         }
     }
 
+
     public static void clearConsole() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
 
+    //load all data from csv to arraylist objects
     public static void loadData() {
         Utils.userService.loadData();
-        Utils.productService.loadData();
         Utils.orderService.loadData();
+        Utils.productService.loadData();
     }
 
+    // write all data to csv
     public static void writeData() throws FileNotFoundException {
         Utils.userService.writeData();
         Utils.productService.writeData();
         Utils.orderService.writeData();
     }
 
-    @SuppressWarnings("rawtypes")
     public static void simpleTable(String[][] table) {
         boolean leftJustifiedRows = true;
         int maxWidth = 30;
@@ -208,7 +225,7 @@ public class BaseHelper {
                 columnLengths.put(i, a[i].length());
             }
         }));
-        final StringBuilder formatString = new StringBuilder("");
+        final StringBuilder formatString = new StringBuilder();
         String flag = leftJustifiedRows ? "-" : "";
         columnLengths.forEach((key, value) -> formatString.append("| %").append(flag).append(value).append("s "));
         formatString.append("|\n");
@@ -220,10 +237,10 @@ public class BaseHelper {
         }, (a, b) -> a + b);
         line = line + "+\n";
         System.out.print(line);
-        Arrays.stream(finalTable).limit(1).forEach(a -> System.out.printf(formatString.toString(), a));
+        Arrays.stream(finalTable).limit(1).forEach(a -> System.out.printf(formatString.toString(), (Object) a));
         System.out.print(line);
 
-        Stream.iterate(1, (i -> i < finalTable.length), (i -> ++i)).forEach(a -> System.out.printf(formatString.toString(), finalTable[a]));
+        Stream.iterate(1, (i -> i < finalTable.length), (i -> ++i)).forEach(a -> System.out.printf(formatString.toString(), (Object) finalTable[a]));
         System.out.print(line);
     }
 
@@ -259,7 +276,7 @@ public class BaseHelper {
         table[0] = new String[]{"Member's ID", "Member's Name", "Member's Phone", "Type of member", "total Spending"};
         int index = 1;
         for (Member member : input) {
-            table[index] = new String[]{member.getId(), member.getName(), member.getPhoneNumber(), member.converMemberTypeToString(), String.valueOf(member.getTotalSpending())};
+            table[index] = new String[]{member.getId(), member.getName(), member.getPhoneNumber(), member.convertMemberTypeToString(), String.valueOf(member.getTotalSpending())};
             index++;
         }
         return table;

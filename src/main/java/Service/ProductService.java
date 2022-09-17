@@ -1,6 +1,5 @@
 package Service;
 
-import Model.Productions.Order;
 import Model.Productions.Product;
 import common.BaseConstant;
 import common.BaseHelper;
@@ -16,26 +15,27 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static common.BaseConstant.*;
-import static common.BaseHelper.orderTableGenerator;
 import static common.BaseHelper.productTableGenerator;
-import static common.Utils.lstOrder;
 import static common.Utils.lstProduct;
 
 public class ProductService implements ProductInterface {
 
-    private static ProductService INSTANT;
+    //ProductService singleton instance
+    private static ProductService INSTANCE;
 
     public static void start() {
-        INSTANT = new ProductService();
+        INSTANCE = new ProductService();
     }
 
     public static ProductService getInstant() {
-        return INSTANT;
+        return INSTANCE;
     }
 
+    /**
+     * Load Product data into the lstProduct ArrayList
+     */
     @Override
     public void loadData() {
-        // TODO Auto-generated method stub
         try {
             BufferedReader productData = new BufferedReader(new FileReader(BaseConstant.PRODUCT_DATA_PATH));
             String record;
@@ -59,6 +59,11 @@ public class ProductService implements ProductInterface {
         }
     }
 
+    /**
+     * Write all Product objects in the lstProduct into the Product.csv file
+     *
+     * @throws FileNotFoundException
+     */
     @Override
     public void writeData() throws FileNotFoundException {
         // TODO Auto-generated method stub
@@ -78,11 +83,14 @@ public class ProductService implements ProductInterface {
         out.close();
     }
 
+    //Print out the list of product in table format
     @Override
     public void showAllProduct() {
         BaseHelper.simpleTable(BaseHelper.productTableGenerator(lstProduct));
     }
 
+    //get user input and find products in the lstProduct that matched that category
+    //then add them to a new ArrayList searchedProducts and then print them out
     public void showProductsByCategory() throws IOException {
         printListOfCategories();
         List<Product> searchedProducts = new ArrayList<>();
@@ -98,37 +106,20 @@ public class ProductService implements ProductInterface {
             }
         }
         if (!BaseHelper.isNullOrEmpty(searchedProducts)) {
-            for (Product product : searchedProducts) {
-                System.out.println(product);
-            }
+            BaseHelper.simpleTable(BaseHelper.productTableGenerator(searchedProducts));
+        } else {
+            System.out.println(ANSI_RED + "Wrong category input, please try again!");
         }
     }
 
+    //print a list of all categories by mapping through lstProduct to find distinct categories exist
     private static void printListOfCategories() {
         List<String> uniqueCategories = lstProduct.stream().map(Product::getCategory).distinct().toList();
-        for (int i = 0; i < uniqueCategories.size(); i++) {
-            System.out.println(i + " " + uniqueCategories.get(i));
+        for (String uniqueCategory : uniqueCategories) {
+            System.out.println(uniqueCategory);
         }
     }
 
-    // TODO
-    public void viewOrderDetails() throws IOException {
-        System.out.println(BLACK_BOLD + "List of order" + ANSI_RESET);
-        BaseHelper.simpleTable(orderTableGenerator(lstOrder));
-        System.out.println("Enter the id of the order you want to view: ");
-        Pattern p = Pattern.compile("^[0-9]+$");
-        boolean notMatchedRegex = true;
-        while (notMatchedRegex) {
-            String orderId = Utils.reader.readLine();
-            Order searchOrder = BaseHelper.getOrderByOrderId(orderId);
-            if (!BaseHelper.isNullOrEmpty(searchOrder) && p.matcher(orderId).find()) {
-                BaseHelper.simpleTable(BaseHelper.orderTableGenerator(BaseHelper.addSingleObjectToList(searchOrder)));
-                notMatchedRegex = false;
-            } else {
-                System.out.println(ANSI_RED + "The your input is in the correct format! Please re-enter: " + ANSI_RESET);
-            }
-        }
-    }
 
     @Override
     public void manageProductPrice() throws IOException {
@@ -189,16 +180,21 @@ public class ProductService implements ProductInterface {
     public void addProduct() throws IOException {
         boolean productExists = false;
         BufferedReader reader = Utils.reader;
+        String productName;
+        String price;
+        String category;
+        String supplier;
+
 //      Supposing the product has not existed in the database, allow user to enter new product
         while (!productExists) {
-            System.out.println("Enter product name: ");
-            String productName = reader.readLine();
-            System.out.println("Enter price: ");
-            String price = reader.readLine();
-            System.out.println("Enter category: ");
-            String category = reader.readLine();
-            System.out.println("Enter supplier: ");
-            String supplier = reader.readLine();
+            System.out.print("Enter product name: ");
+            productName = reader.readLine();
+            System.out.print("Enter price: ");
+            price = reader.readLine();
+            System.out.print("Enter category: ");
+            category = reader.readLine();
+            System.out.print("Enter supplier: ");
+            supplier = reader.readLine();
 //      If the product has EXISTED in the database, display error message in red color
             if (BaseHelper.checkExistProduct(productName, supplier)) {
                 System.out.println(ANSI_RED + productName + " of supplier " + supplier + " has already been added! Please add another product" + ANSI_RESET);

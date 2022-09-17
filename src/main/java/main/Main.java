@@ -10,6 +10,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
+
         BaseHelper.loadData();
         BaseHelper.printWelcomePage();
         Utils.menuService.startUpMenu();

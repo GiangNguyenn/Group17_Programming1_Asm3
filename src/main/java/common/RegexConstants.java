@@ -1,5 +1,8 @@
 package common;
 
+/**
+ * Regular expression constant for user input validation
+ */
 public class RegexConstants {
 
     public static final String PASSWORD_REGEX = "[a-zA-Z0-9]{8}";

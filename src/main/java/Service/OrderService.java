@@ -27,14 +27,14 @@ import static common.Utils.orderService;
 
 public class OrderService implements OrderInterface {
 
-    private static OrderService INSTANT;
+    private static OrderService INSTANCE;
 
     public static void start() {
-        INSTANT = new OrderService();
+        INSTANCE = new OrderService();
     }
 
     public static OrderService getInstant() {
-        return INSTANT;
+        return INSTANCE;
     }
 
 
@@ -69,6 +69,7 @@ public class OrderService implements OrderInterface {
         }
     }
 
+    //write all data of lstOrder to Order.csv file
     @Override
     public void writeData() throws FileNotFoundException {
         PrintWriter out = new PrintWriter(BaseConstant.ORDER_DATA_PATH);
@@ -83,11 +84,10 @@ public class OrderService implements OrderInterface {
         out.close();
     }
 
+    //print all order in the forms of a table
     @Override
-    public void showAllOders() {
-        for (Order order : lstOrder) {
-            System.out.println(order.toString());
-        }
+    public void showAllOrders() {
+        BaseHelper.simpleTable(BaseHelper.orderTableGenerator(lstOrder));
     }
 
     // Datatype to String
@@ -115,13 +115,13 @@ public class OrderService implements OrderInterface {
     //Menus
 
     /**
-     * Take user input as orderID to get specific order
+     * Take user input as orderID to get specific order details
      */
     public void viewCustomerOrder() throws IOException {
         int indexOfOrder = 1;
         ArrayList<Order> ordersOfCustomer = new ArrayList<>();          //Get all the orders belong to the current users
         for (Order order : lstOrder) {
-            if (Objects.equals(order.getMemberID(), Utils.current_user.getId())) {
+            if (Objects.equals(order.getMemberID(), BaseHelper.getCurrentUser().getId())) {
                 ordersOfCustomer.add(order);
             }
         }
@@ -200,12 +200,14 @@ public class OrderService implements OrderInterface {
             String answer = Utils.reader.readLine();
             searchedOrder.setPaid(changeOrderStatus(answer, searchedOrder.getPaid()));
             System.out.println(YELLOW_BOLD + "Order status: Unpaid" + ANSI_RESET);
+        } else {
+            System.out.println();
         }
     }
 
     /**
-     * @param input
-     * @param orderStatus
+     * @param input       boolean indicating if admin still wanna change order status or not
+     * @param orderStatus boolean indicating the current order status
      * @return true if user's input is y or yes, and vice versa with n or no
      */
     private Boolean changeOrderStatus(String input, Boolean orderStatus) {
@@ -232,6 +234,8 @@ public class OrderService implements OrderInterface {
         if (productId.equalsIgnoreCase("B")) {
             return;
         }
+
+        //if product exists, add it to cart
         if (!BaseHelper.isNullOrEmpty(product)) {
             Utils.cart.add(productId);
             System.out.println(GREEN_BOLD + "Product " + product.getProductName() + " added to cart!" + ANSI_RESET);
@@ -255,20 +259,22 @@ public class OrderService implements OrderInterface {
         System.out.println("-----------------------------------------");
     }
 
+    //Calculate total price of current products in cart
+    //apply discount percentage in regard to member type
     private Double calculateTotalPrice() {
         List<Product> productObjectList = new ArrayList<>();
         for (String ProductId : Utils.cart) {
             Product productObject = BaseHelper.getProductByProductId(ProductId);
             productObjectList.add(productObject);
         }
-        return productObjectList.stream().mapToDouble(Product::getPrice).sum() * ((Member) Utils.current_user).discountAmount();
+        return productObjectList.stream().mapToDouble(Product::getPrice).sum() * (BaseHelper.getCurrentUser()).discountAmount();
     }
 
 
     public void placeOrder() throws IOException {
         LocalDateTime now = LocalDateTime.now();
         if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
-            Order newOrder = new Order(BaseHelper.generateUniqueId(Order.class), Utils.current_user.getId(), new ArrayList<String>(Utils.cart),
+            Order newOrder = new Order(BaseHelper.generateUniqueId(Order.class), Utils.current_user.getId(), new ArrayList<>(Utils.cart),
                     now,                                    //When clearing Utils.cart, the products in this order are deleted too
                     false,                                  //Have to make separate object by copying the origin Utils.cart
                     this.calculateTotalPrice());
@@ -296,7 +302,7 @@ public class OrderService implements OrderInterface {
     private LocalDate userInputToDate(String targetYearString, String targetMonthString, String targetDayString) {
         if (!(targetDayString.matches("\\d{1,2}") && targetMonthString.matches("\\d{1,2}") && targetYearString.matches("\\d{4}"))) {
             System.out.println(ANSI_RED + "Invalid format! Please write again." + ANSI_RESET);
-            System.out.println("");
+            System.out.println();
             revenueSpecificDayMenu();
             return null;
         }
@@ -311,8 +317,10 @@ public class OrderService implements OrderInterface {
         System.out.println(YELLOW_BOLD + "Revenue made in " + targetDate + " : " + calculateRevenueOneDay(targetDate) + ANSI_RESET);
     }
 
+    //prompt admin to input specific date that they want to see the revenue of (yyyy/mm/dd)
     public void revenueSpecificDayMenu() {
         try {
+            //initialization
             String targetYearString;
             String targetMonthString;
             String targetDayString;

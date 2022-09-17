@@ -3,9 +3,7 @@ package common;
 public class BaseConstant {
     public static final String App_Name = "ASM3";
 
-    public static enum TypeMember {NORMAL, SILVER, GOLD, PLATINUM}
-
-    ;
+    public enum TypeMember {NORMAL, SILVER, GOLD, PLATINUM}
 
     public static final Double LITMIT_SILVER = 5000000.0;
 
@@ -14,15 +12,10 @@ public class BaseConstant {
     public static final Double LITMIT_PLATINUM = 25000000.0;
 
 
-    // Path
+    // CSV files' Path
     public static final String USER_DATA_PATH = "src/main/resources/data/user.csv";
     public static final String PRODUCT_DATA_PATH = "src/main/resources/data/production.csv";
     public static final String ORDER_DATA_PATH = "src/main/resources/data/order.csv";
-
-    public static final String PRODUCT_TABLE_FORMAT = "%20s%15s%15s";
-    public static final String ORDER_TABLE_FORMNAT = "%20s%15s%15s";
-    public static final String ORDER_ITEM_TABLE_FORMNAT = "%20s%15s%15s%15s%15s";
-
 
     //    Implement Color for better user experience
     public static final String ANSI_RESET = "\u001B[0m";

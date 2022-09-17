@@ -8,20 +8,17 @@ import Service.MenuService;
 import Service.OrderService;
 import Service.ProductService;
 import Service.UserService;
-import common.BaseConstant.TypeMember;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 
 public class Utils {
-    //login infor
+    //login info
     public static Boolean isLogin = false;
     public static Member current_user = null;
     public static Boolean isAdmin = false;
@@ -39,17 +36,6 @@ public class Utils {
     public static ProductService productService = ProductService.getInstant();
     public static UserService userService = UserService.getInstant();
 
-    // Data in use
-    public static HashMap<TypeMember, Float> promotionHash = new HashMap<TypeMember, Float>() {
-        private static final long serialVersionUID = 1L;
-
-        {
-            put(TypeMember.NORMAL, (float) 1.0);
-            put(TypeMember.SILVER, (float) 0.95);
-            put(TypeMember.GOLD, (float) 0.9);
-            put(TypeMember.PLATINUM, (float) 0.85);
-        }
-    };
 
     /* Adding user to lstMember after registering successfully */
     public static List<Admin> lstAdmin = new ArrayList<>();
@@ -72,5 +58,4 @@ public class Utils {
         return new BufferedReader(new FileReader(filePath));
     }
 
-    public static Random rand = new Random();
 }
