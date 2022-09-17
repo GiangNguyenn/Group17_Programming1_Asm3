@@ -139,9 +139,11 @@ public class OrderService implements OrderInterface {
             System.out.println(ANSI_RED + "\nOrder not found");
             System.out.println("Please enter again" + ANSI_RESET);
             viewCustomerOrder();
+        } else {
+            Order order = ordersOfCustomer.get(Integer.parseInt(targetOrderIndex) - 1);
+            System.out.println(order.toStringCustom());
         }
-        Order order = ordersOfCustomer.get(Integer.parseInt(targetOrderIndex) - 1);
-        System.out.println(order.toStringCustom());
+
     }
 
     /**
