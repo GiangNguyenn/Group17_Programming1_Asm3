@@ -120,36 +120,46 @@ public class ProductService implements ProductInterface {
         }
     }
 
-
+    //Manage the product price
     @Override
     public void manageProductPrice() throws IOException {
+        //Display all the product in the table
         BaseHelper.simpleTable(productTableGenerator(lstProduct));
+        //Ask the user to enter their desire product by enter the product's id
         System.out.println("Enter the id of the product you want to change the price of: ");
-
         while (true) {
             System.out.println("Type B to go back!");
+            //Receive the product's id
             String productId = Utils.reader.readLine();
+            //The user can choose "B" to go back
             if (productId.equalsIgnoreCase("b")) {
                 return;
             }
+            //Get a product by their id
             Product searchProduct = BaseHelper.getProductByProductId(productId);
             if (!BaseHelper.isNullOrEmpty(searchProduct)) {
+                //If the id is valid, call the change product price method to change the price
                 changeProductPrice(searchProduct);
                 break;
             } else {
+                //IF the is invalid, print out string below
                 System.out.println(ANSI_RED + "The id you entered is not correct! Please re-enter: " + ANSI_RESET);
             }
         }
         writeData();
     }
 
+    //Change a product's price
     private void changeProductPrice(Product searchedProduct) throws IOException {
+        //Display the product's current price
         System.out.println("The current Price of the product is: " + searchedProduct.getPrice());
         System.out.println("============================");
         System.out.println("Enter your desire product's price: ");
+        //Validate product's price input
         Pattern p = Pattern.compile("^[1-9][0-9]{3,}$");
         boolean notMatchedRegex = true;
         while (notMatchedRegex) {
+            //If the input is validated, the product's will be change
             String newPrice = String.valueOf(Utils.reader.readLine());
             if (p.matcher(newPrice).find()) {
                 searchedProduct.setPrice(Double.parseDouble(newPrice));
@@ -157,18 +167,22 @@ public class ProductService implements ProductInterface {
                 System.out.println("The new Product price is: " + searchedProduct.getPrice() + " VND");
                 notMatchedRegex = false;
             } else {
+                //If the price is invalid, the string will be printed
                 System.out.println(ANSI_RED + "The your input must be larger than 1000(VND) and in the correct format! Please re-enter: " + ANSI_RESET);
             }
         }
     }
 
+    //Filter product by price, high to low or low to high
     public void sortProductByPrice(String sortFunction) throws IOException {
         if (sortFunction.equals("asc")) {
+            //If a user choose ascending option, the product will be display from low to high on a table
             List<Product> ascProductList = lstProduct.stream()
                     .sorted(Comparator.comparing(Product::getPrice))
                     .collect(Collectors.toList());
             BaseHelper.simpleTable(productTableGenerator(ascProductList));
         } else if (sortFunction.equals("desc")) {
+            //If a user choose descending option, the product will be display from high to low on a table
             List<Product> descProductList = lstProduct.stream()
                     .sorted(Comparator.comparing(Product::getPrice).reversed())
                     .collect(Collectors.toList());
@@ -176,6 +190,7 @@ public class ProductService implements ProductInterface {
         }
     }
 
+    //Create a new product
     @Override
     public void addProduct() throws IOException {
         boolean productExists = false;
@@ -210,6 +225,7 @@ public class ProductService implements ProductInterface {
         }
     }
 
+    //Delete a single product from the database
     public void deleteProduct() {
         try {
             BaseHelper.simpleTable(BaseHelper.productTableGenerator(lstProduct));
