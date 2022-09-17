@@ -109,7 +109,7 @@ public class MenuService {
         System.out.println("Your choice: ");
     }
 
-    public void memberMainMenu() {
+    public void memberMainMenu() throws FileNotFoundException {
         BaseHelper.clearConsole();
         printMemberMainMenu();
         try {
@@ -138,13 +138,12 @@ public class MenuService {
             Utils.reader.read();
             memberMainMenu();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            BaseHelper.writeData();
             e.printStackTrace();
         }
     }
 
     private static void printMemberMenu() {
-        // Todo: Print main menu
         System.out.println("Select function: ");
         System.out.println("1. View all products");
         System.out.println("2. Browse products by categories");

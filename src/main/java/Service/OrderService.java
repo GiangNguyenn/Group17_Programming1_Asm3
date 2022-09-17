@@ -152,20 +152,19 @@ public class OrderService implements OrderInterface {
         String customerID = Utils.reader.readLine();
         Member targetCustomer = BaseHelper.getMemberById(customerID);       //Finds customer
 
-        if (targetCustomer == null) {
+        if (BaseHelper.isNullOrEmpty(targetCustomer)) {
             System.out.println(ANSI_RED + "Customer not found!" + ANSI_RESET);
             viewOrderByCustomerId();
-        }
-
-        ArrayList<Order> ordersOfCustomer = new ArrayList<>();
-        for (Order order : lstOrder) {
-            assert targetCustomer != null;
-            if (Objects.equals(order.getMemberID(), targetCustomer.getId())) {          // Returns Empty List if no customer is found
-                ordersOfCustomer.add(order);
+        } else {
+            ArrayList<Order> ordersOfCustomer = new ArrayList<>();
+            for (Order order : lstOrder) {
+                if (Objects.equals(order.getMemberID(), targetCustomer.getId())) {          // Returns Empty List if no customer is found
+                    ordersOfCustomer.add(order);
+                }
             }
-        }
-        for (Order order : ordersOfCustomer) {
-            System.out.println(order.toStringCustom());
+            for (Order order : ordersOfCustomer) {
+                System.out.println(order.toStringCustom());
+            }
         }
     }
 
@@ -264,6 +263,7 @@ public class OrderService implements OrderInterface {
             Product productObject = BaseHelper.getProductByProductId(ProductId);
             productObjectList.add(productObject);
         }
+        System.out.println(productObjectList);
         return productObjectList.stream().mapToDouble(Product::getPrice).sum() * (BaseHelper.getCurrentUser()).discountAmount();
     }
 
@@ -271,12 +271,12 @@ public class OrderService implements OrderInterface {
     public void placeOrder() throws IOException {
         LocalDateTime now = LocalDateTime.now();
         if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
-            Order newOrder = new Order(BaseHelper.generateUniqueId(Order.class), Utils.current_user.getId(), new ArrayList<>(Utils.cart),
-                    now,                                    //When clearing Utils.cart, the products in this order are deleted too
+            Order newOrder = new Order(BaseHelper.generateUniqueId(Order.class), Utils.current_user.getId(), new ArrayList<>(Utils.cart), now,                                    //When clearing Utils.cart, the products in this order are deleted too
                     false,                                  //Have to make separate object by copying the origin Utils.cart
                     this.calculateTotalPrice());
             lstOrder.add(newOrder);
             System.out.println(GREEN_BOLD + "Order placed successfully!" + ANSI_RESET);
+            System.out.println(BaseHelper.getCurrentUser().getMemberType() + " Member" + ": you recieved a " + (int) ((1 - BaseHelper.getCurrentUser().discountAmount()) * 100) + "% discount!");
             System.out.println(newOrder);
             Utils.cart.clear();
         } else {

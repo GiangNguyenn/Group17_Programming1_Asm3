@@ -48,12 +48,12 @@ public class UserService implements UserInterface {
         System.out.println(BLACK_BOLD + "Process login:" + ANSI_RESET);
         System.out.println("Username: ");
         username = Utils.reader.readLine();
-        if (username.equals("B")) {
+        if (username.equalsIgnoreCase("B")) {
             return;
         }
         System.out.println("Password: ");
         password = Utils.reader.readLine();
-        if (password.equals("B")) {
+        if (password.equalsIgnoreCase("B")) {
             return;
         }
 

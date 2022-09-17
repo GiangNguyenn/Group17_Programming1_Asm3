@@ -237,10 +237,10 @@ public class BaseHelper {
         }, (a, b) -> a + b);
         line = line + "+\n";
         System.out.print(line);
-        Arrays.stream(finalTable).limit(1).forEach(a -> System.out.printf(formatString.toString(), (Object) a));
+        Arrays.stream(finalTable).limit(1).forEach(a -> System.out.printf(formatString.toString(), a));
         System.out.print(line);
 
-        Stream.iterate(1, (i -> i < finalTable.length), (i -> ++i)).forEach(a -> System.out.printf(formatString.toString(), (Object) finalTable[a]));
+        Stream.iterate(1, (i -> i < finalTable.length), (i -> ++i)).forEach(a -> System.out.printf(formatString.toString(), finalTable[a]));
         System.out.print(line);
     }
 
