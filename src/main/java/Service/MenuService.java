@@ -15,6 +15,7 @@ import static common.Utils.orderService;
 
 public class MenuService {
 
+    //Singleton
     private static MenuService INSTANCE;
 
     public static void start() {
@@ -29,7 +30,7 @@ public class MenuService {
         System.out.println("1. Enter admin mode");
         System.out.println("2. Enter customer mode");
         System.out.println("E. Exit");
-        System.out.println("Your choice: ");
+        System.out.print("Your choice: ");
     }
 
     public void startUpMenu() {
@@ -64,7 +65,7 @@ public class MenuService {
         System.out.println("1. Admin login");
         System.out.println("E. Exit");
         System.out.println("B. Go back");
-        System.out.println("Your choice: ");
+        System.out.print("Your choice: ");
     }
 
     /**
@@ -106,7 +107,7 @@ public class MenuService {
         System.out.println("3. Browse products");
         System.out.println("B. Go back");
         System.out.println("E. Exit");
-        System.out.println("Your choice: ");
+        System.out.print("Your choice: ");
     }
 
     public void memberMainMenu() throws FileNotFoundException {
@@ -234,6 +235,7 @@ public class MenuService {
         System.out.println("2. Sort product from price high to low");
         System.out.println("B. Go back");
         System.out.println("E. Exit");
+        System.out.print("Your choice:");
     }
 
     public void sortProductByPriceMenu() {
