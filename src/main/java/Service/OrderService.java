@@ -244,6 +244,7 @@ public class OrderService implements OrderInterface {
         }
     }
 
+    //Show the user's shopping cart
     private void printCart() {
         System.out.println(BLACK_BOLD + "Shopping cart: " + ANSI_RESET);
         System.out.println("-----------------------------------------");
@@ -269,7 +270,7 @@ public class OrderService implements OrderInterface {
         return productObjectList.stream().mapToDouble(Product::getPrice).sum() * (BaseHelper.getCurrentUser()).discountAmount();
     }
 
-
+    //Print out a cart for the user to place order products
     public void placeOrder() throws IOException {
         LocalDateTime now = LocalDateTime.now();
         if (!BaseHelper.isNullOrEmpty(Utils.cart)) {
@@ -311,6 +312,7 @@ public class OrderService implements OrderInterface {
         return LocalDate.parse(targetDateString, DateTimeFormatter.ISO_DATE);
     }
 
+    //Return the total revenue in that day
     public void revenueTodayMenu() {
         LocalDate targetDate = LocalDate.now();
         System.out.println(YELLOW_BOLD + "Revenue made in " + targetDate + " : " + calculateRevenueOneDay(targetDate) + ANSI_RESET);

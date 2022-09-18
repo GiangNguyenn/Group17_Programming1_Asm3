@@ -31,6 +31,8 @@ public class UserService implements UserInterface {
     /**
      * @throws IOException
      */
+
+    //Login feature for already existing user
     @Override
     public void login() throws IOException {
         //Strings initialization
@@ -79,6 +81,7 @@ public class UserService implements UserInterface {
         System.out.println(ANSI_RED + "Login fail, please try again! " + ANSI_RESET);
     }
 
+    //Registration for new user
     @Override
     public void register() throws IOException {
         // TODO: process get input to login
@@ -142,6 +145,7 @@ public class UserService implements UserInterface {
         System.out.println(BLUE_BOLD + "You have logged out!" + ANSI_RESET);
     }
 
+    //Load user's data from the database
     @Override
     public void loadData() {
         try {
@@ -176,6 +180,7 @@ public class UserService implements UserInterface {
         }
     }
 
+    //Update user's data to the database
     @Override
     public void writeData() throws FileNotFoundException {
         PrintWriter out = new PrintWriter(BaseConstant.USER_DATA_PATH);
