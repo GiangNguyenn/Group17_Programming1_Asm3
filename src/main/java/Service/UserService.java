@@ -4,7 +4,6 @@ import Model.User.Admin;
 import Model.User.Member;
 import common.BaseConstant;
 import common.BaseHelper;
-import common.RegexConstants;
 import common.Utils;
 import interfaces.UserInterface;
 
@@ -94,63 +93,42 @@ public class UserService implements UserInterface {
             System.out.println(BLUE_BOLD + "Note: Type 'B' in any input to go back." + ANSI_RESET);
             boolean notMatchedRegex = true;
             while (notMatchedRegex) {
-                System.out.println("Enter your name: ");
+                System.out.print("Enter your name: ");
                 name = Utils.reader.readLine();
                 if (name.equalsIgnoreCase("B")) {
                     return;
                 }
 
-                System.out.println("Enter your phone number: ");
+                System.out.print("Enter your phone number: ");
                 phoneNumber = Utils.reader.readLine();
                 if (phoneNumber.equalsIgnoreCase("B")) {
                     return;
                 }
-                System.out.println("Enter your username: ");
-                username = Utils.reader.readLine();
+                System.out.print("Enter your username: ");
+                username = Utils.reader.readLine().toLowerCase();
                 if (username.equalsIgnoreCase("B")) {
                     return;
                 }
-                System.out.println("Enter your password: ");
+                System.out.print("Enter your password: ");
                 password = Utils.reader.readLine();
                 if (password.equalsIgnoreCase("B")) {
                     return;
                 }
 
-                //User inputs' validation, if valid then continue
-                if (!BaseHelper.validateUserInput(name, RegexConstants.NAME_REGEX)) {
-                    System.out.println(ANSI_RED + "Name must be longer than 2 character and contains only letters!" + ANSI_RESET);
-                    System.out.println(ANSI_RED + "Try register again." + ANSI_RESET);
-                    register();
-                } else if (BaseHelper.validateUserInput(username, RegexConstants.USERNAME_REGEX)) {
-                    System.out.println(ANSI_RED + "Username contains minimum of 2 letters!" + ANSI_RESET);
-                    System.out.println(ANSI_RED + "Try register again." + ANSI_RESET);
-                    register();
-                } else if (BaseHelper.validateUserInput(password, RegexConstants.PASSWORD_REGEX)) {
-                    System.out.println(ANSI_RED + "Password contains minimum of 2 letters!" + ANSI_RESET);
-                    System.out.println(ANSI_RED + "Try register again." + ANSI_RESET);
-                    register();
-                } else if (BaseHelper.validateUserInput(phoneNumber, RegexConstants.PHONE_REGEX)) {
-                    System.out.println(ANSI_RED + "Password contains minimum of 2 letters!" + ANSI_RESET);
-                    System.out.println(ANSI_RED + "Try register again." + ANSI_RESET);
-                    register();
+                /* creating new Member if this username is not exits
+                 * after that, switch to login page
+                 * */
+                if (BaseHelper.checkExistUsername(username)) {
+                    System.out.println(ANSI_RED + "This username has been used! Please register with another one." + ANSI_RESET);
+                    userExists = true;
                 } else {
-                    /* creating new Member if this username is not exits
-                     * after that, switch to login page
-                     * */
-                    if (BaseHelper.checkExistUsername(username)) {
-                        System.out.println(ANSI_RED + "This username has been used! Please register with another one." + ANSI_RESET);
-                        userExists = true;
-                    } else {
-                        String id = BaseHelper.generateUniqueId(Member.class);
-                        lstMember.add(new Member(id, name, phoneNumber, username, password));
-                        System.out.println(lstMember);
-                        break;
-                    }
-                    notMatchedRegex = false;
+                    String id = BaseHelper.generateUniqueId(Member.class);
+                    lstMember.add(new Member(id, name, phoneNumber, username, password));
+                    System.out.println(new Member(id, name, phoneNumber, username, password));
+                    return;
                 }
+                notMatchedRegex = false;
             }
-
-
         }
 
     }
