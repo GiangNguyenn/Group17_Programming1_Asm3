@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Locale;
 
 import static common.BaseConstant.*;
 import static common.Utils.lstAdmin;
@@ -47,7 +46,7 @@ public class UserService implements UserInterface {
         //prompt user to input login credentials
         System.out.println(BLACK_BOLD + "Process login:" + ANSI_RESET);
         System.out.println("Username: ");
-        username = Utils.reader.readLine().toLowerCase(;
+        username = Utils.reader.readLine().toLowerCase();
         if (username.equalsIgnoreCase("B")) {
             return;
         }
